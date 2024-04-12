@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +15,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
         textTheme: const TextTheme(
-          headline5: TextStyle(
+          headlineSmall: TextStyle(
               color: Colors.black87, fontSize: 34), // Define your style here
         ),
       ),
@@ -36,8 +34,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
   final List<String> songs = [
     'All Out Of Love - Air Supply',
     'Baker Street - Gerry Rafferty',
@@ -79,12 +75,6 @@ class _MyHomePageState extends State<MyHomePage> {
     'Outro',
   ];
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
                   Text(
                     'Songs',
-                    style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   const SearchBar(
                     hintText: 'Search for songs',
@@ -138,20 +128,26 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black, // Border color
+                    width: 3, // Border width
+                  ),
+                  color: Colors.blueGrey,
+                ),
                 height: 200,
-                color: Colors.blueGrey,
                 child: const Row(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Songs'),
+                    Text('Song Header'),
                   ],
                 ),
               ),
               Expanded(
                 child: Row(
                   children: [
-                    Container(
+                    SizedBox(
                       width: 130,
                       child: ListView(
                         padding: const EdgeInsets.all(8),
@@ -178,8 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             color: Colors.brown,
                             child: Image.asset(
                               'assets/images/chart_placeholder.png',
-                              fit: BoxFit.contain,
-                              scale: 0.5,
+                              fit: BoxFit.scaleDown,
                             ),
                           ),
                         )
