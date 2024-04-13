@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'widgets/song_header.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const BandBridge());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class BandBridge extends StatelessWidget {
+  const BandBridge({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -125,25 +126,19 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black, // Border color
-                    width: 3, // Border width
-                  ),
-                  color: Colors.blueGrey,
-                ),
-                height: 200,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Song Header'),
-                  ],
-                ),
-              ),
+              //====================
+              //====================
+              // Song header panel
+
+              SongHeader(),
+
+              //====================
+              //====================
+              // Song panel with arrangement and chart
+
               Expanded(
                 child: Row(
                   children: [
