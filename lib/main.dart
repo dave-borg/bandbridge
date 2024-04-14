@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'widgets/song_header.dart';
+import 'widgets/song_arrangement_list.dart';
+import 'widgets/song_list.dart';
 
 void main() {
   runApp(const BandBridge());
@@ -35,47 +37,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<String> songs = [
-    'All Out Of Love - Air Supply',
-    'Baker Street - Gerry Rafferty',
-    'Careless Whisper - George Michael',
-    'Choir Girl - Cold Chisel',
-    'Don\'t Stop Believin\' - Journey',
-    'Every Breath You Take - The Police',
-    'Eye of the Tiger - Survivor',
-    'Faith - George Michael',
-    'Footloose - Kenny Loggins',
-    'Seven Nation Army - The White Stripes',
-    'Valerie - Amy Winehouse',
-    'Walking on Sunshine - Katrina and the Waves',
-    'You Give Love a Bad Name - Bon Jovi',
-    'Weather With You - Crowded House',
-    'Under the Milky Way - The Church',
-    'Throw Your Arms Around Me - Hunters & Collectors',
-    'Something - The Beatles',
-    'One and Only - Adele',
-    'You\'re no Good - Linda Ronstadt',
-    'Wonderwall - Oasis',
-    'Heart of Glass - Blondie',
-    'I Want to Break Free - Queen',
-    'I Will Survive - Gloria Gaynor',
-    'I\'m Gonna Be (500 Miles) - The Proclaimers',
-    'I\'m Like a Bird - Nelly Furtado',
-    'I\'m Yours - Jason Mraz',
-    'I\'m a Believer - The Monkees',
-  ];
-
-  final List<String> arrangement = [
-    'Intro',
-    'Verse',
-    'Chorus',
-    'Verse',
-    'Chorus',
-    'Bridge',
-    'Chorus',
-    'Outro',
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,31 +56,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  Text(
-                    'Songs',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SearchBar(
-                    hintText: 'Search for songs',
-                  ),
-                  Expanded(
-                    child: ListView(
-                      padding: const EdgeInsets.all(8),
-                      children: <Widget>[
-                        Column(
-                          children: songs.map((song) {
-                            return SizedBox(
-                              height: 40,
-                              child: Container(
-                                alignment: Alignment.centerLeft,
-                                child: Text(song),
-                              ),
-                            );
-                          }).toList(),
-                        )
-                      ],
-                    ),
-                  ),
+                  //====================
+                  //====================
+                  // Song List
+
+                  SongList(),
+
+                  //====================
+                  //====================
+                  // Gig List
                   const Text('List of gigs'),
                 ],
               ),
@@ -142,25 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Expanded(
                 child: Row(
                   children: [
-                    SizedBox(
-                      width: 130,
-                      child: ListView(
-                        padding: const EdgeInsets.all(8),
-                        children: <Widget>[
-                          Column(
-                            children: arrangement.map((section) {
-                              return SizedBox(
-                                height: 40,
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(section),
-                                ),
-                              );
-                            }).toList(),
-                          )
-                        ],
-                      ),
-                    ),
+                    SongArrangement(),
                     Column(
                       children: [
                         Expanded(
