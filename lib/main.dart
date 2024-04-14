@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'widgets/song_header.dart';
 import 'widgets/song_arrangement_list.dart';
 import 'widgets/song_list.dart';
+import 'widgets/gig_list.dart';
 
 void main() {
   runApp(const BandBridge());
@@ -16,13 +17,15 @@ class BandBridge extends StatelessWidget {
       title: 'BandBridge',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        scaffoldBackgroundColor: const Color.fromRGBO(243, 243, 243, 1.0),
         useMaterial3: true,
         textTheme: const TextTheme(
-          headlineSmall: TextStyle(
-              color: Colors.black87, fontSize: 34), // Define your style here
+          headlineSmall: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          headlineMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          headlineLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
         ),
       ),
-      home: const MyHomePage(title: 'BandBridge Login'),
+      home: const MyHomePage(title: 'BandBridge'),
     );
   }
 }
@@ -41,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: const Color.fromRGBO(223, 223, 223, 1.0),
         title: Text(widget.title),
       ),
       body: Row(
@@ -49,7 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            color: Colors.blue,
             child: SizedBox(
               width: 250,
               child: Column(
@@ -65,47 +67,59 @@ class _MyHomePageState extends State<MyHomePage> {
                   //====================
                   //====================
                   // Gig List
-                  const Text('List of gigs'),
+                  GigList(),
                 ],
               ),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              //====================
-              //====================
-              // Song header panel
+          Container(
+            margin: const EdgeInsets.all(6.0),
+            decoration: BoxDecoration(
+              color: Colors.white, // Your desired color
+              borderRadius: BorderRadius.circular(9.0),
+              border: Border.all(
+                color: const Color.fromRGBO(
+                    203, 203, 203, 1.0), // Your desired border color
+                width: 1.0, // Your desired border width
+              ), // Your desired corner radius
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                //====================
+                //====================
+                // Song header panel
 
-              SongHeader(),
+                SongHeader(),
 
-              //====================
-              //====================
-              // Song panel with arrangement and chart
+                //====================
+                //====================
+                // Song panel with arrangement and chart
 
-              Expanded(
-                child: Row(
-                  children: [
-                    SongArrangement(),
-                    Column(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            alignment: Alignment.topCenter,
-                            color: Colors.brown,
-                            child: Image.asset(
-                              'assets/images/chart_placeholder.png',
-                              fit: BoxFit.scaleDown,
+                Expanded(
+                  child: Row(
+                    children: [
+                      SongArrangement(),
+                      Column(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.topCenter,
+                              color: Colors.brown,
+                              child: Image.asset(
+                                'assets/images/chart_placeholder.png',
+                                fit: BoxFit.scaleDown,
+                              ),
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
