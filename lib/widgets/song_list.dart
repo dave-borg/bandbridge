@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SongList extends StatelessWidget {
-  SongList();
+  SongList({super.key});
 
   final List<String> songs = [
     'All Out Of Love - Air Supply',
@@ -219,9 +219,31 @@ class SongList extends StatelessWidget {
           ), // Your desired corner radius
         ),
         child: Column(children: <Widget>[
-          Text(
-            'Songs',
-            style: Theme.of(context).textTheme.headlineLarge,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    'Songs',
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.sort),
+                onPressed: () {
+                  // Handle button press
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  // Handle button press
+                },
+              )
+            ],
           ),
 
           //========================

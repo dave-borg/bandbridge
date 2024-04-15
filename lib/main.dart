@@ -1,3 +1,4 @@
+import 'package:bandbridge/widgets/song_edit_panel.dart';
 import 'package:flutter/material.dart';
 import 'widgets/song_header.dart';
 import 'widgets/song_arrangement_list.dart';
@@ -51,29 +52,27 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            child: SizedBox(
-              width: 250,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  //====================
-                  //====================
-                  // Song List
+          SizedBox(
+            width: 250,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                //====================
+                //====================
+                // Song List
 
-                  SongList(),
+                SongList(),
 
-                  //====================
-                  //====================
-                  // Gig List
-                  GigList(),
-                ],
-              ),
+                //====================
+                //====================
+                // Gig List
+                GigList(),
+              ],
             ),
           ),
           Container(
-            margin: const EdgeInsets.all(6.0),
+            margin: const EdgeInsets.only(left: 0, top: 6, right: 0, bottom: 6),
             decoration: BoxDecoration(
               color: Colors.white, // Your desired color
               borderRadius: BorderRadius.circular(9.0),
@@ -91,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 //====================
                 // Song header panel
 
-                SongHeader(),
+                const SongHeader(),
 
                 //====================
                 //====================
@@ -101,20 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Row(
                     children: [
                       SongArrangement(),
-                      Column(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              alignment: Alignment.topCenter,
-                              color: Colors.brown,
-                              child: Image.asset(
-                                'assets/images/chart_placeholder.png',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+                      const SongEditPanel(),
                     ],
                   ),
                 ),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class SongHeader extends StatelessWidget {
-  SongHeader();
+  const SongHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 150,
-      width: MediaQuery.of(context).size.width - 270,
+      width: MediaQuery.of(context).size.width - 258,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -18,7 +18,8 @@ class SongHeader extends StatelessWidget {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.only(
+                            left: 8.0, top: 8.0, right: 8.0, bottom: 2.0),
                         child: Row(
                           children: [
                             Text(
@@ -40,29 +41,72 @@ class SongHeader extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            'Gerry Rafferty',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 8.0, top: 0.0, right: 8.0, bottom: 8.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Gerry Rafferty',
+                              style: Theme.of(context).textTheme.headlineSmall,
+                            ),
+                          ],
+                        ),
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            '4/4',
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                          Text(
-                            '80 BPM',
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                          Text(
-                            'F# maj',
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 0.0, top: 8.0, right: 8.0, bottom: 8.0),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0,
+                                  top: 0.0,
+                                  right: 26.0,
+                                  bottom: 8.0),
+                              child: Text(
+                                '4/4',
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0,
+                                  top: 0.0,
+                                  right: 26.0,
+                                  bottom: 8.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    '80',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium,
+                                  ),
+                                  Text(
+                                    'BPM',
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0,
+                                  top: 0.0,
+                                  right: 26.0,
+                                  bottom: 8.0),
+                              child: Text(
+                                'F# maj',
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                     ],
                   ),
@@ -85,6 +129,8 @@ class SongHeader extends StatelessWidget {
                               backgroundColor:
                                   MaterialStateProperty.all(Colors.transparent),
                               shadowColor:
+                                  MaterialStateProperty.all(Colors.transparent),
+                              surfaceTintColor:
                                   MaterialStateProperty.all(Colors.transparent),
                               shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
