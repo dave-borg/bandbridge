@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
             return const CircularProgressIndicator(); // Show loading spinner while waiting
           } else {
             //if (snapshot.data != null && snapshot.data!) {
-            if (false) {
+            if (true) {
               return Scaffold(
                   appBar: AppBar(
                     backgroundColor: const Color.fromRGBO(223, 223, 223, 1.0),
