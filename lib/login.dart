@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'songs_gigs_main.dart';
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -21,7 +23,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
             ),
-            getLoginForm(),
+            getLoginForm(context),
           ])
 
         //===================
@@ -39,12 +41,12 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              getLoginForm(),
+              getLoginForm(context),
             ],
           );
   }
 
-  Expanded getLoginForm() {
+  Expanded getLoginForm(BuildContext context) {
     return Expanded(
         flex: 65,
         child: Column(
@@ -76,7 +78,11 @@ class LoginScreen extends StatelessWidget {
             const SizedBox(height: 20.0), // Add some spacing before the button
             ElevatedButton(
               onPressed: () {
-                // Handle login button press
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SongsGigsMain()),
+                );
               },
               child: const Text('Login'),
             ),
