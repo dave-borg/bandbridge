@@ -23,12 +23,10 @@ class _SongListState extends State<SongList> {
 
   static Future<List<Song>> getAllSongs() {
     Logger().d('Getting all songs.');
+    // ignore: no_leading_underscores_for_local_identifiers
     Future<List<Song>> _allSongs = SongsService().allSongs;
 
-
-
     return _allSongs;
-
   }
 
   @override
@@ -78,10 +76,13 @@ class _SongListState extends State<SongList> {
           // Search Box
 
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 35.0,
+            padding: const EdgeInsets.all(2.0),
+            child: Container(
+              height: 45.0,
+              alignment: Alignment.center,
               child: TextField(
+                textAlign: TextAlign.left,
+                textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
                   labelText: "Search",
                   hintText: "Search",
@@ -130,10 +131,9 @@ class _SongListState extends State<SongList> {
       itemBuilder: (context, index) {
         final thisSong = songs[index];
         return Container(
-          //color: Colors.grey.shade300,
-          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-          //height: 100,
+          margin: const EdgeInsets.symmetric(vertical: 1, horizontal: 10),
+          padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 5),
+          // height: 100,
           width: double.maxFinite,
           child: Row(
             children: [
@@ -141,14 +141,40 @@ class _SongListState extends State<SongList> {
                 flex: 3,
                 child: Consumer<CurrentSongProvider>(
                     builder: (context, currentSongProvider, child) {
-                  return TextButton(
-                    onPressed: () {
-                      logger.d('Song selected: ${thisSong.title}');
-                      currentSongProvider.setCurrentSong(thisSong);
-                    },
-                    child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text('${thisSong.title} - ${thisSong.artist}')),
+                  return Container(
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        //primary: Colors.black,
+                        backgroundColor:
+                            currentSongProvider.currentSong.title ==
+                                    thisSong.title
+                                ? Color.fromARGB(255, 237, 243, 248)
+                                : Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {
+                        logger.d('Song selected: ${thisSong.title}');
+                        currentSongProvider.setCurrentSong(thisSong);
+                      },
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                thisSong.title,
+                                style: const TextStyle(
+                                  fontSize: 16, // Set your desired font size
+                                  fontWeight: FontWeight
+                                      .bold, // Set your desired font weight
+                                ),
+                              ),
+                              Text(thisSong.artist),
+                            ],
+                          )),
+                    ),
                   );
                 }),
               ),
