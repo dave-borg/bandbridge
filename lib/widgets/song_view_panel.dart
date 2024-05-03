@@ -1,11 +1,22 @@
+import 'package:bandbridge/widgets/song_arrangement_list.dart';
+import 'package:bandbridge/widgets/song_edit_panel.dart';
 import 'package:flutter/material.dart';
 
-class SongHeader extends StatelessWidget {
-  const SongHeader({super.key});
+
+class SongViewPanel extends StatelessWidget {
+  const SongViewPanel({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        //====================
+        //====================
+        // Song header panel
+
+        SizedBox(
       height: 150,
       width: MediaQuery.of(context).size.width - 258,
       child: Row(
@@ -160,6 +171,21 @@ class SongHeader extends StatelessWidget {
           ),
         ],
       ),
+    ),
+
+        //====================
+        //====================
+        // Song panel with arrangement and chart
+
+        Expanded(
+          child: Row(
+            children: [
+              SongArrangement(),
+              const SongEditPanel(),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

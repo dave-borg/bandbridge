@@ -26,7 +26,7 @@ class SongEditPanel extends StatelessWidget {
           children: <Widget>[
             Container(
               alignment: Alignment.centerLeft,
-              padding: EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(5.0),
               height: 80,
               width: 140,
               decoration: const BoxDecoration(
@@ -63,7 +63,7 @@ class SongEditPanel extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.centerLeft,
-              padding: EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(5.0),
               height: 80,
               width: 140,
               decoration: const BoxDecoration(
@@ -89,7 +89,7 @@ class SongEditPanel extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.centerLeft,
-              padding: EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(5.0),
               height: 80,
               width: 140,
               decoration: const BoxDecoration(
@@ -115,7 +115,7 @@ class SongEditPanel extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.centerLeft,
-              padding: EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(5.0),
               height: 80,
               width: 140,
               decoration: const BoxDecoration(

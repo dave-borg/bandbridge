@@ -102,14 +102,14 @@ class LoginScreen extends StatelessWidget {
               onPressed: () {
                 // Handle Apple SSO
               },
-              icon: Icon(Icons.apple, size: 24.0),
-              label: Text('Sign in with Apple'),
+              icon: const Icon(Icons.apple, size: 24.0),
+              label: const Text('Sign in with Apple'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.black),
                 foregroundColor: MaterialStateProperty.all(Colors.white),
               ),
             ),
-            SizedBox(height: 20.0), // Add some spacing between the buttons
+            const SizedBox(height: 20.0), // Add some spacing between the buttons
 
             // Google SSO Button
             ElevatedButton.icon(
@@ -117,23 +117,23 @@ class LoginScreen extends StatelessWidget {
                 // Handle Google SSO
               },
               icon: Image.asset('assets/images/google_logo.png', height: 24.0),
-              label: Text('Sign in with Google'),
+              label: const Text('Sign in with Google'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.white),
                 foregroundColor: MaterialStateProperty.all(Colors.black),
               ),
             ),
-            SizedBox(height: 20.0), // Add some spacing between the buttons
+            const SizedBox(height: 20.0), // Add some spacing between the buttons
 
             // Facebook SSO Button
             ElevatedButton.icon(
               onPressed: () {
                 // Handle Facebook SSO
               },
-              icon: Icon(Icons.facebook, size: 24.0),
-              label: Text('Sign in with Facebook'),
+              icon: const Icon(Icons.facebook, size: 24.0),
+              label: const Text('Sign in with Facebook'),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Color(0xFF3b5998)),
+                backgroundColor: MaterialStateProperty.all(const Color(0xFF3b5998)),
                 foregroundColor: MaterialStateProperty.all(Colors.white),
               ),
             ),

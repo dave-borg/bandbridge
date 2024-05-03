@@ -1,9 +1,7 @@
+import 'package:bandbridge/widgets/song_view_panel.dart';
 import 'package:flutter/material.dart';
 
 import 'widgets/gig_list.dart';
-import 'widgets/song_arrangement_list.dart';
-import 'widgets/song_edit_panel.dart';
-import 'widgets/song_header.dart';
 import 'widgets/song_list.dart';
 
 class SongsGigsMain extends StatelessWidget {
@@ -49,30 +47,7 @@ class SongsGigsMain extends StatelessWidget {
                 width: 1.0, // Your desired border width
               ), // Your desired corner radius
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                //====================
-                //====================
-                // Song header panel
-
-                const SongHeader(),
-
-                //====================
-                //====================
-                // Song panel with arrangement and chart
-
-                Expanded(
-                  child: Row(
-                    children: [
-                      SongArrangement(),
-                      const SongEditPanel(),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            child: const SongViewPanel(),
           ),
         ],
       ),

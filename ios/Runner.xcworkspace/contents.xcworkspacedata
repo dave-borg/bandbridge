@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/borg/dev/bandbridge/ios/BandBridge.xcodeproj">
+      location = "group:Runner.xcodeproj">
    </FileRef>
 </Workspace>

@@ -11,10 +11,10 @@ class BandBridge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'BandBridge',
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'BandBridge'),
+      home: MyHomePage(title: 'BandBridge'),
     );
   }
 }

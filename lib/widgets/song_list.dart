@@ -1,14 +1,33 @@
+import 'package:bandbridge/models/mdl_song.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 import '../services/svc_songs.dart';
 
-class SongList extends StatelessWidget {
+class SongList extends StatefulWidget {
   SongList({super.key});
 
-  SongsService songsService = SongsService();
+  final SongsService songsService = SongsService();
 
   @override
-  build(BuildContext context) async {
+  _SongListState createState() => _SongListState();
+}
+
+class _SongListState extends State<SongList> {
+  var logger = Logger();
+
+  Future<List<Song>> allSongsFuture = getAllSongs();
+
+   static Future<List<Song>> getAllSongs()  {
+    Logger().d('Getting all songs.');
+    Future<List<Song>> _allSongs = SongsService().allSongs;
+    
+    return _allSongs;
+  }
+
+  @override
+  build(BuildContext context) {
+    logger.d('Building the SongList widget.');
     return Expanded(
       child: Container(
         margin: const EdgeInsets.only(right: 6.0, left: 6.0, top: 6.0),
@@ -77,23 +96,58 @@ class SongList extends StatelessWidget {
           // Song List
 
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(8),
-              children: await songsService.allSongs.then((list) {
-                return list.map((song) {
-                  return SizedBox(
-                    height: 40,
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(song.title),
-                    ),
-                  );
-                }).toList();
+            child: FutureBuilder<List<Song>>(
+          future: allSongsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasData) {
+              final posts = snapshot.data!;
+              return buildSongs(posts);
+            } else {
+              return const Text("No data available");
+            }
               }),
             ),
-          ),
         ]),
       ),
+    );
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    return _SongListState();
+  }
+  
+  Widget buildSongs(List<Song> songs) {
+    return ListView.builder(
+      itemCount: songs.length,
+      itemBuilder: (context, index) {
+        final thisSong = songs[index];
+        return Container(
+          //color: Colors.grey.shade300,
+          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+          //height: 100,
+          width: double.maxFinite,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 3, 
+                child:
+                  TextButton(
+                    onPressed: () {
+                      logger.d('Song selected: ${thisSong.title}');
+                    },
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('${thisSong.title} - ${thisSong.artist}')),
+                  ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
