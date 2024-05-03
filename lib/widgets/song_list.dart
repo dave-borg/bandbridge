@@ -1,6 +1,8 @@
+import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 import '../services/svc_songs.dart';
 
@@ -10,6 +12,7 @@ class SongList extends StatefulWidget {
   final SongsService songsService = SongsService();
 
   @override
+  // ignore: library_private_types_in_public_api
   _SongListState createState() => _SongListState();
 }
 
@@ -18,11 +21,14 @@ class _SongListState extends State<SongList> {
 
   Future<List<Song>> allSongsFuture = getAllSongs();
 
-   static Future<List<Song>> getAllSongs()  {
+  static Future<List<Song>> getAllSongs() {
     Logger().d('Getting all songs.');
     Future<List<Song>> _allSongs = SongsService().allSongs;
-    
+
+
+
     return _allSongs;
+
   }
 
   @override
@@ -97,28 +103,27 @@ class _SongListState extends State<SongList> {
 
           Expanded(
             child: FutureBuilder<List<Song>>(
-          future: allSongsFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            } else if (snapshot.hasData) {
-              final posts = snapshot.data!;
-              return buildSongs(posts);
-            } else {
-              return const Text("No data available");
-            }
-              }),
-            ),
+                future: allSongsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasData) {
+                    final posts = snapshot.data!;
+                    return buildSongs(posts);
+                  } else {
+                    return const Text("No data available");
+                  }
+                }),
+          ),
         ]),
       ),
     );
   }
 
-  @override
   State<StatefulWidget> createState() {
     return _SongListState();
   }
-  
+
   Widget buildSongs(List<Song> songs) {
     return ListView.builder(
       itemCount: songs.length,
@@ -133,16 +138,19 @@ class _SongListState extends State<SongList> {
           child: Row(
             children: [
               Expanded(
-                flex: 3, 
-                child:
-                  TextButton(
+                flex: 3,
+                child: Consumer<CurrentSongProvider>(
+                    builder: (context, currentSongProvider, child) {
+                  return TextButton(
                     onPressed: () {
                       logger.d('Song selected: ${thisSong.title}');
+                      currentSongProvider.setCurrentSong(thisSong);
                     },
                     child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('${thisSong.title} - ${thisSong.artist}')),
-                  ),
+                        alignment: Alignment.centerLeft,
+                        child: Text('${thisSong.title} - ${thisSong.artist}')),
+                  );
+                }),
               ),
             ],
           ),

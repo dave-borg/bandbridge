@@ -1,5 +1,7 @@
+import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/songs_gigs_main.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'login.dart';
 
 void main() {
@@ -58,12 +60,15 @@ class _MyHomePageState extends State<MyHomePage> {
             //if (snapshot.data != null && snapshot.data!) {
             if (true) {
               return Scaffold(
-                  appBar: AppBar(
-                    backgroundColor: const Color.fromRGBO(223, 223, 223, 1.0),
-                    title: Text(widget.title),
-                  ),
-                  body:
-                      const SongsGigsMain()); // Show home page if user is logged in
+                appBar: AppBar(
+                  backgroundColor: const Color.fromRGBO(223, 223, 223, 1.0),
+                  title: Text(widget.title),
+                ),
+                body: ChangeNotifierProvider(
+                  create: (context) => CurrentSongProvider(),
+                  child: const SongsGigsMain(),
+                ),
+              ); // Sho w home page if user is logged in
             } else {
               return const Scaffold(
                   body:

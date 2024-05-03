@@ -15,23 +15,14 @@ class SongsService {
     // ];
     List<Song> songs = [];
 
-    // try {
-    //   for (String filePath in songFiles) {
-    //     String jsonString = await rootBundle.loadString(filePath);
-    //     Map<String, dynamic> songJson = jsonDecode(jsonString);
-    //     songs.add(Song.fromJson(songJson));
-    //   }
-    // } catch (e) {
-    //   // Handle the error here
-    //   print('Error loading songs: $e');
-    // }
-
     songs = [
       Song(
         title: 'Baker Street',
         artist: 'Gerry Rafferty',
         duration: "270", 
-        timeSignature: '4/4', 
+        timeSignature: '41/4',
+        tempo: "114",
+        initialKey: "Gmaj",
         structure: [
 
         ],
@@ -41,7 +32,9 @@ class SongsService {
         title: 'Seven Nation Army',
         artist: 'The White Stripes',
         duration: "231",
-        timeSignature: '4/4',
+        timeSignature: '42/4',
+        tempo: "124",
+        initialKey: "Cmin",
         structure: [],
         versions: [],
       ),
@@ -49,7 +42,9 @@ class SongsService {
         title: 'Crazy',
         artist: 'Gnarl Barkley',
         duration: "324",
-        timeSignature: '4/4',
+        timeSignature: '43/4',
+        tempo: "114",
+        initialKey: "Gmaj",
         structure: [],
         versions: [],
       ),
@@ -57,14 +52,16 @@ class SongsService {
         title: 'Beautiful Day',
         artist: 'U2',
         duration: "422",
-        timeSignature: '4/4',
+        timeSignature: '44/4',
+        tempo: "114",
+        initialKey: "Gmaj",
         structure: [],
         versions: [],
       ),
       // Add more songs here
     ];
 
-    logger.i('Number of songs: ${songs.length}');
+    logger.d('Number of songs: ${songs.length}');
 
     return Future.value(songs);
   }

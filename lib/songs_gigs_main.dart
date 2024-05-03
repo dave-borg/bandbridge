@@ -1,5 +1,7 @@
+import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/widgets/song_view_panel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'widgets/gig_list.dart';
 import 'widgets/song_list.dart';
@@ -26,7 +28,6 @@ class SongsGigsMain extends StatelessWidget {
                 //====================
                 //====================
                 // Song List
-
                 SongList(),
 
                 //====================
@@ -47,7 +48,7 @@ class SongsGigsMain extends StatelessWidget {
                 width: 1.0, // Your desired border width
               ), // Your desired corner radius
             ),
-            child: const SongViewPanel(),
+            child: SongViewPanel(),
           ),
         ],
       ),

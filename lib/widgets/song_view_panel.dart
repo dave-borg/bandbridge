@@ -1,7 +1,20 @@
+import 'package:bandbridge/models/current_song.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
-class SongViewPanel extends StatelessWidget {
+class SongViewPanel extends StatefulWidget {
   const SongViewPanel({super.key});
+  
+  @override
+  State<StatefulWidget> createState() => _SongViewPanelState();
+
+}
+
+class _SongViewPanelState extends State<SongViewPanel> {
+
+
+  var logger = Logger();
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +28,11 @@ class SongViewPanel extends StatelessWidget {
       'Chorus',
       'Outro',
     ];
+
+    // ignore: no_leading_underscores_for_local_identifiers
+    var _currentSong = context.watch<CurrentSongProvider>();
+
+    logger.d('SongViewPanel rebuilt with song: ${_currentSong.title} by ${_currentSong.artist}');
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -42,7 +60,7 @@ class SongViewPanel extends StatelessWidget {
                             child: Row(
                               children: [
                                 Text(
-                                  'Baker Street',
+                                  _currentSong.title,
                                   style:
                                       Theme.of(context).textTheme.headlineLarge,
                                 ),
@@ -67,7 +85,7 @@ class SongViewPanel extends StatelessWidget {
                             child: Row(
                               children: [
                                 Text(
-                                  'Gerry Rafferty',
+                                  _currentSong.artist,
                                   style:
                                       Theme.of(context).textTheme.headlineSmall,
                                 ),
@@ -86,7 +104,7 @@ class SongViewPanel extends StatelessWidget {
                                       right: 26.0,
                                       bottom: 8.0),
                                   child: Text(
-                                    '4/4',
+                                    _currentSong.timeSignature,
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineMedium,
@@ -102,17 +120,17 @@ class SongViewPanel extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
-                                        '80',
+                                        _currentSong.tempo,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headlineMedium,
                                       ),
-                                      Text(
-                                        'BPM',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                      ),
+                                      _currentSong.tempo.isEmpty
+                                        ? SizedBox.shrink()
+                                        : Text(
+                                            'BPM',
+                                            style: Theme.of(context).textTheme.bodyLarge,
+                                          ),
                                     ],
                                   ),
                                 ),
@@ -123,7 +141,7 @@ class SongViewPanel extends StatelessWidget {
                                       right: 26.0,
                                       bottom: 8.0),
                                   child: Text(
-                                    'F# maj',
+                                    _currentSong.initialKey,
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineMedium,
@@ -409,4 +427,5 @@ class SongViewPanel extends StatelessWidget {
       ],
     );
   }
+  
 }

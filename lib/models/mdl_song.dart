@@ -2,21 +2,21 @@ class Song {
   String title = "";
   String artist = "";
   String duration = "";
-  //String key = "";
+  String initialKey = "";
   String tempo = "";
   String timeSignature = "";
   List<Section> structure;
   List<Version> versions;
 
   Song({
-    this.title = "",
-    this.artist = "",
+    this.title = "[Title]",
+    this.artist = "[Artist]",
     this.duration = "",
-    //this.key = "",
+    this.initialKey = "",
     this.tempo = "",
-    required this.timeSignature,
-    required this.structure,
-    required this.versions,
+    this.timeSignature = "",
+    this.structure = const [],
+    this.versions = const [],
   });
 
   factory Song.fromJson(Map<String, dynamic> json) {
@@ -24,7 +24,7 @@ class Song {
       title: json['title'],
       artist: json['artist'],
       duration: json['duration'],
-      //key: json['key'],
+      initialKey: json['key'],
       tempo: json['tempo'],
       timeSignature: json['timeSignature'],
       structure:
@@ -39,7 +39,7 @@ class Song {
       'title': title,
       'artist': artist,
       'duration': duration,
-      //'key': key,
+      'initialKey': initialKey,
       'tempo': tempo,
       'timeSignature': timeSignature,
       'structure': List<dynamic>.from(structure.map((x) => x.toJson())),
@@ -81,6 +81,7 @@ class Section {
       'timestamp': timestamp,
       'duration': duration,
       'chords': List<dynamic>.from(chords.map((x) => x.toJson())),
+      // ignore: unnecessary_null_comparison
       'lyrics': lyrics != null
           ? List<dynamic>.from(lyrics.map((x) => x.toJson()))
           : null,
