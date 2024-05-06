@@ -122,9 +122,21 @@ class _SongListState extends State<SongList> {
                     return const CircularProgressIndicator();
                   } else if (snapshot.hasData) {
                     logger.d("Got songs.");
-                    _allSongs = snapshot.data!;
-                    _filteredSongs = _allSongs;
-                    return buildSongs(_filteredSongs);
+
+                    // If we haven't set _allSongs yet, set it to the snapshot data - should only happen on the first run
+                    if (_allSongs.isEmpty) {
+                      _allSongs = snapshot.data!;
+                      _filteredSongs = _allSongs;
+                    }
+
+                    // If we have songs, build the song list
+                    if (_filteredSongs.isEmpty) {
+                      return const Text("No songs found");
+
+                      // If we have no songs show a message
+                    } else {
+                      return buildSongs(_filteredSongs);
+                    }
                   } else {
                     logger.d("No songs available.");
                     return const Text("No data available");
@@ -208,11 +220,17 @@ class _SongListState extends State<SongList> {
       logger.d("Filtering songs - ${_searchController.text}");
       setState(() {
         _filteredSongs = _allSongs
-            .where((song) => song.title
-                .toLowerCase()
-                .contains(_searchController.text.toLowerCase()))
+            .where((song) =>
+                song.title
+                    .toLowerCase()
+                    .contains(_searchController.text.toLowerCase()) ||
+                song.artist
+                    .toLowerCase()
+                    .contains(_searchController.text.toLowerCase()))
             .toList();
       });
+      _filteredSongs
+          .forEach((song) => logger.d('Filtered song title: ${song.title}'));
       logger.d("Filtered songs: ${_filteredSongs.length}");
     }
   }
