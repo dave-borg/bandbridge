@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:bandbridge/models/mdl_song.dart';
+import 'package:bandbridge/utils/logging_util.dart';
 import 'package:crypto/crypto.dart';
 import 'package:logger/logger.dart';
 
 class SongHasher {
   static String hashSong(Song song) {
-    var logger = Logger();
-    logger.d('Hashing song: ${song.title}');
+    var logger = Logger(level: LoggingUtil.loggingLevel('SongHasher'));
+    logger.i('Hashing song: ${song.title}');
 
     var songString = "";
 

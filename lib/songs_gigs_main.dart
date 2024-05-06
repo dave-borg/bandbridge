@@ -1,7 +1,5 @@
-import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/widgets/song_view_panel.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'widgets/gig_list.dart';
 import 'widgets/song_list.dart';

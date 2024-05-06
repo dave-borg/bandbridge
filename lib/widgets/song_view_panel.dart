@@ -1,4 +1,5 @@
 import 'package:bandbridge/models/current_song.dart';
+import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -8,13 +9,10 @@ class SongViewPanel extends StatefulWidget {
   
   @override
   State<StatefulWidget> createState() => _SongViewPanelState();
-
 }
 
 class _SongViewPanelState extends State<SongViewPanel> {
-
-
-  var logger = Logger();
+  var logger = Logger(level: LoggingUtil.loggingLevel('SongViewPanel'));
 
   @override
   Widget build(BuildContext context) {
