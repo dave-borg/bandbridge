@@ -2,7 +2,7 @@
     "title": "Baker Street",
     "artist": "Gerry Raffety",
     "duration": "366",
-    "key": "D",
+    "initialKey": "D",
     "tempo": "126",
     "timeSignature": "4/4",
     "structure": [

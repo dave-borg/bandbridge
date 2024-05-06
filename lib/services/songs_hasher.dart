@@ -23,14 +23,17 @@ class SongHasher {
       songString += section.timestamp;
       songString += section.duration;
 
-      section.chords.forEach((chord) {
+      section.chords!.forEach((chord) {
         songString += chord.name;
-        songString += chord.modifications;
+
+        if (chord.modifications != null) songString += chord.modifications!;
+
         songString += chord.beats;
-        songString += chord.bass;
+
+        if (chord.bass != null) songString += chord.bass!;
       });
 
-      section.lyrics.forEach((lyric) {
+      section.lyrics!.forEach((lyric) {
         songString += lyric.text;
         songString += lyric.timestamp;
       });
