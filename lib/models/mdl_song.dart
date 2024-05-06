@@ -24,7 +24,7 @@ class Song {
       title: json['title'],
       artist: json['artist'],
       duration: json['duration'],
-      initialKey: json['key'],
+      initialKey: json['initialKey'],
       tempo: json['tempo'],
       timeSignature: json['timeSignature'],
       structure:
@@ -52,15 +52,15 @@ class Section {
   String section;
   String timestamp;
   String duration;
-  List<Chord> chords;
-  List<Lyric> lyrics;
+  List<Chord>? chords;
+  List<Lyric>? lyrics;
 
   Section({
     required this.section,
     required this.timestamp,
     required this.duration,
-    required this.chords,
-    required this.lyrics,
+    this.chords,
+    this.lyrics,
   });
 
   factory Section.fromJson(Map<String, dynamic> json) {
@@ -68,7 +68,9 @@ class Section {
       section: json['section'],
       timestamp: json['timestamp'],
       duration: json['duration'],
-      chords: List<Chord>.from(json['chords'].map((x) => Chord.fromJson(x))),
+      chords: json['chords'] != null
+          ? List<Chord>.from(json['chords'].map((x) => Chord.fromJson(x)))
+          : [],
       lyrics: json['lyrics'] != null
           ? List<Lyric>.from(json['lyrics'].map((x) => Lyric.fromJson(x)))
           : [],
@@ -80,10 +82,10 @@ class Section {
       'section': section,
       'timestamp': timestamp,
       'duration': duration,
-      'chords': List<dynamic>.from(chords.map((x) => x.toJson())),
+      'chords': List<dynamic>.from(chords!.map((x) => x.toJson())),
       // ignore: unnecessary_null_comparison
       'lyrics': lyrics != null
-          ? List<dynamic>.from(lyrics.map((x) => x.toJson()))
+          ? List<dynamic>.from(lyrics!.map((x) => x.toJson()))
           : null,
     };
   }
@@ -92,14 +94,14 @@ class Section {
 class Chord {
   String name;
   String beats;
-  String modifications = "";
-  String bass;
+  String? modifications = "";
+  String? bass;
 
   Chord({
     required this.name,
     required this.beats,
-    required this.modifications,
-    required this.bass,
+    this.modifications,
+    this.bass,
   });
 
   factory Chord.fromJson(Map<String, dynamic> json) {
