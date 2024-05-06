@@ -1,5 +1,6 @@
 import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/models/mdl_song.dart';
+import 'package:bandbridge/services/songs_hasher.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -182,6 +183,8 @@ class _SongListState extends State<SongList> {
                     ),
                     onPressed: () {
                       logger.d('Song selected: ${thisSong.title}');
+                      logger.d(
+                          'Current song hash: ${SongHasher.hashSong(currentSongProvider.currentSong)}');
                       currentSongProvider.setCurrentSong(thisSong);
                     },
                     child: Align(
