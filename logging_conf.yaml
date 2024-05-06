@@ -1,0 +1,13 @@
+loggers:
+  SongsGigsMain:
+    level: INFO
+  SongList:
+    level: INFO
+  SongViewPanel:
+    level: INFO
+  SongsService:
+    level: INFO
+  SongHasher:
+    level: INFO
+  DEFAULT:
+    level: WTF

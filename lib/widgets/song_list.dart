@@ -1,6 +1,7 @@
 import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/services/songs_hasher.dart';
+import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,7 @@ class SongList extends StatefulWidget {
 }
 
 class _SongListState extends State<SongList> {
-  var logger = Logger();
+  var logger = Logger(level: LoggingUtil.loggingLevel('SongList'));
 
   // A future that holds all our songs. It's like a time capsule for music!
   Future<List<Song>> allSongsFuture = getAllSongs();
@@ -30,7 +31,7 @@ class _SongListState extends State<SongList> {
 
   // A function that gets all songs. It's like a musical treasure hunt!
   static Future<List<Song>> getAllSongs() {
-    Logger().d('Getting all songs.');
+    Logger(level: LoggingUtil.loggingLevel('SongList')).d('Getting all songs.');
     Future<List<Song>> _allSongs = SongsService().allSongs;
 
     return _allSongs;

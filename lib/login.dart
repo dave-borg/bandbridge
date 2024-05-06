@@ -1,4 +1,6 @@
+import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 import 'songs_gigs_main.dart';
 
@@ -7,6 +9,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var logger = Logger(level: LoggingUtil.loggingLevel('SongHasher'));
+    logger.i('Building the LoginScreen widget.');
     var orientation = MediaQuery.of(context).orientation;
 
     return orientation == Orientation.portrait
