@@ -16,7 +16,8 @@ class SongsService {
     List<String> songFiles = [
       'assets/songs/baker-street_43f34fofj34oif3.json',
       'assets/songs/seven-nation-army-fgsdjhb1345jb.json',
-      // Add more song files here
+      'assets/songs/hotel-california_asfa8g7dfsgs.json',
+      'assets/songs/imagine_dfsvd7sfvsdfhv.json',
     ];
 
     List<Song> songs = [];

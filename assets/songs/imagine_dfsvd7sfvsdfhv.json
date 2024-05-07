@@ -1,0 +1,159 @@
+{
+    "title": "Imagine",
+    "artist": "John Lennon",
+    "duration": "187",
+    "initialKey": "C",
+    "tempo": "75",
+    "timeSignature": "4/4",
+    "structure": [
+        {
+            "section": "Verse",
+            "timestamp": "0",
+            "duration": "22",
+            "chords": [
+                {
+                    "name": "C",
+                    "beats": "4"
+                },
+                {
+                    "name": "Cmaj7",
+                    "beats": "4"
+                },
+                {
+                    "name": "F",
+                    "beats": "4"
+                },
+                {
+                    "name": "C",
+                    "beats": "4"
+                },
+                {
+                    "name": "Cmaj7",
+                    "beats": "4"
+                },
+                {
+                    "name": "F",
+                    "beats": "4"
+                }
+            ]
+        },
+        {
+            "section": "Chorus",
+            "timestamp": "22",
+            "duration": "22",
+            "chords": [
+                {
+                    "name": "F",
+                    "beats": "4"
+                },
+                {
+                    "name": "Amin/E",
+                    "beats": "4"
+                },
+                {
+                    "name": "F",
+                    "beats": "4"
+                },
+                {
+                    "name": "C/E",
+                    "beats": "4"
+                },
+                {
+                    "name": "Dmin",
+                    "beats": "4"
+                },
+                {
+                    "name": "F",
+                    "beats": "4"
+                }
+            ]
+        },
+        {
+            "section": "Verse",
+            "timestamp": "44",
+            "duration": "22",
+            "chords": [
+                {
+                    "name": "C",
+                    "beats": "4"
+                },
+                {
+                    "name": "Cmaj7",
+                    "beats": "4"
+                },
+                {
+                    "name": "F",
+                    "beats": "4"
+                },
+                {
+                    "name": "C",
+                    "beats": "4"
+                },
+                {
+                    "name": "Cmaj7",
+                    "beats": "4"
+                },
+                {
+                    "name": "F",
+                    "beats": "4"
+                }
+            ]
+        },
+        {
+            "section": "Chorus",
+            "timestamp": "66",
+            "duration": "22",
+            "chords": [
+                {
+                    "name": "F",
+                    "beats": "4"
+                },
+                {
+                    "name": "Amin/E",
+                    "beats": "4"
+                },
+                {
+                    "name": "F",
+                    "beats": "4"
+                },
+                {
+                    "name": "C/E",
+                    "beats": "4"
+                },
+                {
+                    "name": "Dmin",
+                    "beats": "4"
+                },
+                {
+                    "name": "F",
+                    "beats": "4"
+                }
+            ]
+        },
+        {
+            "section": "Outro",
+            "timestamp": "88",
+            "duration": "22",
+            "chords": [
+                {
+                    "name": "G11",
+                    "beats": "4"
+                },
+                {
+                    "name": "G",
+                    "beats": "4"
+                }
+            ]
+        }
+    ],
+    "versions": [
+        {
+            "hash": "9876543210",
+            "epoch": "9876543210"
+        },
+        {
+            "hash": "1234567890",
+            "epoch": "1234567890"
+        }
+    ]
+}

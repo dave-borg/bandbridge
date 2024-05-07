@@ -1,19 +1,5 @@
 loggers:
   SongsGigsMain:
     level: INFO
-  SongList:
-    level: INFO
-  GigList:
-    level: INFO
-  Gig:
-    level: INFO
-  SongViewPanel:
-    level: INFO
-  SongsService:
-    level: INFO
-  GigsService:
-    level: INFO
-  SongHasher:
-    level: INFO
   DEFAULT:
     level: INFO
