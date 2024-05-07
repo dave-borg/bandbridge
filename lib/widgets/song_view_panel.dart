@@ -16,22 +16,11 @@ class _SongViewPanelState extends State<SongViewPanel> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> arrangement = [
-      'Intro',
-      'Verse',
-      'Chorus',
-      'Verse',
-      'Chorus',
-      'Bridge',
-      'Chorus',
-      'Outro',
-    ];
-
     // ignore: no_leading_underscores_for_local_identifiers
-    var _currentSong = context.watch<CurrentSongProvider>();
+    var currentSong = context.watch<CurrentSongProvider>();
 
     logger.d(
-        'SongViewPanel rebuilt with song: ${_currentSong.title} by ${_currentSong.artist}');
+        'SongViewPanel rebuilt with song: ${currentSong.title} by ${currentSong.artist}');
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -59,7 +48,7 @@ class _SongViewPanelState extends State<SongViewPanel> {
                             child: Row(
                               children: [
                                 Text(
-                                  _currentSong.title,
+                                  currentSong.title,
                                   style:
                                       Theme.of(context).textTheme.headlineLarge,
                                 ),
@@ -84,7 +73,7 @@ class _SongViewPanelState extends State<SongViewPanel> {
                             child: Row(
                               children: [
                                 Text(
-                                  _currentSong.artist,
+                                  currentSong.artist,
                                   style:
                                       Theme.of(context).textTheme.headlineSmall,
                                 ),
@@ -103,7 +92,7 @@ class _SongViewPanelState extends State<SongViewPanel> {
                                       right: 26.0,
                                       bottom: 8.0),
                                   child: Text(
-                                    _currentSong.timeSignature,
+                                    currentSong.timeSignature,
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineMedium,
@@ -119,12 +108,12 @@ class _SongViewPanelState extends State<SongViewPanel> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
-                                        _currentSong.tempo,
+                                        currentSong.tempo,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headlineMedium,
                                       ),
-                                      _currentSong.tempo.isEmpty
+                                      currentSong.tempo.isEmpty
                                           ? const SizedBox.shrink()
                                           : Text(
                                               'BPM',
@@ -142,7 +131,7 @@ class _SongViewPanelState extends State<SongViewPanel> {
                                       right: 26.0,
                                       bottom: 8.0),
                                   child: Text(
-                                    _currentSong.initialKey,
+                                    currentSong.initialKey,
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineMedium,
@@ -261,12 +250,13 @@ class _SongViewPanelState extends State<SongViewPanel> {
                         padding: const EdgeInsets.all(8),
                         children: <Widget>[
                           Column(
-                            children: arrangement.map((section) {
+                            children: (currentSong.structure as List)
+                                .map((arrangementItem) {
                               return SizedBox(
                                 height: 40,
                                 child: Container(
                                   alignment: Alignment.centerLeft,
-                                  child: Text(section),
+                                  child: Text(arrangementItem.section),
                                 ),
                               );
                             }).toList(),
