@@ -3,6 +3,7 @@ import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
+// ignore: must_be_immutable
 class SongSectionPanel extends StatelessWidget {
   var logger = Logger(level: LoggingUtil.loggingLevel('SongSectionPanel'));
 
@@ -46,15 +47,12 @@ class SongSectionPanel extends StatelessWidget {
         //================================================================
         // Section chords
 
-        
-          newChord(section.chords![0].name, section.chords![0].beats),
-        
+        newChord(section.chords![0].name, section.chords![0].beats),
+
         //start row
         //new bar(chord, beats)
         //new chord(chord, beats)
         //end row
-
-       
       ],
     );
   }
@@ -63,9 +61,9 @@ class SongSectionPanel extends StatelessWidget {
     logger.d('calculateRequiredRows: section: ${section.section}');
 
     int totalBeats = 0;
-    section.chords!.forEach((chord) {
+    for (var chord in section.chords!) {
       totalBeats += int.parse(chord.beats);
-    });
+    }
 
     logger.d('calculateRequiredRows: totalBeats: $totalBeats');
     logger.d(
@@ -90,7 +88,7 @@ class SongSectionPanel extends StatelessWidget {
       ),
       child: RichText(
         text: TextSpan(
-          text: name + '/n' + beats,
+          text: '$name/n$beats',
           style: const TextStyle(
             fontSize: 30,
             fontFamily: 'Myriad Pro',
@@ -100,6 +98,4 @@ class SongSectionPanel extends StatelessWidget {
       ),
     );
   }
-
-
 }

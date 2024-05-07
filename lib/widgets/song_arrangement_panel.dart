@@ -3,22 +3,23 @@ import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
+// ignore: must_be_immutable
 class SongArrangementPanel extends StatelessWidget {
   var logger = Logger(level: LoggingUtil.loggingLevel('SongArrangementPanel'));
-  
+
   Song song;
 
   SongArrangementPanel({
     super.key,
     required this.song,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 130,
       child: Column(
-        children: [ 
+        children: [
           // Toolbar
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -62,8 +63,7 @@ class SongArrangementPanel extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               children: <Widget>[
                 Column(
-                  children:
-                      (song.structure as List).map((arrangementItem) {
+                  children: (song.structure as List).map((arrangementItem) {
                     return SizedBox(
                       height: 40,
                       child: Container(
