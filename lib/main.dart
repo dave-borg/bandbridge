@@ -1,3 +1,4 @@
+import 'package:bandbridge/models/current_gig.dart';
 import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/songs_gigs_main.dart';
 import 'package:flutter/material.dart';
@@ -64,10 +65,20 @@ class _MyHomePageState extends State<MyHomePage> {
                   backgroundColor: const Color.fromRGBO(223, 223, 223, 1.0),
                   title: Text(widget.title),
                 ),
-                body: ChangeNotifierProvider(
-                  create: (context) => CurrentSongProvider(),
+                body: MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider(
+                        create: (context) => CurrentSongProvider()),
+                    ChangeNotifierProvider(
+                        create: (context) => CurrentGigProvider()),
+                  ],
                   child: const SongsGigsMain(),
                 ),
+
+                // body: ChangeNotifierProvider(
+                //   create: (context) => CurrentSongProvider(),
+                //   child: const SongsGigsMain(),
+                // ),
               ); // Sho w home page if user is logged in
             } else {
               return const Scaffold(

@@ -40,8 +40,6 @@ class SongsService {
         logger.e('Failed to load JSON file: $file');
       }
       logger.d('Number of songs: ${songs.length}');
-
-      
     }
     return songs;
   }

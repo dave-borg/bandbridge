@@ -3,11 +3,17 @@ loggers:
     level: INFO
   SongList:
     level: INFO
+  GigList:
+    level: DEBUG
+  Gig:
+    level: DEBUG
   SongViewPanel:
     level: INFO
   SongsService:
     level: INFO
+  GigsService:
+    level: DEBUG
   SongHasher:
     level: INFO
   DEFAULT:
-    level: WTF
+    level: INFO
