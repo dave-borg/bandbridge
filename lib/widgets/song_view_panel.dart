@@ -43,7 +43,14 @@ class _SongViewPanelState extends State<SongViewPanel> {
             children: [
               SongArrangementPanel(song: currentSong),
               Column(
-                children: currentSong.structure.map((section) => SongSectionPanel(section: section)).toList(),
+                children: <Widget>[
+                  if ((currentSong.structure as List).isEmpty)
+                    const Text('No structure defined for this song')
+                  else
+                    ...((currentSong.structure as List).map((section) {
+                      return SongSectionPanel(section: section);
+                    }).toList()),
+                ],
               ),
             ],
           ),
