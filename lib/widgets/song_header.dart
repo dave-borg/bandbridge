@@ -1,7 +1,11 @@
 import 'package:bandbridge/models/mdl_song.dart';
+import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class SongHeader extends StatelessWidget {
+  var logger = Logger(level: LoggingUtil.loggingLevel('SongArrangementPanel'));
+  
   Song song;
 
   SongHeader({
