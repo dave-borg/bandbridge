@@ -46,7 +46,7 @@ class SongsGigsMain extends StatelessWidget {
                 width: 1.0, // Your desired border width
               ), // Your desired corner radius
             ),
-            child: SongViewPanel(),
+            child: const SongViewPanel(),
           ),
         ],
       ),

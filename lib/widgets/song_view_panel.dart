@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 class SongViewPanel extends StatefulWidget {
   const SongViewPanel({super.key});
-  
+
   @override
   State<StatefulWidget> createState() => _SongViewPanelState();
 }
@@ -30,7 +30,8 @@ class _SongViewPanelState extends State<SongViewPanel> {
     // ignore: no_leading_underscores_for_local_identifiers
     var _currentSong = context.watch<CurrentSongProvider>();
 
-    logger.d('SongViewPanel rebuilt with song: ${_currentSong.title} by ${_currentSong.artist}');
+    logger.d(
+        'SongViewPanel rebuilt with song: ${_currentSong.title} by ${_currentSong.artist}');
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -124,11 +125,13 @@ class _SongViewPanelState extends State<SongViewPanel> {
                                             .headlineMedium,
                                       ),
                                       _currentSong.tempo.isEmpty
-                                        ? SizedBox.shrink()
-                                        : Text(
-                                            'BPM',
-                                            style: Theme.of(context).textTheme.bodyLarge,
-                                          ),
+                                          ? const SizedBox.shrink()
+                                          : Text(
+                                              'BPM',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge,
+                                            ),
                                     ],
                                   ),
                                 ),
@@ -425,5 +428,4 @@ class _SongViewPanelState extends State<SongViewPanel> {
       ],
     );
   }
-  
 }

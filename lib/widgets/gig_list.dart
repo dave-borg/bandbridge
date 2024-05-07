@@ -13,6 +13,7 @@ class GigList extends StatefulWidget {
   final GigsService gigsService = GigsService();
 
   @override
+  // ignore: library_private_types_in_public_api
   _GigListState createState() => _GigListState();
 }
 
@@ -225,8 +226,9 @@ class _GigListState extends State<GigList> {
                     .contains(_searchController.text.toLowerCase()))
             .toList();
       });
-      _filteredGigs
-          .forEach((gig) => logger.d('Filtered gig name: ${gig.name}'));
+      for (var gig in _filteredGigs) {
+        logger.d('Filtered gig name: ${gig.name}');
+      }
       logger.d("Filtered gigs: ${_filteredGigs.length}");
     }
   }

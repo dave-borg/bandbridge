@@ -16,6 +16,7 @@ class SongList extends StatefulWidget {
   final SongsService songsService = SongsService();
 
   @override
+  // ignore: library_private_types_in_public_api
   _SongListState createState() => _SongListState();
 }
 
@@ -25,16 +26,16 @@ class _SongListState extends State<SongList> {
   // A future that holds all our songs. It's like a time capsule for music!
   Future<List<Song>> allSongsFuture = getAllSongs();
 
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   List<Song> _filteredSongs = [];
   List<Song> _allSongs = [];
 
   // A function that gets all songs. It's like a musical treasure hunt!
   static Future<List<Song>> getAllSongs() {
     Logger(level: LoggingUtil.loggingLevel('SongList')).d('Getting all songs.');
-    Future<List<Song>> _allSongs = SongsService().allSongs;
+    Future<List<Song>> allSongs = SongsService().allSongs;
 
-    return _allSongs;
+    return allSongs;
   }
 
   @override
@@ -233,8 +234,9 @@ class _SongListState extends State<SongList> {
                     .contains(_searchController.text.toLowerCase()))
             .toList();
       });
-      _filteredSongs
-          .forEach((song) => logger.d('Filtered song title: ${song.title}'));
+      for (var song in _filteredSongs) {
+        logger.d('Filtered song title: ${song.title}');
+      }
       logger.d("Filtered songs: ${_filteredSongs.length}");
     }
   }
