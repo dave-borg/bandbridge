@@ -20,7 +20,7 @@ class _SongViewPanelState extends State<SongViewPanel> {
     var currentSong = context.watch<CurrentSongProvider>();
 
     logger.d(
-        'SongViewPanel rebuilt with song: ${currentSong.title} by ${currentSong.artist}');
+        'SongViewPanel rebuilt with the song: ${currentSong.title} by ${currentSong.artist}');
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
