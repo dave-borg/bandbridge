@@ -27,6 +27,8 @@ class _SongViewPanelState extends State<SongViewPanel> {
       'Outro',
     ];
 
+    //['structure']['section']
+
     // ignore: no_leading_underscores_for_local_identifiers
     var _currentSong = context.watch<CurrentSongProvider>();
 
@@ -261,12 +263,13 @@ class _SongViewPanelState extends State<SongViewPanel> {
                         padding: const EdgeInsets.all(8),
                         children: <Widget>[
                           Column(
-                            children: arrangement.map((section) {
+                            children: (_currentSong.structure as List)
+                                .map((arrangementItem) {
                               return SizedBox(
                                 height: 40,
                                 child: Container(
                                   alignment: Alignment.centerLeft,
-                                  child: Text(section),
+                                  child: Text(arrangementItem.section),
                                 ),
                               );
                             }).toList(),
