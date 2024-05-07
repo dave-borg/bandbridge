@@ -1,0 +1,75 @@
+{
+  "gigs": [
+    {
+      "name": "Wedding at The Grand Hotel",
+      "date": "2025-09-10",
+      "venue": "The Grand Hotel",
+      "notes": "Outdoor ceremony followed by reception in the ballroom"
+    },
+    {
+      "name": "Private Party at The Manor",
+      "date": "2022-09-17",
+      "venue": "The Manor",
+      "notes": "Celebrating John's 50th birthday"
+    },
+    {
+      "name": "Jazz Night at The Blue Note",
+      "date": "2022-09-24",
+      "venue": "The Blue Note",
+      "notes": "Aaron guest saxophonist"
+    },
+    {
+      "name": "Corporate Event at The Convention Center",
+      "date": "2022-10-01",
+      "venue": "The Convention Center",
+      "notes": "Networking event for tech industry professionals"
+    },
+    {
+      "name": "Wedding at The Vineyard",
+      "date": "2024-10-08",
+      "venue": "The Vineyard",
+      "notes": "Intimate ceremony followed by wine tasting reception"
+    },
+    {
+      "name": "Private Party at The Beach House",
+      "date": "2022-10-15",
+      "venue": "The Beach House",
+      "notes": ""
+    },
+    {
+      "name": "Jazz Night at The Jazz Club",
+      "venue": "The Jazz Club",
+      "notes": "Featuring a tribute to Miles Davis"
+    },
+    {
+      "name": "Wedding at The Country Club",
+      "date": "2022-10-29",
+      "venue": "The Country Club",
+      "notes": "Formal black-tie affair"
+    },
+    {
+      "name": "Private Party at The Loft",
+      "date": "2022-11-05",
+      "venue": "The Loft",
+      "notes": "Roof-top party with stunning city views"
+    },
+    {
+      "name": "Jazz Night at The Lounge",
+      "date": "2022-11-12",
+      "venue": "The Lounge",
+      "notes": "Smooth jazz and cocktails"
+    },
+    {
+      "name": "Wedding at The Mansion",
+      "date": "2022-11-19",
+      "venue": "The Mansion",
+      "notes": "Historic venue with beautiful gardens"
+    },
+    {
+      "name": "Private Party at The Penthouse",
+      "date": "2022-11-26",
+      "venue": "The Penthouse",
+      "notes": "Exclusive party for VIP guests"
+    }
+  ]
+}

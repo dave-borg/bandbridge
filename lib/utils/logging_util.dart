@@ -4,8 +4,13 @@ import 'package:logger/logger.dart';
 
 class LoggingUtil {
   static Level loggingLevel(String className) {
-    var yaml = loadYaml(File('/Users/borg/dev/bandbridge/logging_conf.yaml').readAsStringSync());
+    var yaml = loadYaml(File('/Users/borg/dev/bandbridge/logging_conf.yaml')
+        .readAsStringSync());
     var level = Level.info;
+
+    // If the class name is not in the loggers section of the YAML file, use the DEFAULT logger
+    if (!yaml['loggers'].containsKey(className)) className = 'DEFAULT';
+    if (yaml['loggers'][className] == null) return level;
 
     switch (yaml['loggers'][className]['level']) {
       case 'DEBUG':
@@ -31,7 +36,7 @@ class LoggingUtil {
         break;
     }
 
-    var logger = Logger();
+    var logger = Logger(level: level);
     logger.d('Logging level for $className: $level');
 
     return level;

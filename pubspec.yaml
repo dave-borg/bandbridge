@@ -32,6 +32,7 @@ dependencies:
     sdk: flutter
   logger: ^1.1.0
   provider: ^6.0.1
+  intl: ^0.17.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -107,5 +108,4 @@ flutter:
     - assets/images/google_logo.png
     - assets/songs/baker-street_43f34fofj34oif3.json
     - assets/songs/seven-nation-army-fgsdjhb1345jb.json
-
-
+    - assets/gigs/gigs.json
