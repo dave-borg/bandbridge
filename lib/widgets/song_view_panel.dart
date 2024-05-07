@@ -33,13 +33,11 @@ class _SongViewPanelState extends State<SongViewPanel> {
         //====================
         //====================
         // Song header panel
-
         SongHeader(song: currentSong),
 
         //====================
         //====================
         // Song panel with arrangement and chart
-
         Expanded(
           child: Row(
             children: [

@@ -1,5 +1,7 @@
 loggers:
   SongsGigsMain:
     level: INFO
+  SongSectionPanel:
+    level: DEBUG
   DEFAULT:
     level: INFO
