@@ -1,10 +1,11 @@
 import 'package:bandbridge/models/mdl_gig.dart';
+import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 
 class CurrentGigProvider extends ChangeNotifier {
-  var logger = Logger();
+  var logger = Logger(level: LoggingUtil.loggingLevel('CurrentGigProvider'));
 
   late Gig _currentGig;
   Gig get currentGig => _currentGig;

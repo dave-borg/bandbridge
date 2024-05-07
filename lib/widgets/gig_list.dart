@@ -21,15 +21,15 @@ class _GigListState extends State<GigList> {
 
   Future<List<Gig>> allGigsFuture = getAllGigs();
 
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   List<Gig> _filteredGigs = [];
   List<Gig> _allGigs = [];
 
   static Future<List<Gig>> getAllGigs() {
     Logger(level: LoggingUtil.loggingLevel('GigList')).d('Getting all Gigs.');
-    Future<List<Gig>> _allGigs = GigsService().allGigs;
+    Future<List<Gig>> allGigs = GigsService().allGigs;
 
-    return _allGigs;
+    return allGigs;
   }
 
   @override
@@ -130,7 +130,6 @@ class _GigListState extends State<GigList> {
         ]));
   }
 
-  @override
   State<StatefulWidget> createState() {
     return _GigListState();
   }

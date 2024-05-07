@@ -1,10 +1,11 @@
 import 'package:bandbridge/models/mdl_song.dart';
+import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 
 class CurrentSongProvider extends ChangeNotifier {
-  var logger = Logger();
+  var logger = Logger(level: LoggingUtil.loggingLevel('CurrentSongProvider'));
 
   late Song _currentSong;
   Song get currentSong => _currentSong;
@@ -15,7 +16,7 @@ class CurrentSongProvider extends ChangeNotifier {
 
   void setCurrentSong(Song song) {
     logger.d('Setting Current Song: ${song.title} - ${song.artist}');
-   
+
     _currentSong = song;
     notifyListeners();
   }

@@ -19,12 +19,12 @@ class SongHasher {
     songString += song.tempo;
     songString += song.timeSignature;
 
-    song.structure.forEach((section) {
+    for (var section in song.structure) {
       songString += section.section;
       songString += section.timestamp;
       songString += section.duration;
 
-      section.chords!.forEach((chord) {
+      for (var chord in section.chords!) {
         songString += chord.name;
 
         if (chord.modifications != null) songString += chord.modifications!;
@@ -32,13 +32,13 @@ class SongHasher {
         songString += chord.beats;
 
         if (chord.bass != null) songString += chord.bass!;
-      });
+      }
 
-      section.lyrics!.forEach((lyric) {
+      for (var lyric in section.lyrics!) {
         songString += lyric.text;
         songString += lyric.timestamp;
-      });
-    });
+      }
+    }
 
     logger.d('Song string: $songString');
 
