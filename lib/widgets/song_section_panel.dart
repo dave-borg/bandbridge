@@ -1,5 +1,6 @@
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
+import 'package:bandbridge/widgets/chord_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -10,6 +11,8 @@ class SongSectionPanel extends StatelessWidget {
   Section section;
 
   int requiredRows = 0;
+
+  int startingPositionRunningCount = 1;
 
   SongSectionPanel({
     super.key,
@@ -22,38 +25,47 @@ class SongSectionPanel extends StatelessWidget {
 
     requiredRows = calculateRequiredRows(section);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            //================================================================
-            //================================================================
-            // Section name
-            Container(
-              alignment: Alignment.centerLeft,
-              height: 40,
-              width: 140,
-              child: Text(section.section,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontFamily: 'Myriad Pro',
-                  )),
-            ),
-          ],
-        ),
+    return Container(
+      width: 610,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              //================================================================
+              //================================================================
+              // Section name
+              Container(
+                alignment: Alignment.centerLeft,
+                height: 40,
+                width: 140,
+                margin: const EdgeInsets.only(top: 30.0),
+                child: Text(section.section,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontFamily: 'Myriad Pro',
+                    )),
+              ),
+            ],
+          ),
 
-        //================================================================
-        //================================================================
-        // Section chords
+          //================================================================
+          //================================================================
+          // Section chords
+          Wrap(
+            children: section.chords!.expand((thisChord) {
+              var chordPanels = ChordPanel.buildChordPanels(
+                chord: thisChord,
+                start: startingPositionRunningCount,
+                timeSignature: "4/4",
+              );
 
-        newChord(section.chords![0].name, section.chords![0].beats),
-
-        //start row
-        //new bar(chord, beats)
-        //new chord(chord, beats)
-        //end row
-      ],
+              startingPositionRunningCount += int.parse(thisChord.beats);
+              return chordPanels;
+            }).toList(),
+          )
+        ],
+      ),
     );
   }
 
