@@ -43,7 +43,7 @@ class ChordPanel {
     List<Widget> chordPanels = [];
 
     //container for chord name
-    chordPanels.add(chordPanel(chord.name, start));
+    chordPanels.add(chordPanel(chord.name, start, modifier: chord.modifications));
 
     //repeat symbols
     for (var i = 1; i < int.parse(chord.beats); i++) {
@@ -53,26 +53,31 @@ class ChordPanel {
     return chordPanels;
   }
 
-  static Widget chordPanel(String symbol, int startingBeat) {
+  static Widget chordPanel(String symbol, int startingBeat,
+      {String? modifier}) {
+    var logger = Logger(level: LoggingUtil.loggingLevel('ChordPanel'));
     var isBeatOne = isStartOfBar(startingBeat);
     var isRepeat = symbol == '/';
-    var panelWidth = 40; 
+    double panelWidth = 40;
 
     //dynamic width for chord panel
-    if (symbol.length == 1) {
-      panelWidth = 40; 
-    } else if (isRepeat) {
-      panelWidth = 20; 
+    if (isRepeat) {
+      panelWidth = 20;
+    } else if (symbol.length == 1) {
+      panelWidth = 30;
     } else {
       panelWidth = 40 + (symbol.length - 1) * 10;
     }
 
+    logger.d(
+        'Chord panel: $symbol, start: $startingBeat, isBeatOne: $isBeatOne, isRepeat: $isRepeat, panelWidth: $panelWidth');
+
     return Container(
       alignment: Alignment.centerLeft,
       height: 80,
-      width: isRepeat ? 20 : 45,
-      padding: const EdgeInsets.only(left: 10.0),
-      margin: const EdgeInsets.only(top: 10.0),
+      width: panelWidth,
+      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+      margin: const EdgeInsets.only(top: 10.0, right: 10.0),
       decoration: BoxDecoration(
         //================================================================
         //Add a border if this is the start of a bar
@@ -85,17 +90,27 @@ class ChordPanel {
               )
             : null,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        //crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-  symbol,
-  style: TextStyle(
-    fontSize: 24,
-    fontFamily: 'Myriad Pro',
-    color: isRepeat ? Colors.grey : Colors.black,
-  ),
-)
+            symbol,
+            style: TextStyle(
+              fontSize: 24,
+              fontFamily: 'Myriad Pro',
+              color: isRepeat ? Colors.grey : Colors.black,
+            ),
+          ),
+          modifier != null
+              ? Text(
+                  symbol,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Myriad Pro',
+                    color: isRepeat ? Colors.grey : Colors.black,
+                  ),
+                )
+              : Container(),
         ],
       ),
     );

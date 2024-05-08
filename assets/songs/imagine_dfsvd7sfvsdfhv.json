@@ -16,8 +16,9 @@
                     "beats": "3"
                 },
                 {
-                    "name": "Cmaj7",
-                    "beats": "1"
+                    "name": "C",
+                    "beats": "1",
+                    "modifications": "maj7"
                 },
                 {
                     "name": "F",
@@ -28,8 +29,9 @@
                     "beats": "3"
                 },
                 {
-                    "name": "Cmaj7",
-                    "beats": "1"
+                    "name": "C",
+                    "beats": "1",
+                    "modifications": "maj7"
                 },
                 {
                     "name": "F",
@@ -47,20 +49,23 @@
                     "beats": "4"
                 },
                 {
-                    "name": "Amin/E",
-                    "beats": "4"
+                    "name": "A",
+                    "beats": "4",
+                    "modifications": "min"
                 },
                 {
                     "name": "F",
                     "beats": "4"
                 },
                 {
-                    "name": "C/E",
-                    "beats": "4"
+                    "name": "C",
+                    "beats": "4",
+                    "bass": "E"
                 },
                 {
-                    "name": "Dmin",
-                    "beats": "4"
+                    "name": "D",
+                    "beats": "4",
+                    "modifications": "m"
                 },
                 {
                     "name": "F",
@@ -78,8 +83,9 @@
                     "beats": "4"
                 },
                 {
-                    "name": "Cmaj7",
-                    "beats": "4"
+                    "name": "C",
+                    "beats": "4",
+                    "modifications": "maj7"
                 },
                 {
                     "name": "F",
@@ -90,8 +96,9 @@
                     "beats": "4"
                 },
                 {
-                    "name": "Cmaj7",
-                    "beats": "4"
+                    "name": "C",
+                    "beats": "4",
+                    "modifications": "maj7"
                 },
                 {
                     "name": "F",
@@ -109,20 +116,24 @@
                     "beats": "4"
                 },
                 {
-                    "name": "Amin/E",
-                    "beats": "4"
+                    "name": "A",
+                    "beats": "4",
+                    "modifications": "m",
+                    "bass": "E"
                 },
                 {
                     "name": "F",
                     "beats": "4"
                 },
                 {
-                    "name": "C/E",
-                    "beats": "4"
+                    "name": "C",
+                    "beats": "4",
+                    "bass": "E"
                 },
                 {
-                    "name": "Dmin",
-                    "beats": "4"
+                    "name": "D",
+                    "beats": "4",
+                    "modifications": "m"
                 },
                 {
                     "name": "F",
@@ -136,8 +147,9 @@
             "duration": "22",
             "chords": [
                 {
-                    "name": "G11",
-                    "beats": "4"
+                    "name": "G",
+                    "beats": "4",
+                    "modifications": "11"
                 },
                 {
                     "name": "G",
