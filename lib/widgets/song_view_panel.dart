@@ -4,6 +4,7 @@ import 'package:bandbridge/widgets/song_arrangement_panel.dart';
 import 'package:bandbridge/widgets/song_header.dart';
 import 'package:bandbridge/widgets/song_section_panel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -42,15 +43,17 @@ class _SongViewPanelState extends State<SongViewPanel> {
           child: Row(
             children: [
               SongArrangementPanel(song: currentSong),
-              Column(
-                children: <Widget>[
-                  if ((currentSong.structure as List).isEmpty)
-                    const Text('No structure defined for this song')
-                  else
-                    ...((currentSong.structure as List).map((section) {
-                      return SongSectionPanel(section: section);
-                    }).toList()),
-                ],
+              SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    if ((currentSong.structure as List).isEmpty)
+                      const Text('No structure defined for this song')
+                    else
+                      ...((currentSong.structure as List).map((section) {
+                        return SongSectionPanel(section: section);
+                      }).toList()),
+                  ],
+                ),
               ),
             ],
           ),

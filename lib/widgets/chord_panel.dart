@@ -55,11 +55,22 @@ class ChordPanel {
 
   static Widget chordPanel(String symbol, int startingBeat) {
     var isBeatOne = isStartOfBar(startingBeat);
+    var isRepeat = symbol == '/';
+    var panelWidth = 40; 
+
+    //dynamic width for chord panel
+    if (symbol.length == 1) {
+      panelWidth = 40; 
+    } else if (isRepeat) {
+      panelWidth = 20; 
+    } else {
+      panelWidth = 40 + (symbol.length - 1) * 10;
+    }
 
     return Container(
       alignment: Alignment.centerLeft,
       height: 80,
-      width: 38,
+      width: isRepeat ? 20 : 45,
       padding: const EdgeInsets.only(left: 10.0),
       margin: const EdgeInsets.only(top: 10.0),
       decoration: BoxDecoration(
@@ -77,11 +88,14 @@ class ChordPanel {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(symbol,
-              style: const TextStyle(
-                fontSize: 24,
-                fontFamily: 'Myriad Pro',
-              )),
+          Text(
+  symbol,
+  style: TextStyle(
+    fontSize: 24,
+    fontFamily: 'Myriad Pro',
+    color: isRepeat ? Colors.grey : Colors.black,
+  ),
+)
         ],
       ),
     );

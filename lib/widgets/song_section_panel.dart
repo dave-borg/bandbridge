@@ -43,6 +43,7 @@ class SongSectionPanel extends StatelessWidget {
                 child: Text(section.section,
                     style: const TextStyle(
                       fontSize: 24,
+                      fontWeight: FontWeight.bold,
                       fontFamily: 'Myriad Pro',
                     )),
               ),
