@@ -121,6 +121,11 @@ class Chord {
       'bass': bass,
     };
   }
+
+  @override
+  String toString() {
+    return toJson().toString();
+  }
 }
 
 class Lyric {

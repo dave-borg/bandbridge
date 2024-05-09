@@ -18,6 +18,7 @@ class SongsService {
       'assets/songs/seven-nation-army-fgsdjhb1345jb.json',
       'assets/songs/hotel-california_asfa8g7dfsgs.json',
       'assets/songs/imagine_dfsvd7sfvsdfhv.json',
+      'assets/songs/down-under_sdfgs786g8df.json',
     ];
 
     List<Song> songs = [];

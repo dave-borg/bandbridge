@@ -1,7 +1,10 @@
 import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
+import 'package:bandbridge/widgets/song_arrangement_panel.dart';
 import 'package:bandbridge/widgets/song_header.dart';
+import 'package:bandbridge/widgets/song_section_panel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -18,10 +21,11 @@ class _SongViewPanelState extends State<SongViewPanel> {
   @override
   Widget build(BuildContext context) {
     // ignore: no_leading_underscores_for_local_identifiers
-    var currentSong = context.watch<CurrentSongProvider>();
+    var currentSongProvider = context.watch<CurrentSongProvider>();
+    var currentSong = currentSongProvider.currentSong;
 
     logger.d(
-        'SongViewPanel rebuilt with song: ${currentSong.title} by ${currentSong.artist}');
+        'SongViewPanel rebuilt with song: ${currentSongProvider.title} by ${currentSongProvider.artist}');
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -30,227 +34,27 @@ class _SongViewPanelState extends State<SongViewPanel> {
         //====================
         //====================
         // Song header panel
-
-        SongHeader(song: currentSong.currentSong),
+        SongHeader(song: currentSong),
 
         //====================
         //====================
         // Song panel with arrangement and chart
-
         Expanded(
           child: Row(
             children: [
-              SizedBox(
-                width: 130,
+              SongArrangementPanel(song: currentSong),
+              SingleChildScrollView(
                 child: Column(
-                  children: [
-                    // Toolbar
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: 30.0, // Your desired width
-                          child: IconButton(
-                            padding: EdgeInsets.zero, // Remove padding
-                            icon: const Icon(Icons.add,
-                                size: 20.0), // Set icon size
-                            onPressed: () {
-                              // Handle add button press
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          width: 30.0, // Your desired width
-                          child: IconButton(
-                            padding: EdgeInsets.zero, // Remove padding
-                            icon: const Icon(Icons.edit,
-                                size: 20.0), // Set icon size
-                            onPressed: () {
-                              // Handle add button press
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          width: 30.0, // Your desired width
-                          child: IconButton(
-                            padding: EdgeInsets.zero, // Remove padding
-                            icon: const Icon(Icons.content_copy,
-                                size: 20.0), // Set icon size
-                            onPressed: () {
-                              // Handle add button press
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    // ListView
-                    Expanded(
-                      child: ListView(
-                        padding: const EdgeInsets.all(8),
-                        children: <Widget>[
-                          Column(
-                            children: (currentSong.structure as List)
-                                .map((arrangementItem) {
-                              return SizedBox(
-                                height: 40,
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(arrangementItem.section),
-                                ),
-                              );
-                            }).toList(),
-                          )
-                        ],
-                      ),
-                    ),
+                  children: <Widget>[
+                    if ((currentSong.structure as List).isEmpty)
+                      const Text('No structure defined for this song')
+                    else
+                      ...((currentSong.structure as List).map((section) {
+                        return SongSectionPanel(section: section);
+                      }).toList()),
                   ],
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        height: 40,
-                        width: 140,
-                        child: const Text('Intro',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontFamily: 'Myriad Pro',
-                            )),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.all(5.0),
-                        height: 80,
-                        width: 140,
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            left: BorderSide(
-                              color: Colors
-                                  .black, // Change this color to the one you prefer
-                              width:
-                                  3.0, // Change this value to the one you prefer
-                            ),
-                          ),
-                        ),
-                        child: RichText(
-                          text: const TextSpan(
-                            text: 'C\u266F',
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontFamily: 'Myriad Pro',
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: 'm',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  // 75% of the original size
-                                  //baseline: TextBaseline.alphabetic,
-                                  textBaseline: TextBaseline.alphabetic,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.all(5.0),
-                        height: 80,
-                        width: 140,
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            left: BorderSide(
-                              color: Colors
-                                  .black, // Change this color to the one you prefer
-                              width:
-                                  3.0, // Change this value to the one you prefer
-                            ),
-                          ),
-                        ),
-                        child: RichText(
-                          text: const TextSpan(
-                            text: 'A',
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontFamily: 'Myriad Pro',
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.all(5.0),
-                        height: 80,
-                        width: 140,
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            left: BorderSide(
-                              color: Colors
-                                  .black, // Change this color to the one you prefer
-                              width:
-                                  3.0, // Change this value to the one you prefer
-                            ),
-                          ),
-                        ),
-                        child: RichText(
-                          text: const TextSpan(
-                            text: 'G\u266F',
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontFamily: 'Myriad Pro',
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.all(5.0),
-                        height: 80,
-                        width: 140,
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            left: BorderSide(
-                              color: Colors
-                                  .black, // Change this color to the one you prefer
-                              width:
-                                  3.0, // Change this value to the one you prefer
-                            ),
-                            right: BorderSide(
-                              color: Colors
-                                  .black, // Change this color to the one you prefer
-                              width:
-                                  3.0, // Change this value to the one you prefer
-                            ),
-                          ),
-                        ),
-                        child: RichText(
-                          text: const TextSpan(
-                            text: 'G\u266F',
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontFamily: 'Myriad Pro',
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              )
             ],
           ),
         ),

@@ -1,0 +1,78 @@
+{
+    "title": "Down Under",
+    "artist": "Men at Work",
+    "duration": "235",
+    "initialKey": "B",
+    "tempo": "104",
+    "timeSignature": "4/4",
+    "structure": [
+        {
+            "section": "Intro",
+            "timestamp": "0",
+            "duration": "10",
+            "chords": [
+                
+            ]
+        },
+        {
+            "section": "Verse",
+            "timestamp": "10",
+            "duration": "10",
+            "lyrics": [
+                {
+                    "text": "Traveling in a fried-out Kombi",
+                    "timestamp": "10"
+                },
+                {
+                    "text": "On a hippie trail, head full of zombie",
+                    "timestamp": "15"
+                },
+                {
+                    "text": "I met a strange lady, she made me nervous",
+                    "timestamp": "20"
+                },
+                {
+                    "text": "She took me in and gave me breakfast",
+                    "timestamp": "25"
+                }
+            ],
+            "chords": [
+            ]
+        },
+        {
+            "section": "Chorus",
+            "timestamp": "20",
+            "duration": "20",
+            "lyrics": [
+                {
+                    "text": "And she said, Do you come from a land down under?",
+                    "timestamp": "20"
+                },
+                {
+                    "text": "Where women glow and men plunder?",
+                    "timestamp": "25"
+                },
+                {
+                    "text": "Can't you hear, can't you hear the thunder?",
+                    "timestamp": "30"
+                },
+                {
+                    "text": "You better run, you better take cover",
+                    "timestamp": "35"
+                }
+            ],
+            "chords": [
+            ]
+        }
+    ],
+    "versions": [
+        {
+            "hash": "123456786451",
+            "epoch": "123456786451"
+        },
+        {
+            "hash": "43456786451",
+            "epoch": "123456786451"
+        }
+    ]
+}
