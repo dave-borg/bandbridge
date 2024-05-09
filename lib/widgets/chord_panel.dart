@@ -11,6 +11,7 @@
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 
 class ChordPanel {
@@ -43,7 +44,8 @@ class ChordPanel {
     List<Widget> chordPanels = [];
 
     //container for chord name
-    chordPanels.add(chordPanel(chord.name, start, modifier: chord.modifications));
+    chordPanels
+        .add(chordPanel(chord.name, start, modifier: chord.modifications));
 
     //repeat symbols
     for (var i = 1; i < int.parse(chord.beats); i++) {
@@ -56,62 +58,60 @@ class ChordPanel {
   static Widget chordPanel(String symbol, int startingBeat,
       {String? modifier}) {
     var logger = Logger(level: LoggingUtil.loggingLevel('ChordPanel'));
+    var fullSymbol = modifier != null ? '$symbol$modifier' : symbol;
     var isBeatOne = isStartOfBar(startingBeat);
     var isRepeat = symbol == '/';
-    double panelWidth = 40;
-
-    //dynamic width for chord panel
-    if (isRepeat) {
-      panelWidth = 20;
-    } else if (symbol.length == 1) {
-      panelWidth = 30;
-    } else {
-      panelWidth = 40 + (symbol.length - 1) * 10;
-    }
 
     logger.d(
-        'Chord panel: $symbol, start: $startingBeat, isBeatOne: $isBeatOne, isRepeat: $isRepeat, panelWidth: $panelWidth');
+        'Chord panel: $fullSymbol, start: $startingBeat, isBeatOne: $isBeatOne, isRepeat: $isRepeat');
 
-    return Container(
-      alignment: Alignment.centerLeft,
-      height: 80,
-      width: panelWidth,
-      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-      margin: const EdgeInsets.only(top: 10.0, right: 10.0),
-      decoration: BoxDecoration(
-        //================================================================
-        //Add a border if this is the start of a bar
-        border: isBeatOne
-            ? const Border(
-                left: BorderSide(
-                  color: Colors.black, // Set border color
-                  width: 2.0, // Set border width
-                ),
-              )
-            : null,
-      ),
-      child: Row(
-        //crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            symbol,
-            style: TextStyle(
-              fontSize: 24,
-              fontFamily: 'Myriad Pro',
-              color: isRepeat ? Colors.grey : Colors.black,
-            ),
-          ),
-          modifier != null
-              ? Text(
-                  symbol,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: 'Myriad Pro',
-                    color: isRepeat ? Colors.grey : Colors.black,
+    return IntrinsicWidth(
+      child: Container(
+        alignment: Alignment.centerLeft,
+        height: 80,
+        //width: panelWidth,
+        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+        margin: const EdgeInsets.only(top: 10.0, right: 10.0),
+        decoration: BoxDecoration(
+          //================================================================
+          //Add a border if this is the start of a bar
+          border: isBeatOne
+              ? const Border(
+                  left: BorderSide(
+                    color: Colors.black, // Set border color
+                    width: 2.0, // Set border width
                   ),
                 )
-              : Container(),
-        ],
+              : Border.all(
+                  color: Color.fromARGB(255, 114, 157, 128), // Set border color
+                  width: 0.5, // Set border width
+                ),
+        ),
+        child: Row(
+          //crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IntrinsicWidth(
+              child: Text(
+                symbol,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'Myriad Pro',
+                  color: isRepeat ? Colors.grey : Colors.black,
+                ),
+              ),
+            ),
+            modifier != null
+                ? Text(
+                    modifier,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Myriad Pro',
+                      color: isRepeat ? Colors.grey : Colors.black,
+                    ),
+                  )
+                : Container(),
+          ],
+        ),
       ),
     );
   }
