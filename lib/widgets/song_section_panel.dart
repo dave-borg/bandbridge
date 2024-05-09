@@ -3,6 +3,7 @@ import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/chord_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:collection/collection.dart';
 
 // ignore: must_be_immutable
 class SongSectionPanel extends StatelessWidget {
@@ -23,9 +24,13 @@ class SongSectionPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     logger.d('SongSectionPanel rebuilt with section: ${section.section}');
 
+// List<int> testList = [1, 2, 3, 4, 5, 6, 7, 8];
+// var chunks = testList.chunked(4);
+// logger.d(chunks.toString());
+
     requiredRows = calculateRequiredRows(section);
 
-    return Container(
+    return SizedBox(
       width: 610,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,16 +59,25 @@ class SongSectionPanel extends StatelessWidget {
           //================================================================
           // Section chords
           Wrap(
-            children: section.chords!.expand((thisChord) {
-              var chordPanels = ChordPanel.buildChordPanels(
-                chord: thisChord,
-                start: startingPositionRunningCount,
-                timeSignature: "4/4",
-              );
+            children: chunk<Widget>(
+              section.chords!.expand((thisChord) {
+                var chordPanels = ChordPanel.buildChordPanels(
+                  chord: thisChord,
+                  start: startingPositionRunningCount,
+                  timeSignature: "4/4",
+                );
 
-              startingPositionRunningCount += int.parse(thisChord.beats);
-              return chordPanels;
-            }).toList(),
+                startingPositionRunningCount += int.parse(thisChord.beats);
+                return chordPanels;
+              }).toList(),
+              4, //chunk size
+            )
+                .map((group) => Container(
+                      child: Wrap(
+                        children: group,
+                      ),
+                    ))
+                .toList(),
           )
         ],
       ),
@@ -110,5 +124,14 @@ class SongSectionPanel extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<List<T>> chunk<T>(List<T> list, int chunkSize) {
+    var chunks = <List<T>>[];
+    for (var i = 0; i < list.length; i += chunkSize) {
+      chunks.add(list.sublist(
+          i, i + chunkSize > list.length ? list.length : i + chunkSize));
+    }
+    return chunks;
   }
 }

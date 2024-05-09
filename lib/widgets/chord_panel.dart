@@ -11,7 +11,6 @@
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 
 class ChordPanel {
@@ -83,7 +82,7 @@ class ChordPanel {
                   ),
                 )
               : Border.all(
-                  color: Color.fromARGB(255, 114, 157, 128), // Set border color
+                  color: const Color.fromARGB(255, 114, 157, 128), // Set border color
                   width: 0.5, // Set border width
                 ),
         ),
