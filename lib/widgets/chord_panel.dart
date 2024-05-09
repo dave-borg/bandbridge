@@ -59,7 +59,6 @@ class ChordPanel {
       {String? modifier}) {
     var logger = Logger(level: LoggingUtil.loggingLevel('ChordPanel'));
     var fullSymbol = modifier != null ? '$symbol$modifier' : symbol;
-    var isFirstBeat = isStartOfBar(startingBeat);
     var isLastBeat = isEndOfBar(startingBeat);
     var isRepeat = symbol == '/';
 
