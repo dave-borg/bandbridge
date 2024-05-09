@@ -36,9 +36,6 @@ class LoggingUtil {
         break;
     }
 
-    var logger = Logger(level: level);
-    logger.d('Logging level for $className: $level');
-
     return level;
   }
 }

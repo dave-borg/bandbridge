@@ -16,25 +16,28 @@ import 'package:logger/logger.dart';
 class ChordPanel {
   static String _timeSignature = '4/4';
 
-  static bool isStartOfBar(int start) {
+  static int modStart(int startingBeat) {
     var logger = Logger(level: LoggingUtil.loggingLevel('ChordPanel'));
 
     var timeSignatureParts = _timeSignature.split('/');
     var beatsPerBar = int.parse(timeSignatureParts[0]);
-    var beatValue = int.parse(timeSignatureParts[1]);
 
-    var isStartOfBar = start % beatsPerBar == 1;
+    return startingBeat % beatsPerBar;
+  }
 
-    logger.d(
-        'start: $start \ntimeSignature: $_timeSignature \nbeatsPerBar: $beatsPerBar \nbeatValue: $beatValue \nisStartOfBar: $isStartOfBar');
+  static bool isStartOfBar(int startingBeat) {
+    return modStart(startingBeat) == 1;
+  }
 
-    return isStartOfBar;
+  static bool isEndOfBar(int startingBeat) {
+    return modStart(startingBeat) == 0;
   }
 
   static List<Widget> buildChordPanels(
       {required Chord chord,
       required int start,
-      required String timeSignature}) {
+      required String timeSignature,
+      required int sectionPosition}) {
     var logger = Logger(level: LoggingUtil.loggingLevel('ChordPanel'));
     _timeSignature = timeSignature;
 
@@ -43,26 +46,27 @@ class ChordPanel {
     List<Widget> chordPanels = [];
 
     //container for chord name
-    chordPanels
-        .add(chordPanel(chord.name, start, modifier: chord.modifications));
+    chordPanels.add(chordPanel(chord.name, start, sectionPosition,
+        modifier: chord.modifications));
 
     //repeat symbols
     for (var i = 1; i < int.parse(chord.beats); i++) {
-      chordPanels.add(chordPanel('/', start + i));
+      chordPanels.add(chordPanel('/', start + i, sectionPosition));
     }
 
     return chordPanels;
   }
 
-  static Widget chordPanel(String symbol, int startingBeat,
+  static Widget chordPanel(String symbol, int startingBeat, int sectionPosition,
       {String? modifier}) {
     var logger = Logger(level: LoggingUtil.loggingLevel('ChordPanel'));
     var fullSymbol = modifier != null ? '$symbol$modifier' : symbol;
-    var isBeatOne = isStartOfBar(startingBeat);
+    var isFirstBeat = isStartOfBar(startingBeat);
+    var isLastBeat = isEndOfBar(startingBeat);
     var isRepeat = symbol == '/';
 
     logger.d(
-        'Chord panel: $fullSymbol, start: $startingBeat, isBeatOne: $isBeatOne, isRepeat: $isRepeat');
+        'Chord panel: $fullSymbol, start: $startingBeat, sectionPosition: $sectionPosition, isBeatOne: $isLastBeat, isRepeat: $isRepeat');
 
     return IntrinsicWidth(
       child: Container(
@@ -71,21 +75,11 @@ class ChordPanel {
         //width: panelWidth,
         padding: const EdgeInsets.only(left: 10.0, right: 10.0),
         margin: const EdgeInsets.only(top: 10.0, right: 10.0),
-        decoration: BoxDecoration(
-          //================================================================
-          //Add a border if this is the start of a bar
-          border: isBeatOne
-              ? const Border(
-                  left: BorderSide(
-                    color: Colors.black, // Set border color
-                    width: 2.0, // Set border width
-                  ),
-                )
-              : Border.all(
-                  color: const Color.fromARGB(255, 114, 157, 128), // Set border color
-                  width: 0.5, // Set border width
-                ),
-        ),
+        // decoration: BoxDecoration(
+        //   //================================================================
+        //   //Add a border if this is the start of a bar
+        //   border: getChordBorder(isFirstBeat, isLastBeat, sectionPosition),
+        // ),
         child: Row(
           //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -114,4 +108,26 @@ class ChordPanel {
       ),
     );
   }
+
+  static getChordBorder(bool isFirstBeat, bool isLastBeat, int sectionPosition) {
+    if (sectionPosition == 0) {
+      return const Border(
+        left: BorderSide(
+          color: Colors.black, // Set border color
+          width: 2.0, // Set border width
+        ),
+      );
+    // } else if (isLastBeat) {
+    //   return const Border(
+    //     right: BorderSide(
+    //       color: Colors.black, // Set border color
+    //       width: 2.0, // Set border width
+    //     ),
+    //   );
+    } else {
+      return null;
+    }
+  }
+  
+  
 }

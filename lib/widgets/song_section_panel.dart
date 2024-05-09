@@ -1,9 +1,9 @@
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
+import 'package:bandbridge/widgets/chord-chart/bar_container.dart';
 import 'package:bandbridge/widgets/chord_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:collection/collection.dart';
 
 // ignore: must_be_immutable
 class SongSectionPanel extends StatelessWidget {
@@ -11,9 +11,10 @@ class SongSectionPanel extends StatelessWidget {
 
   Section section;
 
-  int requiredRows = 0;
+  // int requiredRows = 0;
 
   int startingPositionRunningCount = 1;
+  int sectionPosition = 0;
 
   SongSectionPanel({
     super.key,
@@ -28,7 +29,7 @@ class SongSectionPanel extends StatelessWidget {
 // var chunks = testList.chunked(4);
 // logger.d(chunks.toString());
 
-    requiredRows = calculateRequiredRows(section);
+    // requiredRows = calculateRequiredRows(section);
 
     return SizedBox(
       width: 610,
@@ -65,18 +66,20 @@ class SongSectionPanel extends StatelessWidget {
                   chord: thisChord,
                   start: startingPositionRunningCount,
                   timeSignature: "4/4",
+                  sectionPosition: sectionPosition,
                 );
 
                 startingPositionRunningCount += int.parse(thisChord.beats);
+                
                 return chordPanels;
               }).toList(),
               4, //chunk size
             )
-                .map((group) => Container(
-                      child: Wrap(
-                        children: group,
-                      ),
-                    ))
+                .map((barChords) => BarContainer(
+                    Wrap(
+                      children: barChords,
+                    ),
+                    sectionPosition++))
                 .toList(),
           )
         ],
@@ -84,20 +87,16 @@ class SongSectionPanel extends StatelessWidget {
     );
   }
 
-  int calculateRequiredRows(Section section) {
-    logger.d('calculateRequiredRows: section: ${section.section}');
+  // int calculateRequiredRows(Section section) {
+  //   logger.d('calculateRequiredRows: section: ${section.section}');
 
-    int totalBeats = 0;
-    for (var chord in section.chords!) {
-      totalBeats += int.parse(chord.beats);
-    }
+  //   int totalBeats = 0;
+  //   for (var chord in section.chords!) {
+  //     totalBeats += int.parse(chord.beats);
+  //   }
 
-    logger.d('calculateRequiredRows: totalBeats: $totalBeats');
-    logger.d(
-        'calculateRequiredRows: totalBeats / 16: ${(totalBeats / 16).ceil()}');
-
-    return (totalBeats / 16).ceil();
-  }
+  //   return (totalBeats / 16).ceil();
+  // }
 
   Container newChord(String name, String beats) {
     return Container(
