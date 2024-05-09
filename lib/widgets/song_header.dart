@@ -6,7 +6,6 @@ import 'package:logger/logger.dart';
 // ignore: must_be_immutable
 class SongHeader extends StatelessWidget {
   var logger = Logger(level: LoggingUtil.loggingLevel('SongArrangementPanel'));
-
   Song song;
 
   SongHeader({
@@ -17,7 +16,7 @@ class SongHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 150,
+height: 150,
       width: MediaQuery.of(context).size.width - 258,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -96,7 +95,7 @@ class SongHeader extends StatelessWidget {
                                         .textTheme
                                         .headlineMedium,
                                   ),
-                                  song.tempo.isEmpty
+song.tempo.isEmpty
                                       ? const SizedBox.shrink()
                                       : Text(
                                           'BPM',
