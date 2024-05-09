@@ -17,8 +17,6 @@ class ChordPanel {
   static String _timeSignature = '4/4';
 
   static int modStart(int startingBeat) {
-    var logger = Logger(level: LoggingUtil.loggingLevel('ChordPanel'));
-
     var timeSignatureParts = _timeSignature.split('/');
     var beatsPerBar = int.parse(timeSignatureParts[0]);
 
