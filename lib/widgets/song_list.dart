@@ -46,12 +46,6 @@ class _SongListState extends State<SongList> {
 
     var currentSongProvider = Provider.of<CurrentSongProvider>(context);
 
-    String songTitle = '',
-        artist = '',
-        key = '',
-        tempo = '',
-        timeSignature = '4/4';
-
     return Expanded(
       child: Container(
         // Some padding to give our widget room to breathe
