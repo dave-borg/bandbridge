@@ -30,6 +30,8 @@ class _SongListState extends State<SongList> {
   List<Song> _filteredSongs = [];
   List<Song> _allSongs = [];
 
+  final _formKey = GlobalKey<FormState>();
+
   // A function that gets all songs. It's like a musical treasure hunt!
   static Future<List<Song>> getAllSongs() {
     Logger(level: LoggingUtil.loggingLevel('SongList')).d('Getting all songs.');
@@ -42,6 +44,10 @@ class _SongListState extends State<SongList> {
   build(BuildContext context) {
     logger.d('Building the SongList widget.');
     // Our main stage, where all the action happens
+
+    String songTitle = '', artist = '', key = '', tempo = '', timeSignature = '';
+
+
     return Expanded(
       child: Container(
         // Some padding to give our widget room to breathe
@@ -79,8 +85,137 @@ class _SongListState extends State<SongList> {
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () {
-                  // Handle button press
-                  logger.d("Add song button pressed.");
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Add a new song'),
+                        content: Container(
+                          height: 500,
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              children: <Widget>[
+                                TextFormField(
+                                  decoration:
+                                      const InputDecoration(labelText: 'Song Title'),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter a song title';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    songTitle = value!;
+                                  },
+                                ),
+                                TextFormField(
+                                  decoration:
+                                      const InputDecoration(labelText: 'Artist'),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter a song artist';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    artist = value!;
+                                  },
+                                ),
+                                DropdownButtonFormField<String>(
+                                  decoration: const InputDecoration(labelText: 'Key'),
+                                  items: <String>[
+                                    'C',
+                                    'D',
+                                    'E',
+                                    'F',
+                                    'G',
+                                    'A',
+                                    'B'
+                                  ].map((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    key = value!;
+                                  },
+                                ),
+                                TextFormField(
+                                  decoration:
+                                      const InputDecoration(labelText: 'Tempo'),
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter a tempo';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    tempo = value!;
+                                  },
+                                ),
+                                DropdownButtonFormField<String>(
+                                  decoration: const InputDecoration(
+                                      labelText: 'Time Signature'),
+                                  value: '4/4',
+                                  items: <String>[
+                                    '4/4',
+                                    '3/4',
+                                    '6/8',
+                                    '2/4',
+                                    '3/8',
+                                    '5/4',
+                                    '7/8',
+                                    '9/8',
+                                    '12/8'
+                                  ].map((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    timeSignature = value!;
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('Cancel'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: const Text('Submit'),
+                            onPressed: () {
+                              if (_formKey.currentState?.validate() ?? false) {
+                                _formKey.currentState?.save();
+                                Song newSong = Song(
+                                  title: songTitle,
+                                  artist: artist,
+                                  initialKey: key,
+                                  tempo: tempo,
+                                  timeSignature: timeSignature,
+                                );
+                                // Add the new song to your list of songs
+                                Navigator.of(context).pop();
+
+                                logger.d('New song: ' + newSong.toString());
+                              } else {
+                                logger.d('Form is not valid');
+                              }
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
               )
             ],
