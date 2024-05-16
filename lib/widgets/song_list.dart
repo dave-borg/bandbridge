@@ -2,6 +2,7 @@ import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/services/songs_hasher.dart';
 import 'package:bandbridge/utils/logging_util.dart';
+import 'package:bandbridge/widgets/songs/song_header_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +43,15 @@ class _SongListState extends State<SongList> {
   build(BuildContext context) {
     logger.d('Building the SongList widget.');
     // Our main stage, where all the action happens
+
+    var currentSongProvider = Provider.of<CurrentSongProvider>(context);
+
+    String songTitle = '',
+        artist = '',
+        key = '',
+        tempo = '',
+        timeSignature = '4/4';
+
     return Expanded(
       child: Container(
         // Some padding to give our widget room to breathe
@@ -79,8 +89,20 @@ class _SongListState extends State<SongList> {
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () {
-                  // Handle button press
-                  logger.d("Add song button pressed.");
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SongHeaderDialog(
+                        onSongCreated: (newSong) {
+                          setState(() {
+                            _allSongs.add(newSong);
+                            _filteredSongs = _allSongs;
+                            currentSongProvider.setCurrentSong(newSong);
+                          });
+                        },
+                      );
+                    },
+                  );
                 },
               )
             ],

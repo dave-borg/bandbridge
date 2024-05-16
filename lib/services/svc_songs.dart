@@ -9,6 +9,8 @@ import 'dart:convert';
 class SongsService {
   SongsService();
 
+  List<Song> songs = [];
+
   Future<List<Song>> get allSongs async {
     var logger = Logger(level: LoggingUtil.loggingLevel('SongsService'));
     logger.i("Getting all songs");
@@ -21,7 +23,6 @@ class SongsService {
       'assets/songs/down-under_sdfgs786g8df.json',
     ];
 
-    List<Song> songs = [];
 
     for (var file in songFiles) {
       String jsonString = await rootBundle.loadString(file);
@@ -44,5 +45,9 @@ class SongsService {
       logger.d('Number of songs: ${songs.length}');
     }
     return songs;
+  }
+
+  void addSong(Song song) {
+    songs.add(song);
   }
 }
