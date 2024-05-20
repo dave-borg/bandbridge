@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -106,7 +107,7 @@ class Section {
     return openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
       await db.execute(
-          'CREATE TABLE Songs (title TEXT, artist TEXT, initialKey TEXT, tempo TEXT, timeSignature TEXT)');
+          'CREATE TABLE Songs (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, artist TEXT, duration TEXT, initialKey TEXT, tempo TEXT, timeSignature TEXT)');
     });
   }
 }

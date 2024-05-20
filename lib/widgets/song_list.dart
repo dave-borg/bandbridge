@@ -77,7 +77,7 @@ class _SongListState extends State<SongList> {
               IconButton(
                 icon: const Icon(Icons.sort),
                 onPressed: () {
-                  logger.d("Sort songs button pressed.");
+                  logger.d("Sort songs button pressed!!!");
                 },
               ),
               IconButton(
