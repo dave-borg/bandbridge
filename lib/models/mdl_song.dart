@@ -1,4 +1,11 @@
+import 'dart:io' as io;
+
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
+
 class Song {
+  
+  final int? id;
   String title = "";
   String artist = "";
   String duration = "";
@@ -9,6 +16,7 @@ class Song {
   List<Version> versions;
 
   Song({
+    this.id,
     this.title = "[Title]",
     this.artist = "[Artist]",
     this.duration = "",
@@ -21,6 +29,7 @@ class Song {
 
   factory Song.fromJson(Map<String, dynamic> json) {
     return Song(
+      id: json['id'],
       title: json['title'],
       artist: json['artist'],
       duration: json['duration'],
@@ -36,6 +45,7 @@ class Song {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'title': title,
       'artist': artist,
       'duration': duration,
@@ -89,7 +99,19 @@ class Section {
           : null,
     };
   }
+
+  Future<Database> _getDatabase() async {
+    io.Directory documentDirectory = await getApplicationDocumentsDirectory();
+    final path = join(documentDirectory.path, 'songs.db');
+    return openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
+      await db.execute(
+          'CREATE TABLE Songs (title TEXT, artist TEXT, initialKey TEXT, tempo TEXT, timeSignature TEXT)');
+    });
+  }
 }
+
+
 
 class Chord {
   String name;
