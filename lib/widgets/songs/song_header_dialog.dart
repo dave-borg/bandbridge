@@ -8,8 +8,14 @@ class SongHeaderDialog extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final Function(Song) onSongCreated;
   final Song? song;
+  final String dialogTitle;
 
-  SongHeaderDialog({super.key, required this.onSongCreated, this.song});
+  SongHeaderDialog({
+    super.key,
+    required this.onSongCreated,
+    this.song,
+    required this.dialogTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +29,7 @@ class SongHeaderDialog extends StatelessWidget {
     String timeSignature = song?.timeSignature ?? '4/4';
 
     return AlertDialog(
-      title: const Text('Add a new song'),
+      title: Text(dialogTitle),
       content: Container(
         height: 500,
         child: Form(
@@ -32,6 +38,7 @@ class SongHeaderDialog extends StatelessWidget {
             children: <Widget>[
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Song Title'),
+                initialValue: songTitle,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a song title';
@@ -44,6 +51,7 @@ class SongHeaderDialog extends StatelessWidget {
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Artist'),
+                initialValue: artist,
                 validator: (value) {
                   // if (value == null || value.isEmpty) {
                   //   return 'Please enter a song artist';
@@ -55,7 +63,7 @@ class SongHeaderDialog extends StatelessWidget {
                 },
               ),
               DropdownButtonFormField<String>(
-                value: 'A',
+                value: key,
                 decoration: const InputDecoration(labelText: 'Key'),
                 items: <String>[
                   'A',
@@ -93,7 +101,7 @@ class SongHeaderDialog extends StatelessWidget {
                 },
               ),
               TextFormField(
-                initialValue: '120',
+                initialValue: tempo,
                 decoration: const InputDecoration(labelText: 'Tempo'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -110,7 +118,7 @@ class SongHeaderDialog extends StatelessWidget {
               ),
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: 'Time Signature'),
-                value: '4/4',
+                value: timeSignature,
                 items: <String>[
                   '4/4',
                   '3/4',

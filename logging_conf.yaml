@@ -1,9 +1,7 @@
 loggers:
   SongsService:
-    level: DEBUG
-  SongHeaderDialog:
-    level: DEBUG
-  SongList:
+    level: INFO
+  SongHeader:
     level: DEBUG
   DEFAULT:
     level: INFO

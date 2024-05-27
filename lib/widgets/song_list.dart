@@ -102,6 +102,7 @@ class _SongListState extends State<SongList> {
                     context: context,
                     builder: (BuildContext context) {
                       return SongHeaderDialog(
+                        dialogTitle: 'Add Song',
                         onSongCreated: (newSong) {
                           setState(() {
                             //_allSongs.add(newSong);
