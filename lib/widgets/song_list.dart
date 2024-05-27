@@ -91,6 +91,10 @@ class _SongListState extends State<SongList> {
                   logger.d("Sort songs button pressed!!!");
                 },
               ),
+
+              //================================================================================================
+              // Add a Song btn
+              // This is the button that adds a new song to our list
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () {
@@ -100,6 +104,8 @@ class _SongListState extends State<SongList> {
                       return SongHeaderDialog(
                         onSongCreated: (newSong) {
                           setState(() {
+                            //_allSongs.add(newSong);
+                            SongsService().addSong(newSong);
                             _allSongs.add(newSong);
                             _filteredSongs = _allSongs;
                             currentSongProvider.setCurrentSong(newSong);

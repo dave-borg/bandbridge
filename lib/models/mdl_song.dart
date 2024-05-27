@@ -1,11 +1,7 @@
-import 'dart:io' as io;
-
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:uuid/uuid.dart';
 
 class Song {
-  final int? id;
+  String id;
   String title = "";
   String artist = "";
   String duration = "";
@@ -16,7 +12,7 @@ class Song {
   List<Version> versions;
 
   Song({
-    this.id,
+    String? songId,
     this.title = "[Title]",
     this.artist = "[Artist]",
     this.duration = "",
@@ -25,11 +21,11 @@ class Song {
     this.timeSignature = "",
     this.structure = const [],
     this.versions = const [],
-  });
+  }) : id = songId == null || songId == "-1" ? const Uuid().v4() : songId;
 
   factory Song.fromJson(Map<String, dynamic> json) {
     return Song(
-      id: json['id'],
+      songId: json['id'],
       title: json['title'],
       artist: json['artist'],
       duration: json['duration'],
@@ -102,16 +98,6 @@ class Section {
           ? List<dynamic>.from(lyrics!.map((x) => x.toJson()))
           : null,
     };
-  }
-
-  Future<Database> _getDatabase() async {
-    io.Directory documentDirectory = await getApplicationDocumentsDirectory();
-    final path = join(documentDirectory.path, 'songs.db');
-    return openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute(
-          'CREATE TABLE Songs (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, artist TEXT, duration TEXT, initialKey TEXT, tempo TEXT, timeSignature TEXT)');
-    });
   }
 }
 

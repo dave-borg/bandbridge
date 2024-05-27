@@ -3,10 +3,12 @@
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-// import 'package:path/path.dart';
+// imp:path/path.dart';
 // import 'package:path_provider/path_provider.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '../models/mdl_song.dart';
 
@@ -104,17 +106,38 @@ class SongsService {
 
     logger.d('Saving ${songs.length} songs to database.');
 
+    var uuid = const Uuid();
+
     for (var song in songs) {
-      await db.put(song.id.toString(), song.toJson());
+      if (song.id == "-1") {
+        String id;
+        do {
+          id = uuid.v4();
+        } while (db.containsKey(id));
+        song.id = id;
+      }
+
+      logger.d("Saving song: ${song.id.toString()}");
+      await db.put(song.id, song.toJson());
       count++;
     }
 
-    logger.d('Saved $count songs to database.');
+    outputSongDatabaseContents();
     count = 0;
   }
 
   _getDatabase() async {
     var db = await Hive.openBox('songs');
     return db;
+  }
+
+  void outputSongDatabaseContents() async {
+    var logger = Logger(level: LoggingUtil.loggingLevel('SongsService'));
+    logger.d('Outputting song database contents');
+
+    final db = await Hive.openBox('songs');
+    for (var key in db.keys) {
+      logger.d('Key: $key \nValue: ${jsonEncode(db.get(key))}\n==========');
+    }
   }
 }
