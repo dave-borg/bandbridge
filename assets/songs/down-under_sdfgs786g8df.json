@@ -11,7 +11,42 @@
             "timestamp": "0",
             "duration": "10",
             "chords": [
-                
+                {
+                    "name": "D",
+                    "beats": "8"
+                },
+                {
+                    "name": "C",
+                    "beats": "2"
+                },
+                {
+                    "name": "A",
+                    "beats": "2"
+                },
+                {
+                    "name": "G",
+                    "beats": "4"
+                },
+                {
+                    "name": "D",
+                    "beats": "4"
+                },
+                {
+                    "name": "D",
+                    "beats": "4"
+                },
+                {
+                    "name": "C",
+                    "beats": "2"
+                },
+                {
+                    "name": "A",
+                    "beats": "2"
+                },
+                {
+                    "name": "G",
+                    "beats": "4"
+                }
             ]
         },
         {
@@ -37,6 +72,42 @@
                 }
             ],
             "chords": [
+                {
+                    "name": "D",
+                    "beats": "8"
+                },
+                {
+                    "name": "C",
+                    "beats": "2"
+                },
+                {
+                    "name": "A",
+                    "beats": "2"
+                },
+                {
+                    "name": "G",
+                    "beats": "4"
+                },
+                {
+                    "name": "D",
+                    "beats": "4"
+                },
+                {
+                    "name": "D",
+                    "beats": "4"
+                },
+                {
+                    "name": "C",
+                    "beats": "2"
+                },
+                {
+                    "name": "A",
+                    "beats": "2"
+                },
+                {
+                    "name": "G",
+                    "beats": "4"
+                }
             ]
         },
         {

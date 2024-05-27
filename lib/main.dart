@@ -2,10 +2,13 @@ import 'package:bandbridge/models/current_gig.dart';
 import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/songs_gigs_main.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'login.dart';
 
-void main() {
+Future<void> main() async {
+  await Hive.initFlutter();
+
   runApp(const BandBridge());
 }
 

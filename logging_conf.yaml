@@ -1,12 +1,8 @@
 loggers:
-  SongsGigsMain:
-    level: INFO
-  SongSectionPanel:
-    level: INFO
-  ChordPanel:
-    level: INFO
-  BarContainer:
-    level: INFO
+  SongsService:
+    level: DEBUG
+  SongHeaderDialog:
+    level: DEBUG
   SongList:
     level: DEBUG
   DEFAULT:

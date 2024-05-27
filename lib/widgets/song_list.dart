@@ -24,19 +24,30 @@ class SongList extends StatefulWidget {
 class _SongListState extends State<SongList> {
   var logger = Logger(level: LoggingUtil.loggingLevel('SongList'));
 
-  // A future that holds all our songs. It's like a time capsule for music!
-  Future<List<Song>> allSongsFuture = getAllSongs();
-
+  late Future<List<Song>> allSongsFuture = Future.value([]);
   final TextEditingController _searchController = TextEditingController();
   List<Song> _filteredSongs = [];
   List<Song> _allSongs = [];
 
-  // A function that gets all songs. It's like a musical treasure hunt!
-  static Future<List<Song>> getAllSongs() {
-    Logger(level: LoggingUtil.loggingLevel('SongList')).d('Getting all songs.');
-    Future<List<Song>> allSongs = SongsService().allSongs;
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+    getAllSongs();
+  }
 
-    return allSongs;
+  Future<void> getAllSongs() async {
+    Logger(level: LoggingUtil.loggingLevel('SongList'))
+        .d('Fetching songs ->>> from Hive.');
+
+    List<Song> allSongs = await SongsService().allSongs;
+
+    Logger(level: LoggingUtil.loggingLevel('SongList'))
+        .d('Songs read in from from Hive.\n $allSongs');
+
+    setState(() {
+      allSongsFuture = Future.value(allSongs);
+    });
   }
 
   @override
@@ -77,9 +88,13 @@ class _SongListState extends State<SongList> {
               IconButton(
                 icon: const Icon(Icons.sort),
                 onPressed: () {
-                  logger.d("Sort songs button pressed.");
+                  logger.d("Sort songs button pressed!!!");
                 },
               ),
+
+              //================================================================================================
+              // Add a Song btn
+              // This is the button that adds a new song to our list
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () {
@@ -89,6 +104,8 @@ class _SongListState extends State<SongList> {
                       return SongHeaderDialog(
                         onSongCreated: (newSong) {
                           setState(() {
+                            //_allSongs.add(newSong);
+                            SongsService().addSong(newSong);
                             _allSongs.add(newSong);
                             _filteredSongs = _allSongs;
                             currentSongProvider.setCurrentSong(newSong);
@@ -262,11 +279,5 @@ class _SongListState extends State<SongList> {
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(_onSearchChanged);
   }
 }

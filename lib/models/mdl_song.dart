@@ -1,4 +1,7 @@
+import 'package:uuid/uuid.dart';
+
 class Song {
+  String id;
   String title = "";
   String artist = "";
   String duration = "";
@@ -9,6 +12,7 @@ class Song {
   List<Version> versions;
 
   Song({
+    String? songId,
     this.title = "[Title]",
     this.artist = "[Artist]",
     this.duration = "",
@@ -17,25 +21,31 @@ class Song {
     this.timeSignature = "",
     this.structure = const [],
     this.versions = const [],
-  });
+  }) : id = songId == null || songId == "-1" ? const Uuid().v4() : songId;
 
   factory Song.fromJson(Map<String, dynamic> json) {
     return Song(
+      songId: json['id'],
       title: json['title'],
       artist: json['artist'],
       duration: json['duration'],
       initialKey: json['initialKey'],
       tempo: json['tempo'],
       timeSignature: json['timeSignature'],
-      structure:
-          List<Section>.from(json['structure'].map((x) => Section.fromJson(x))),
-      versions:
-          List<Version>.from(json['versions'].map((x) => Version.fromJson(x))),
+      structure: List<Section>.from(
+        json['structure']
+            .map((x) => Section.fromJson(Map<String, dynamic>.from(x))),
+      ),
+      versions: List<Version>.from(
+        json['versions']
+            .map((x) => Version.fromJson(Map<String, dynamic>.from(x))),
+      ),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'title': title,
       'artist': artist,
       'duration': duration,

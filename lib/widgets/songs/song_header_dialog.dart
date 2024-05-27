@@ -1,4 +1,5 @@
 import 'package:bandbridge/models/mdl_song.dart';
+import 'package:bandbridge/services/svc_songs.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -13,6 +14,7 @@ class SongHeaderDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var logger = Logger(level: LoggingUtil.loggingLevel('SongHeaderDialog'));
+    logger.t('Building SongHeaderDialog');
 
     String songTitle = song?.title ?? '';
     String artist = song?.artist ?? '';
@@ -143,6 +145,7 @@ class SongHeaderDialog extends StatelessWidget {
         TextButton(
           child: const Text('Submit'),
           onPressed: () {
+            logger.d('Submit button pressed');
             if (_formKey.currentState?.validate() ?? false) {
               _formKey.currentState?.save();
               Song newSong = Song(
@@ -153,6 +156,10 @@ class SongHeaderDialog extends StatelessWidget {
                 timeSignature: timeSignature,
               );
               onSongCreated(newSong);
+
+              logger.d('Saving songs to database');
+              SongsService().saveSongs();
+
               Navigator.of(context).pop();
             } else {
               logger.d('Form is not valid');
