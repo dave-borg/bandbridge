@@ -20,7 +20,9 @@ class SongHeaderDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var logger = Logger(level: LoggingUtil.loggingLevel('SongHeaderDialog'));
-    logger.t('Building SongHeaderDialog');
+    logger.d('Building SongHeaderDialog');
+
+    logger.d('Full song: $song.toJSon()');
 
     String songTitle = song?.title ?? '';
     String artist = song?.artist ?? '';

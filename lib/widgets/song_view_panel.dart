@@ -34,7 +34,7 @@ class _SongViewPanelState extends State<SongViewPanel> {
         //====================
         //====================
         // Song header panel
-        SongHeader(song: currentSong),
+        SongHeader(),
 
         //====================
         //====================

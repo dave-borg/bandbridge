@@ -1,8 +1,10 @@
+import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/songs/song_header_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class SongHeader extends StatefulWidget {
@@ -10,23 +12,25 @@ class SongHeader extends StatefulWidget {
 
   SongHeader({
     super.key,
-    required this.song,
   });
 
   @override
-  _SongHeaderState createState() => _SongHeaderState(song);
+  _SongHeaderState createState() => _SongHeaderState();
 }
 
 class _SongHeaderState extends State<SongHeader> {
   var logger = Logger(level: LoggingUtil.loggingLevel('SongHeader'));
 
-  Song? song;
-
-  _SongHeaderState(this.song);
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   logger.d('SongHeader.initState()\nSong header: ${song!.title}');
+  // }
 
   @override
   Widget build(BuildContext context) {
-    logger.d('SongHeader.build()\nSong header: ${song!.title}');
+    var currentSongProvider = context.watch<CurrentSongProvider>();
+    var currentSong = currentSongProvider.currentSong;
 
     return SizedBox(
       height: 150,
@@ -46,7 +50,7 @@ class _SongHeaderState extends State<SongHeader> {
                         child: Row(
                           children: [
                             Text(
-                              song!.title,
+                              currentSong.title,
                               style: Theme.of(context).textTheme.headlineLarge,
                             ),
                             IconButton(
@@ -57,7 +61,7 @@ class _SongHeaderState extends State<SongHeader> {
                                   builder: (BuildContext context) {
                                     return SongHeaderDialog(
                                       dialogTitle: 'Edit Song',
-                                      song: song,
+                                      song: currentSong,
                                       onSongCreated: (song) {
                                         // setState(() {
                                         //   //_allSongs.add(newSong);
@@ -88,7 +92,7 @@ class _SongHeaderState extends State<SongHeader> {
                         child: Row(
                           children: [
                             Text(
-                              song!.artist,
+                              currentSong.artist,
                               style: Theme.of(context).textTheme.headlineSmall,
                             ),
                           ],
@@ -106,7 +110,7 @@ class _SongHeaderState extends State<SongHeader> {
                                   right: 26.0,
                                   bottom: 8.0),
                               child: Text(
-                                song!.timeSignature,
+                                currentSong.timeSignature,
                                 style:
                                     Theme.of(context).textTheme.headlineMedium,
                               ),
@@ -121,12 +125,12 @@ class _SongHeaderState extends State<SongHeader> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    song!.tempo,
+                                    currentSong.tempo,
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineMedium,
                                   ),
-                                  song!.tempo.isEmpty
+                                  currentSong.tempo.isEmpty
                                       ? const SizedBox.shrink()
                                       : Text(
                                           'BPM',
@@ -144,7 +148,7 @@ class _SongHeaderState extends State<SongHeader> {
                                   right: 26.0,
                                   bottom: 8.0),
                               child: Text(
-                                song!.initialKey,
+                                currentSong.initialKey,
                                 style:
                                     Theme.of(context).textTheme.headlineMedium,
                               ),
