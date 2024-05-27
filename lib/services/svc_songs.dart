@@ -33,15 +33,16 @@ class SongsService {
 
     if (db.length == 0) {
       logger.d("No songs found, loading sample songs.");
-      songs = loadSampleSongs() as List<Song>;
+      songs = await loadSampleSongs();
     } else {
-      logger.d('${db.length} songs found, loading sample songs.');
+      logger.d('${db.length} songs found, loading previously saved songs.');
       for (var i = 0; i < db.length; i++) {
         var song = db.getAt(i);
 
         logger.d("Loading song from Hive $song");
 
-        songs.add(Song.fromJson(song));
+        Map<String, dynamic> songMap = Map<String, dynamic>.from(song);
+        songs.add(Song.fromJson(songMap));
       }
     }
 
@@ -70,7 +71,7 @@ class SongsService {
       String jsonString = await rootBundle.loadString(file);
 
       logger.d("Loaded JSON file: $file");
-      logger.d("JSON data: $jsonString");
+      logger.t("JSON data: $jsonString");
 
       if (jsonDecode(jsonString) != null) {
         try {

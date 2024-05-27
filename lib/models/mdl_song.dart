@@ -5,7 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Song {
-  
   final int? id;
   String title = "";
   String artist = "";
@@ -37,10 +36,14 @@ class Song {
       initialKey: json['initialKey'],
       tempo: json['tempo'],
       timeSignature: json['timeSignature'],
-      structure:
-          List<Section>.from(json['structure'].map((x) => Section.fromJson(x))),
-      versions:
-          List<Version>.from(json['versions'].map((x) => Version.fromJson(x))),
+      structure: List<Section>.from(
+        json['structure']
+            .map((x) => Section.fromJson(Map<String, dynamic>.from(x))),
+      ),
+      versions: List<Version>.from(
+        json['versions']
+            .map((x) => Version.fromJson(Map<String, dynamic>.from(x))),
+      ),
     );
   }
 
@@ -111,8 +114,6 @@ class Section {
     });
   }
 }
-
-
 
 class Chord {
   String name;
