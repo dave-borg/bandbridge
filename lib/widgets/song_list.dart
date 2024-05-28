@@ -1,20 +1,14 @@
 import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/models/mdl_song.dart';
-import 'package:bandbridge/services/songs_hasher.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/songs/song_header_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
-import '../services/svc_songs.dart';
-
 // Here's our SongList, the rockstar of our app!
 class SongList extends StatefulWidget {
   SongList({super.key});
-
-  // Our trusty song service, always ready to fetch us some tunes
-  final SongsService songsService = SongsService();
 
   @override
   // ignore: library_private_types_in_public_api
@@ -33,29 +27,30 @@ class _SongListState extends State<SongList> {
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
-    getAllSongs();
+    _loadAllSongs();
   }
 
-  Future<void> getAllSongs() async {
-    Logger(level: LoggingUtil.loggingLevel('SongList'))
-        .d('Fetching songs ->>> from Hive.');
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   _loadAllSongs();
+  // }
 
-    List<Song> allSongs = await SongsService().allSongs;
-
-    Logger(level: LoggingUtil.loggingLevel('SongList'))
-        .d('Songs read in from from Hive.\n $allSongs');
-
+  void _loadAllSongs() async {
+    var currentSongProvider =
+        Provider.of<CurrentSongProvider>(context, listen: false);
+    List<Song> songs = await currentSongProvider.getAllSongs;
     setState(() {
-      allSongsFuture = Future.value(allSongs);
+      _allSongs = songs;
     });
   }
 
   @override
   build(BuildContext context) {
     logger.d('Building the SongList widget.');
-    // Our main stage, where all the action happens
 
     var currentSongProvider = Provider.of<CurrentSongProvider>(context);
+    _loadAllSongs();
 
     return Expanded(
       child: Container(
@@ -105,11 +100,9 @@ class _SongListState extends State<SongList> {
                         dialogTitle: 'Add Song',
                         onSongCreated: (newSong) {
                           setState(() {
-                            //_allSongs.add(newSong);
-                            SongsService().addSong(newSong);
-                            _allSongs.add(newSong);
+                            currentSongProvider.saveSong(newSong);
+                            _loadAllSongs();
                             _filteredSongs = _allSongs;
-                            currentSongProvider.setCurrentSong(newSong);
                           });
                         },
                       );
@@ -151,34 +144,55 @@ class _SongListState extends State<SongList> {
 
           // The heart of our app, the song list
           Expanded(
-            child: FutureBuilder<List<Song>>(
-                future: allSongsFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    logger.d("Waiting for songs.");
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasData) {
-                    logger.d("Got songs.");
+            child: Consumer<CurrentSongProvider>(
+              builder: (context, currentSongProvider, child) {
+                logger.d('allSongsFuture.length: ${allSongsFuture.toString()}');
 
-                    // If we haven't set _allSongs yet, set it to the snapshot data - should only happen on the first run
-                    if (_allSongs.isEmpty) {
+                return FutureBuilder<List<Song>>(
+                  future: currentSongProvider.getAllSongs,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      logger.d("Waiting for songs.");
+                      return const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                        ],
+                      );
+                    } else if (snapshot.hasError) {
+                      logger.e("Error fetching songs: ${snapshot.error}");
+                      return const Text("Error fetching songs");
+                    } else if (snapshot.hasData) {
+                      logger.d("Got songs. Data: ${snapshot.data?.length}");
+
+                      // If we haven't set _allSongs yet, set it to the snapshot data - should only happen on the first run
+                      // if (_allSongs.isEmpty) {
+                      //   logger.d('allSongs is empty');
                       _allSongs = snapshot.data!;
                       _filteredSongs = _allSongs;
-                    }
 
-                    // If we have songs, build the song list
-                    if (_filteredSongs.isEmpty) {
-                      return const Text("No songs found");
+                      Logger(level: LoggingUtil.loggingLevel('SongList')).d(
+                          'Songs read in from snapshot\n${_allSongs.map((song) => song.getDebugOutput()).join('\n')}');
+                      // }
 
-                      // If we have no songs show a message
+                      Logger(level: LoggingUtil.loggingLevel('SongList')).d(
+                          'Songs in _filteredSongs\n${_filteredSongs.map((song) => song.getDebugOutput()).join('\n')}');
+
+                      if (_filteredSongs.isEmpty) {
+                        return const Text("No songs found");
+
+                        // If we have no songs show a message
+                      } else {
+                        return buildSongs(_filteredSongs);
+                      }
                     } else {
-                      return buildSongs(_filteredSongs);
+                      logger.d("No songs available.");
+                      return const Text("No data available");
                     }
-                  } else {
-                    logger.d("No songs available.");
-                    return const Text("No data available");
-                  }
-                }),
+                  },
+                );
+              },
+            ),
           ),
         ]),
       ),
@@ -193,21 +207,21 @@ class _SongListState extends State<SongList> {
   Widget buildSongs(List<Song> filteredSongs) {
     logger.d("Building the song list with ${filteredSongs.length} songs.");
 
-    return ListView.builder(
-      itemCount: filteredSongs.length,
-      itemBuilder: (context, index) {
-        final thisSong = filteredSongs[index];
-        return Container(
-          margin: const EdgeInsets.symmetric(vertical: 1, horizontal: 10),
-          padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 5),
-          width: double.maxFinite,
-          child: Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: Consumer<CurrentSongProvider>(
-                    builder: (context, currentSongProvider, child) {
-                  return TextButton(
+    return Consumer<CurrentSongProvider>(
+        builder: (context, currentSongProvider, child) {
+      return ListView.builder(
+        itemCount: filteredSongs.length,
+        itemBuilder: (context, index) {
+          final thisSong = filteredSongs[index];
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 1, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 5),
+            width: double.maxFinite,
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: TextButton(
                     style: TextButton.styleFrom(
                       backgroundColor: currentSongProvider.currentSong.title ==
                               thisSong.title
@@ -219,8 +233,6 @@ class _SongListState extends State<SongList> {
                     ),
                     onPressed: () {
                       logger.d('Song selected: ${thisSong.title}');
-                      logger.d(
-                          'Current song hash: ${SongHasher.hashSong(currentSongProvider.currentSong)}');
                       currentSongProvider.setCurrentSong(thisSong);
                     },
                     child: Align(
@@ -238,14 +250,14 @@ class _SongListState extends State<SongList> {
                             Text(thisSong.artist),
                           ],
                         )),
-                  );
-                }),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    });
   }
 
   _onSearchChanged() {

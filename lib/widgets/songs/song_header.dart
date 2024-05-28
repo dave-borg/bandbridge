@@ -62,15 +62,13 @@ class _SongHeaderState extends State<SongHeader> {
                                     return SongHeaderDialog(
                                       dialogTitle: 'Edit Song',
                                       song: currentSong,
-                                      onSongCreated: (song) {
-                                        // setState(() {
-                                        //   //_allSongs.add(newSong);
-                                        //   SongsService().addSong(song);
-                                        //   _allSongs.add(song);
-                                        //   _filteredSongs = _allSongs;
-                                        //   currentSongProvider
-                                        //       .setCurrentSong(newSong);
-                                        // });
+                                      onSongCreated: (currentSong) {
+                                        setState(() {
+                                          logger.d(currentSong
+                                              .getDebugOutput('Editing Song'));
+                                          currentSongProvider
+                                              .saveSong(currentSong);
+                                        });
                                       },
                                     );
                                   },

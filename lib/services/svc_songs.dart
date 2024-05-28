@@ -7,8 +7,6 @@ import 'package:logger/logger.dart';
 // import 'package:path_provider/path_provider.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:uuid/uuid.dart';
 
 import '../models/mdl_song.dart';
 
@@ -33,20 +31,21 @@ class SongsService {
 
     List<Song> songs = [];
 
-    if (db.length == 0) {
-      logger.d("No songs found, loading sample songs.");
-      songs = await loadSampleSongs();
-    } else {
-      logger.d('${db.length} songs found, loading previously saved songs.');
-      for (var i = 0; i < db.length; i++) {
-        var song = db.getAt(i);
+    // if (db.length == 0) {
+    //   logger.d("No songs found, loading sample songs.");
+    //   songs = await loadSampleSongs();
+    // } else {
+    logger.d('${db.length} songs found, loading previously saved songs.');
+    for (var i = 0; i < db.length; i++) {
+      var song = db.getAt(i);
 
-        logger.d("Loading song from Hive $song");
+      Map<String, dynamic> songMap = Map<String, dynamic>.from(song);
+      Song loadedSong = Song.fromJson(songMap);
+      songs.add(loadedSong);
 
-        Map<String, dynamic> songMap = Map<String, dynamic>.from(song);
-        songs.add(Song.fromJson(songMap));
-      }
+      logger.d(loadedSong.getDebugOutput("Loaded song from database"));
     }
+    // }
 
     logger.d("Returning ${songs.length} songs.");
 
@@ -98,33 +97,30 @@ class SongsService {
   /// This method encodes the songs into JSON format and stores them in the 'songs' key of shared preferences.
   /// It's like putting the songs in a tiny bottle and throwing them into the vast ocean of shared preferences.
   /// May the songs find their way back to you when you need them the most.
-  Future<void> saveSongs() async {
-    var logger = Logger(level: LoggingUtil.loggingLevel('SongsService'));
-    int count = 0;
+  // Future<void> saveSongs() async {
+  //   var logger = Logger(level: LoggingUtil.loggingLevel('SongsService'));
 
-    final db = await _getDatabase();
+  //   final db = await _getDatabase();
 
-    logger.d('Saving ${songs.length} songs to database.');
+  //   logger.d('Saving ${songs.length} songs to database.');
 
-    var uuid = const Uuid();
+  //   var uuid = const Uuid();
 
-    for (var song in songs) {
-      if (song.id == "-1") {
-        String id;
-        do {
-          id = uuid.v4();
-        } while (db.containsKey(id));
-        song.id = id;
-      }
+  //   for (var song in songs) {
+  //     if (song.id == "-1") {
+  //       String id;
+  //       do {
+  //         id = uuid.v4();
+  //       } while (db.containsKey(id));
+  //       song.id = id;
+  //     }
 
-      logger.d("Saving song: ${song.id.toString()}");
-      await db.put(song.id, song.toJson());
-      count++;
-    }
+  //     logger.d("Saving song: ${song.id.toString()}");
+  //     await db.put(song.id, song.toJson());
+  //   }
 
-    outputSongDatabaseContents();
-    count = 0;
-  }
+  //   outputSongDatabaseContents();
+  // }
 
   _getDatabase() async {
     var db = await Hive.openBox('songs');
@@ -139,5 +135,38 @@ class SongsService {
     for (var key in db.keys) {
       logger.d('Key: $key \nValue: ${jsonEncode(db.get(key))}\n==========');
     }
+  }
+
+  /// Saves all the songs in the provided list.
+  ///
+  /// This method takes a list of [Song] objects and saves each song individually
+  /// by calling the [saveSong] method. It performs the saving operation
+  /// asynchronously using the `async` and `await` keywords.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// List<Song> allSongs = [...];
+  /// await saveAllSongs(allSongs);
+  /// ```
+  static Future<void> saveAllSongs(List<Song> allSongs) async {
+    for (var song in allSongs) {
+      saveSong(song);
+    }
+  }
+
+  /// Saves the given [thisSong] to the 'songs' box in Hive.
+  ///
+  /// This method opens the 'songs' box using Hive and saves the [thisSong] object
+  /// with its ID as the key.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// Song song = Song(id: 1, title: 'My Song');
+  /// await saveSong(song);
+  /// ```
+  static Future<void> saveSong(Song thisSong) async {
+    final box = await Hive.openBox<Song>('songs');
+
+    await box.put(thisSong.id, thisSong);
   }
 }

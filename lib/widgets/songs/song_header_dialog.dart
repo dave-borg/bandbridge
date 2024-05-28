@@ -1,8 +1,9 @@
+import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/models/mdl_song.dart';
-import 'package:bandbridge/services/svc_songs.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 class SongHeaderDialog extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -20,10 +21,11 @@ class SongHeaderDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var logger = Logger(level: LoggingUtil.loggingLevel('SongHeaderDialog'));
-    logger.d('Building SongHeaderDialog');
+    var currentSongProvider = Provider.of<CurrentSongProvider>(context);
 
-    logger.d('Full song: $song.toJSon()');
+    logger.d(song?.getDebugOutput('Song in SongHeaderDialog'));
 
+    String songId = song?.id ?? '-1';
     String songTitle = song?.title ?? '';
     String artist = song?.artist ?? '';
     String key = song?.initialKey ?? 'A';
@@ -155,10 +157,11 @@ class SongHeaderDialog extends StatelessWidget {
         TextButton(
           child: const Text('Submit'),
           onPressed: () {
-            logger.d('Submit button pressed');
+            logger.t('Submit button pressed');
             if (_formKey.currentState?.validate() ?? false) {
               _formKey.currentState?.save();
               Song newSong = Song(
+                songId: songId,
                 title: songTitle,
                 artist: artist,
                 initialKey: key,
@@ -167,8 +170,10 @@ class SongHeaderDialog extends StatelessWidget {
               );
               onSongCreated(newSong);
 
-              logger.d('Saving songs to database');
-              SongsService().saveSongs();
+              logger.d(newSong.getDebugOutput('Saving song to database'));
+              //SongsService().saveSongs();
+
+              currentSongProvider.saveSong(newSong);
 
               Navigator.of(context).pop();
             } else {

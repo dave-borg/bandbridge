@@ -1,7 +1,7 @@
 import 'package:uuid/uuid.dart';
 
 class Song {
-  String id;
+  String id = "-1";
   String title = "";
   String artist = "";
   String duration = "";
@@ -56,6 +56,22 @@ class Song {
       'versions': List<dynamic>.from(versions.map((x) => x.toJson())),
     };
   }
+
+  String getDebugOutput([String debugTitle = 'Song']) {
+    var rValue = "$debugTitle\n";
+    rValue += "--------------\n";
+    rValue += "ID: $id\n";
+    rValue += "Title: $title\n";
+    rValue += "Artist: $artist\n";
+    rValue += "Duration: $duration\n";
+    rValue += "Initial Key: $initialKey\n";
+    rValue += "Tempo: $tempo\n";
+    rValue += "Time Signature: $timeSignature\n";
+    rValue += "Structure: ${structure.length}\n";
+    rValue += "Versions: ${versions.length}\n";
+
+    return rValue;
+  }
 }
 
 class Section {
@@ -74,15 +90,20 @@ class Section {
   });
 
   factory Section.fromJson(Map<String, dynamic> json) {
+    var chordsJson = json['chords'] as List;
+    var lyricsJson = json['lyrics'] as List;
+
     return Section(
       section: json['section'],
       timestamp: json['timestamp'],
       duration: json['duration'],
-      chords: json['chords'] != null
-          ? List<Chord>.from(json['chords'].map((x) => Chord.fromJson(x)))
+      chords: chordsJson != null
+          ? List<Chord>.from(chordsJson
+              .map((x) => Chord.fromJson(Map<String, dynamic>.from(x))))
           : [],
-      lyrics: json['lyrics'] != null
-          ? List<Lyric>.from(json['lyrics'].map((x) => Lyric.fromJson(x)))
+      lyrics: lyricsJson != null
+          ? List<Lyric>.from(lyricsJson
+              .map((x) => Lyric.fromJson(Map<String, dynamic>.from(x))))
           : [],
     );
   }

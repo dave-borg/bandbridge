@@ -1,11 +1,11 @@
 loggers:
-  SongsService:
-    level: INFO
-  SongHeader:
+  CurrentSongProvider:
+    level: DEBUG
+  SongList:
     level: DEBUG
   SongViewPanel:
     level: INFO
   SongHeaderDialog:
-    level: DEBUG
+    level: INFO
   DEFAULT:
     level: INFO
