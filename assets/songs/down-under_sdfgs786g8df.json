@@ -1,4 +1,5 @@
 {
+    "id": "bbccddeeffgg",
     "title": "Down Under",
     "artist": "Men at Work",
     "duration": "235",
@@ -47,7 +48,8 @@
                     "name": "G",
                     "beats": "4"
                 }
-            ]
+            ],
+            "lyrics": []
         },
         {
             "section": "Verse",

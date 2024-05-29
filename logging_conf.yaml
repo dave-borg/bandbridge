@@ -3,9 +3,7 @@ loggers:
     level: DEBUG
   SongList:
     level: DEBUG
-  SongViewPanel:
-    level: INFO
-  SongHeaderDialog:
-    level: INFO
+  SongsService:
+    level: DEBUG
   DEFAULT:
     level: INFO

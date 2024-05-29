@@ -1,8 +1,9 @@
+import 'package:bandbridge/models/mdl_lyric.dart';
+import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/services/svc_songs.dart';
 import 'package:bandbridge/utils/logging_util.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
 class CurrentSongProvider extends ChangeNotifier {
@@ -11,25 +12,28 @@ class CurrentSongProvider extends ChangeNotifier {
   // The current song that is being edited
   late Song _currentSong;
   Song get currentSong => _currentSong;
+  Future<List<Song>>? _allSongsFuture;
 
   // A list of all songs in the temp
-  late List<Song> allSongs = [];
+  List<Song> allSongs = [];
 
   CurrentSongProvider() {
     _currentSong = Song(); // Initialize _currentSong with a default Song
   }
 
   Future<List<Song>> get getAllSongs async {
-    var futureSongs = SongsService().allSongs;
+    var fetchedSongsFuture = SongsService().allSongs;
+    var fetchedSongs = await fetchedSongsFuture;
 
-    allSongs = await futureSongs;
+    if (_allSongsFuture == null || !listEquals(fetchedSongs, allSongs)) {
+      _allSongsFuture = fetchedSongsFuture;
+      allSongs = fetchedSongs;
+      logger.d('getAllSongs: allSongs length: ${allSongs.length}');
+      logger.d(
+          'Returning songs from svc\n${allSongs.map((song) => song.getDebugOutput()).join('\n')}');
+    }
 
-    logger.d('allSongs length: ${allSongs.length}');
-
-    logger.d(
-        'Returning songs from svc\n${allSongs.map((song) => song.getDebugOutput()).join('\n')}');
-
-    return futureSongs;
+    return _allSongsFuture!;
   }
 
 //Not changing any data. This provides the currently selected song to the application context and notify listeners when it changes

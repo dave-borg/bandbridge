@@ -3,8 +3,6 @@
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-// imp:path/path.dart';
-// import 'package:path_provider/path_provider.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -25,29 +23,39 @@ class SongsService {
 
   Future<List<Song>> get allSongs async {
     var logger = Logger(level: LoggingUtil.loggingLevel('SongsService'));
-    logger.i("Getting all songs");
+    logger.i("allSongs: Getting all songs");
 
-    final db = await _getDatabase();
+    final db = await Hive.openBox('songs');
+    logger.d("allSongs: Database opened\nIs Empty: ${db.isEmpty}");
 
     List<Song> songs = [];
 
-    // if (db.length == 0) {
-    //   logger.d("No songs found, loading sample songs.");
-    //   songs = await loadSampleSongs();
-    // } else {
-    logger.d('${db.length} songs found, loading previously saved songs.');
+    logger.d('allSongs: ${db.length} songs found at load');
+
+    if (db.isEmpty) {
+      logger.d("allSongs: No songs found, loading sample songs.");
+      songs = await loadSampleSongs();
+
+      logger.d("allSongs: Saving sample songs to database.");
+      for (var song in songs) {
+        logger.d("allSongs: Saving sample song: ${song.title}");
+        await db.put(song.id, song.toJson());
+      }
+    }
+    logger.d(
+        'allSongs: ${db.length} songs found, loading previously saved songs.');
+
     for (var i = 0; i < db.length; i++) {
       var song = db.getAt(i);
 
-      Map<String, dynamic> songMap = Map<String, dynamic>.from(song);
+      Map<String, dynamic> songMap = Map<String, dynamic>.from(song as Map);
       Song loadedSong = Song.fromJson(songMap);
       songs.add(loadedSong);
 
       logger.d(loadedSong.getDebugOutput("Loaded song from database"));
     }
-    // }
 
-    logger.d("Returning ${songs.length} songs.");
+    logger.d("allSongs: Returning ${songs.length} songs.");
 
     return songs;
   }
@@ -58,7 +66,7 @@ class SongsService {
 
   Future<List<Song>> loadSampleSongs() async {
     var logger = Logger(level: LoggingUtil.loggingLevel('SongsService'));
-    logger.i("Getting all songs");
+    logger.i("loadSampleSongs: Getting all songs");
 
     List<String> songFiles = [
       'assets/songs/baker-street_43f34fofj34oif3.json',
@@ -71,17 +79,18 @@ class SongsService {
     for (var file in songFiles) {
       String jsonString = await rootBundle.loadString(file);
 
-      logger.d("Loaded JSON file: $file");
-      logger.t("JSON data: $jsonString");
+      logger.d("loadSampleSongs: Loaded JSON file: $file");
+      logger.t("loadSampleSongs: JSON data: $jsonString");
 
       if (jsonDecode(jsonString) != null) {
         try {
+          logger.t('Parsing JSON file: $file');
           Map<String, dynamic> songData = jsonDecode(jsonString);
           Song song = Song.fromJson(songData);
           songs.add(song);
-        } catch (e) {
-          logger.e('Error parsing JSON file: $file');
-          logger.e(e);
+        } catch (e, stacktrace) {
+          logger.e(
+              'Error parsing JSON file: $file\n${e.toString()}\n$stacktrace');
         }
       } else {
         logger.e('Failed to load JSON file: $file');
@@ -91,40 +100,6 @@ class SongsService {
 
     //saveSongs();
     return songs;
-  }
-
-  /// Saves the songs to shared preferences.
-  /// This method encodes the songs into JSON format and stores them in the 'songs' key of shared preferences.
-  /// It's like putting the songs in a tiny bottle and throwing them into the vast ocean of shared preferences.
-  /// May the songs find their way back to you when you need them the most.
-  // Future<void> saveSongs() async {
-  //   var logger = Logger(level: LoggingUtil.loggingLevel('SongsService'));
-
-  //   final db = await _getDatabase();
-
-  //   logger.d('Saving ${songs.length} songs to database.');
-
-  //   var uuid = const Uuid();
-
-  //   for (var song in songs) {
-  //     if (song.id == "-1") {
-  //       String id;
-  //       do {
-  //         id = uuid.v4();
-  //       } while (db.containsKey(id));
-  //       song.id = id;
-  //     }
-
-  //     logger.d("Saving song: ${song.id.toString()}");
-  //     await db.put(song.id, song.toJson());
-  //   }
-
-  //   outputSongDatabaseContents();
-  // }
-
-  _getDatabase() async {
-    var db = await Hive.openBox('songs');
-    return db;
   }
 
   void outputSongDatabaseContents() async {
@@ -165,8 +140,14 @@ class SongsService {
   /// await saveSong(song);
   /// ```
   static Future<void> saveSong(Song thisSong) async {
-    final box = await Hive.openBox<Song>('songs');
+    Box box;
 
-    await box.put(thisSong.id, thisSong);
+    if (Hive.isBoxOpen('songs')) {
+      box = Hive.box('songs');
+    } else {
+      box = await Hive.openBox('songs');
+    }
+
+    await box.put(thisSong.id, thisSong.toJson());
   }
 }

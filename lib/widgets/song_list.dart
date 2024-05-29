@@ -3,6 +3,8 @@ import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/songs/song_header_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +19,7 @@ class SongList extends StatefulWidget {
 
 class _SongListState extends State<SongList> {
   var logger = Logger(level: LoggingUtil.loggingLevel('SongList'));
+  var currentSongProvider;
 
   late Future<List<Song>> allSongsFuture = Future.value([]);
   final TextEditingController _searchController = TextEditingController();
@@ -27,6 +30,7 @@ class _SongListState extends State<SongList> {
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
+    //currentSongProvider = Provider.of<CurrentSongProvider>(context);
     _loadAllSongs();
   }
 
@@ -37,9 +41,11 @@ class _SongListState extends State<SongList> {
   // }
 
   void _loadAllSongs() async {
+    logger.d('_loadAllSongs: Loading all songs.');
     var currentSongProvider =
         Provider.of<CurrentSongProvider>(context, listen: false);
     List<Song> songs = await currentSongProvider.getAllSongs;
+    logger.d('_loadAllSongs: Songs loaded: ${songs.length}');
     setState(() {
       _allSongs = songs;
     });
@@ -49,7 +55,6 @@ class _SongListState extends State<SongList> {
   build(BuildContext context) {
     logger.d('Building the SongList widget.');
 
-    var currentSongProvider = Provider.of<CurrentSongProvider>(context);
     _loadAllSongs();
 
     return Expanded(
@@ -141,59 +146,95 @@ class _SongListState extends State<SongList> {
               ),
             ),
           ),
-
-          // The heart of our app, the song list
           Expanded(
-            child: Consumer<CurrentSongProvider>(
-              builder: (context, currentSongProvider, child) {
+            child: ValueListenableBuilder<Box<Song>>(
+              valueListenable: Hive.box<Song>('songs').listenable(),
+              builder: (context, Box<Song> box, widget) {
                 logger.d('allSongsFuture.length: ${allSongsFuture.toString()}');
+                logger.d(
+                    'currentSongProvider.getAllSongs: ${currentSongProvider.allSongs.toString()}');
 
-                return FutureBuilder<List<Song>>(
-                  future: currentSongProvider.getAllSongs,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      logger.d("Waiting for songs.");
-                      return const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(),
-                        ],
-                      );
-                    } else if (snapshot.hasError) {
-                      logger.e("Error fetching songs: ${snapshot.error}");
-                      return const Text("Error fetching songs");
-                    } else if (snapshot.hasData) {
-                      logger.d("Got songs. Data: ${snapshot.data?.length}");
+                // Get all songs from the box
+                List<Song> allSongs = box.values.toList();
 
-                      // If we haven't set _allSongs yet, set it to the snapshot data - should only happen on the first run
-                      // if (_allSongs.isEmpty) {
-                      //   logger.d('allSongs is empty');
-                      _allSongs = snapshot.data!;
-                      _filteredSongs = _allSongs;
+                if (allSongs.isEmpty) {
+                  logger.d("No songs available.");
+                  return const Text("No data available");
+                } else {
+                  logger.d("Got songs. Data: ${allSongs.length}");
 
-                      Logger(level: LoggingUtil.loggingLevel('SongList')).d(
-                          'Songs read in from snapshot\n${_allSongs.map((song) => song.getDebugOutput()).join('\n')}');
-                      // }
+                  _allSongs = allSongs;
 
-                      Logger(level: LoggingUtil.loggingLevel('SongList')).d(
-                          'Songs in _filteredSongs\n${_filteredSongs.map((song) => song.getDebugOutput()).join('\n')}');
+                  Logger(level: LoggingUtil.loggingLevel('SongList')).d(
+                      'Songs read in from snapshot\n${_allSongs.map((song) => song.getDebugOutput()).join('\n')}');
 
-                      if (_filteredSongs.isEmpty) {
-                        return const Text("No songs found");
+                  Logger(level: LoggingUtil.loggingLevel('SongList')).d(
+                      'Songs in _filteredSongs\n${_filteredSongs.map((song) => song.getDebugOutput()).join('\n')}');
 
-                        // If we have no songs show a message
-                      } else {
-                        return buildSongs(_filteredSongs);
-                      }
-                    } else {
-                      logger.d("No songs available.");
-                      return const Text("No data available");
-                    }
-                  },
-                );
+                  if (_allSongs.isEmpty) {
+                    return const Text("No songs found");
+                  } else {
+                    return buildSongs(_allSongs);
+                  }
+                }
               },
             ),
           ),
+          // The heart of our app, the song list
+          // Expanded(
+          //   child: Consumer<CurrentSongProvider>(
+          //     builder: (context, currentSongProvider, child) {
+          //       logger.d('allSongsFuture.length: ${allSongsFuture.toString()}');
+          //       logger.d(
+          //           'currentSongProvider.getAllSongs: ${currentSongProvider.allSongs.toString()}');
+
+          //       return FutureBuilder<List<Song>>(
+          //         future: currentSongProvider.getAllSongs,
+          //         builder: (context, snapshot) {
+          //           // if (snapshot.connectionState == ConnectionState.waiting) {
+          //           //   logger.d("Waiting for songs.");
+          //           //   return const Column(
+          //           //     mainAxisAlignment: MainAxisAlignment.center,
+          //           //     children: [
+          //           //       CircularProgressIndicator(),
+          //           //     ],
+          //           //   );
+          //           // } else if (snapshot.hasError) {
+          //           if (snapshot.hasError) {
+          //             logger.e("Error fetching songs: ${snapshot.error}");
+          //             return const Text("Error fetching songs");
+          //           } else if (snapshot.hasData) {
+          //             logger.d("Got songs. Data: ${snapshot.data?.length}");
+
+          //             // If we haven't set _allSongs yet, set it to the snapshot data - should only happen on the first run
+          //             // if (_allSongs.isEmpty) {
+          //             //   logger.d('allSongs is empty');
+          //             _allSongs = snapshot.data!;
+          //             //_filteredSongs = _allSongs;
+
+          //             Logger(level: LoggingUtil.loggingLevel('SongList')).d(
+          //                 'Songs read in from snapshot\n${_allSongs.map((song) => song.getDebugOutput()).join('\n')}');
+          //             // }
+
+          //             Logger(level: LoggingUtil.loggingLevel('SongList')).d(
+          //                 'Songs in _filteredSongs\n${_filteredSongs.map((song) => song.getDebugOutput()).join('\n')}');
+
+          //             if (_allSongs.isEmpty) {
+          //               return const Text("No songs found");
+
+          //               // If we have no songs show a message
+          //             } else {
+          //               return buildSongs(_allSongs);
+          //             }
+          //           } else {
+          //             logger.d("No songs available.");
+          //             return const Text("No data available");
+          //           }
+          //         },
+          //       );
+          //     },
+          //   ),
+          // ),
         ]),
       ),
     );

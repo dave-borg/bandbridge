@@ -1,14 +1,28 @@
+import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 
-class Song {
+import 'mdl_lyric.dart';
+import 'mdl_section.dart';
+
+@HiveType(typeId: 0)
+class Song extends HiveObject {
+  @HiveField(0)
   String id = "-1";
+  @HiveField(1)
   String title = "";
+  @HiveField(2)
   String artist = "";
+  @HiveField(3)
   String duration = "";
+  @HiveField(4)
   String initialKey = "";
+  @HiveField(5)
   String tempo = "";
+  @HiveField(6)
   String timeSignature = "";
+  @HiveField(7)
   List<Section> structure;
+  @HiveField(8)
   List<Version> versions;
 
   Song({
@@ -71,138 +85,5 @@ class Song {
     rValue += "Versions: ${versions.length}\n";
 
     return rValue;
-  }
-}
-
-class Section {
-  String section;
-  String timestamp;
-  String duration;
-  List<Chord>? chords;
-  List<Lyric>? lyrics;
-
-  Section({
-    required this.section,
-    required this.timestamp,
-    required this.duration,
-    this.chords,
-    this.lyrics,
-  });
-
-  factory Section.fromJson(Map<String, dynamic> json) {
-    var chordsJson = json['chords'] as List;
-    var lyricsJson = json['lyrics'] as List;
-
-    return Section(
-      section: json['section'],
-      timestamp: json['timestamp'],
-      duration: json['duration'],
-      chords: chordsJson != null
-          ? List<Chord>.from(chordsJson
-              .map((x) => Chord.fromJson(Map<String, dynamic>.from(x))))
-          : [],
-      lyrics: lyricsJson != null
-          ? List<Lyric>.from(lyricsJson
-              .map((x) => Lyric.fromJson(Map<String, dynamic>.from(x))))
-          : [],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'section': section,
-      'timestamp': timestamp,
-      'duration': duration,
-      'chords': List<dynamic>.from(chords!.map((x) => x.toJson())),
-      // ignore: unnecessary_null_comparison
-      'lyrics': lyrics != null
-          ? List<dynamic>.from(lyrics!.map((x) => x.toJson()))
-          : null,
-    };
-  }
-}
-
-class Chord {
-  String name;
-  String beats;
-  String? modifications = "";
-  String? bass;
-
-  Chord({
-    required this.name,
-    required this.beats,
-    this.modifications,
-    this.bass,
-  });
-
-  factory Chord.fromJson(Map<String, dynamic> json) {
-    return Chord(
-      name: json['name'],
-      beats: json['beats'],
-      modifications: json['modifications'],
-      bass: json['bass'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'beats': beats,
-      'modifications': modifications,
-      'bass': bass,
-    };
-  }
-
-  @override
-  String toString() {
-    return toJson().toString();
-  }
-}
-
-class Lyric {
-  String text;
-  String timestamp;
-
-  Lyric({
-    required this.text,
-    required this.timestamp,
-  });
-
-  factory Lyric.fromJson(Map<String, dynamic> json) {
-    return Lyric(
-      text: json['text'],
-      timestamp: json['timestamp'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'text': text,
-      'timestamp': timestamp,
-    };
-  }
-}
-
-class Version {
-  String hash;
-  String epoch;
-
-  Version({
-    required this.hash,
-    required this.epoch,
-  });
-
-  factory Version.fromJson(Map<String, dynamic> json) {
-    return Version(
-      hash: json['hash'],
-      epoch: json['epoch'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'hash': hash,
-      'epoch': epoch,
-    };
   }
 }
