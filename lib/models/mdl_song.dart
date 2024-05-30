@@ -1,7 +1,7 @@
+import 'package:bandbridge/models/mdl_version.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 
-import 'mdl_lyric.dart';
 import 'mdl_section.dart';
 
 @HiveType(typeId: 0)

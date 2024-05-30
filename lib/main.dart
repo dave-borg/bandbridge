@@ -1,14 +1,29 @@
 import 'package:bandbridge/models/current_gig.dart';
 import 'package:bandbridge/models/current_song.dart';
+import 'package:bandbridge/models/hive_adapters/adpt_chord.dart';
+import 'package:bandbridge/models/hive_adapters/adpt_lyric.dart';
+import 'package:bandbridge/models/hive_adapters/adpt_section.dart';
+import 'package:bandbridge/models/hive_adapters/adpt_song.dart';
+import 'package:bandbridge/models/hive_adapters/adpt_version.dart';
+import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/songs_gigs_main.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'login.dart';
 
 Future<void> main() async {
-  await Hive.initFlutter();
-
+  WidgetsFlutterBinding.ensureInitialized();
+  final document = await getApplicationDocumentsDirectory();
+  await Hive.initFlutter(document.path);
+  await Hive.openBox<Song>('songs');
+  Hive.registerAdapter(SectionAdapter());
+  Hive.registerAdapter(ChordAdapter());
+  Hive.registerAdapter(SongAdapter());
+  Hive.registerAdapter(LyricAdapter());
+  Hive.registerAdapter(VersionAdapter());
+  
   runApp(const BandBridge());
 }
 

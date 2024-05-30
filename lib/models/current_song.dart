@@ -1,6 +1,6 @@
-import 'package:bandbridge/models/mdl_lyric.dart';
 import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/models/mdl_song.dart';
+import 'package:bandbridge/models/mdl_version.dart';
 import 'package:bandbridge/services/svc_songs.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/foundation.dart';

@@ -26,27 +26,3 @@ class Lyric {
     };
   }
 }
-
-class Version {
-  String hash;
-  String epoch;
-
-  Version({
-    required this.hash,
-    required this.epoch,
-  });
-
-  factory Version.fromJson(Map<String, dynamic> json) {
-    return Version(
-      hash: json['hash'],
-      epoch: json['epoch'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'hash': hash,
-      'epoch': epoch,
-    };
-  }
-}

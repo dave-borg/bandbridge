@@ -1,9 +1,8 @@
-import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
 
 class SongHeaderDialog extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -21,7 +20,6 @@ class SongHeaderDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var logger = Logger(level: LoggingUtil.loggingLevel('SongHeaderDialog'));
-    var currentSongProvider = Provider.of<CurrentSongProvider>(context);
 
     logger.d(song?.getDebugOutput('Song in SongHeaderDialog'));
 
@@ -160,21 +158,34 @@ class SongHeaderDialog extends StatelessWidget {
             logger.t('Submit button pressed');
             if (_formKey.currentState?.validate() ?? false) {
               _formKey.currentState?.save();
-              Song newSong = Song(
-                songId: songId,
-                title: songTitle,
-                artist: artist,
-                initialKey: key,
-                tempo: tempo,
-                timeSignature: timeSignature,
-              );
-              onSongCreated(newSong);
-
-              logger.d(newSong.getDebugOutput('Saving song to database'));
-              //SongsService().saveSongs();
-
-              currentSongProvider.saveSong(newSong);
-
+              final box = Hive.box<Song>('songs');
+              if (box.containsKey(songId)) {
+                Song? existingSong = box.get(songId);
+                if (existingSong != null) {
+                  existingSong.title = songTitle;
+                  existingSong.artist = artist;
+                  existingSong.initialKey = key;
+                  existingSong.tempo = tempo;
+                  existingSong.timeSignature = timeSignature;
+                  existingSong.save();
+                  logger
+                      .d(existingSong.getDebugOutput('Updated existing song'));
+                  onSongCreated(existingSong);
+                }
+              } else {
+                Song newSong = Song(
+                  songId: songId,
+                  title: songTitle,
+                  artist: artist,
+                  initialKey: key,
+                  tempo: tempo,
+                  timeSignature: timeSignature,
+                );
+                box.put(newSong.id, newSong);
+                logger.d(newSong.getDebugOutput('Added new song'));
+                logger.d("Added Song key: ${newSong.id}");
+                onSongCreated(newSong);
+              }
               Navigator.of(context).pop();
             } else {
               logger.d('Form is not valid');

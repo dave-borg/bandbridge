@@ -3,7 +3,6 @@ import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/songs/song_header_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -30,32 +29,31 @@ class _SongListState extends State<SongList> {
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
-    //currentSongProvider = Provider.of<CurrentSongProvider>(context);
-    _loadAllSongs();
+    //
+    //_loadAllSongs();
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   _loadAllSongs();
-  // }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    currentSongProvider = Provider.of<CurrentSongProvider>(context);
+    // _loadAllSongs();
+  }
 
   void _loadAllSongs() async {
     logger.d('_loadAllSongs: Loading all songs.');
-    var currentSongProvider =
-        Provider.of<CurrentSongProvider>(context, listen: false);
-    List<Song> songs = await currentSongProvider.getAllSongs;
-    logger.d('_loadAllSongs: Songs loaded: ${songs.length}');
-    setState(() {
-      _allSongs = songs;
-    });
+    // var currentSongProvider =
+    //     Provider.of<CurrentSongProvider>(context, listen: false);
+    // List<Song> songs = await currentSongProvider.getAllSongs;
+    // logger.d('_loadAllSongs: Songs loaded: ${songs.length}');
+    // setState(() {
+    //   _allSongs = songs;
+    // });
   }
 
   @override
   build(BuildContext context) {
     logger.d('Building the SongList widget.');
-
-    _loadAllSongs();
 
     return Expanded(
       child: Container(
@@ -101,15 +99,18 @@ class _SongListState extends State<SongList> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return SongHeaderDialog(
-                        dialogTitle: 'Add Song',
-                        onSongCreated: (newSong) {
-                          setState(() {
-                            currentSongProvider.saveSong(newSong);
-                            _loadAllSongs();
-                            _filteredSongs = _allSongs;
-                          });
-                        },
+                      return ChangeNotifierProvider<CurrentSongProvider>.value(
+                        value: currentSongProvider,
+                        child: SongHeaderDialog(
+                          dialogTitle: 'Add Song',
+                          onSongCreated: (newSong) {
+                            setState(() {
+                              currentSongProvider.saveSong(newSong);
+                              _loadAllSongs();
+                              _filteredSongs = _allSongs;
+                            });
+                          },
+                        ),
                       );
                     },
                   );
@@ -146,16 +147,17 @@ class _SongListState extends State<SongList> {
               ),
             ),
           ),
+
+          //chaning the FutureBuilder to ValueListenableBuilder
           Expanded(
             child: ValueListenableBuilder<Box<Song>>(
               valueListenable: Hive.box<Song>('songs').listenable(),
               builder: (context, Box<Song> box, widget) {
-                logger.d('allSongsFuture.length: ${allSongsFuture.toString()}');
-                logger.d(
-                    'currentSongProvider.getAllSongs: ${currentSongProvider.allSongs.toString()}');
-
                 // Get all songs from the box
                 List<Song> allSongs = box.values.toList();
+
+                logger.d(
+                    'allSongs selected from the database: ${allSongs.length}');
 
                 if (allSongs.isEmpty) {
                   logger.d("No songs available.");

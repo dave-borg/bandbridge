@@ -25,7 +25,7 @@ class SongsService {
     var logger = Logger(level: LoggingUtil.loggingLevel('SongsService'));
     logger.i("allSongs: Getting all songs");
 
-    final db = await Hive.openBox('songs');
+    final db = Hive.box('songs');
     logger.d("allSongs: Database opened\nIs Empty: ${db.isEmpty}");
 
     List<Song> songs = [];
@@ -106,7 +106,7 @@ class SongsService {
     var logger = Logger(level: LoggingUtil.loggingLevel('SongsService'));
     logger.d('Outputting song database contents');
 
-    final db = await Hive.openBox('songs');
+    final db = Hive.box('songs');
     for (var key in db.keys) {
       logger.d('Key: $key \nValue: ${jsonEncode(db.get(key))}\n==========');
     }
@@ -142,11 +142,11 @@ class SongsService {
   static Future<void> saveSong(Song thisSong) async {
     Box box;
 
-    if (Hive.isBoxOpen('songs')) {
+    //if (Hive.isBoxOpen('songs')) {
       box = Hive.box('songs');
-    } else {
-      box = await Hive.openBox('songs');
-    }
+    //} else {
+    //  box = await Hive.openBox('songs');
+    //}
 
     await box.put(thisSong.id, thisSong.toJson());
   }
