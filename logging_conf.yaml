@@ -1,5 +1,5 @@
 loggers:
   SongHeaderDialog:
-    level: DEBUG
+    level: INFO
   DEFAULT:
     level: INFO

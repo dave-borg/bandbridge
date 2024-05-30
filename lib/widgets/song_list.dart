@@ -7,9 +7,16 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
-// Here's our SongList, the rockstar of our app!
+/// A widget that displays a list of songs.
+///
+/// This widget is the rockstar of our app! It is responsible for rendering a list of songs
+/// and providing a user interface for selecting the current song, and access CRUD functionality.
+/// The SongList widget is a stateful widget, as it needs to maintain the state of the currently
+/// selected song and the list of songs to display.
+/// The SongList widget is also a consumer of the CurrentSongProvider, which provides the current
+/// song and the list of all songs.
 class SongList extends StatefulWidget {
-  SongList({super.key});
+  const SongList({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -29,8 +36,6 @@ class _SongListState extends State<SongList> {
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
-    //
-    //_loadAllSongs();
   }
 
   @override
@@ -38,17 +43,6 @@ class _SongListState extends State<SongList> {
     super.didChangeDependencies();
     currentSongProvider = Provider.of<CurrentSongProvider>(context);
     // _loadAllSongs();
-  }
-
-  void _loadAllSongs() async {
-    logger.d('_loadAllSongs: Loading all songs.');
-    // var currentSongProvider =
-    //     Provider.of<CurrentSongProvider>(context, listen: false);
-    // List<Song> songs = await currentSongProvider.getAllSongs;
-    // logger.d('_loadAllSongs: Songs loaded: ${songs.length}');
-    // setState(() {
-    //   _allSongs = songs;
-    // });
   }
 
   @override
@@ -83,10 +77,16 @@ class _SongListState extends State<SongList> {
                 ),
               ),
               // A button that does... something. It's a mystery!
+              
+              
+              //================================================================================================
+              // Sort btn
+              // Change the sort order of the song list
               IconButton(
                 icon: const Icon(Icons.sort),
                 onPressed: () {
                   logger.d("Sort songs button pressed!!!");
+                  //TODO: Implement sort functionality
                 },
               ),
 
@@ -106,7 +106,6 @@ class _SongListState extends State<SongList> {
                           onSongCreated: (newSong) {
                             setState(() {
                               currentSongProvider.saveSong(newSong);
-                              _loadAllSongs();
                               _filteredSongs = _allSongs;
                             });
                           },
@@ -119,6 +118,7 @@ class _SongListState extends State<SongList> {
             ],
           ),
 
+          //================================================================================================
           // Our search box, the key to finding your favorite tunes
           Padding(
             padding: const EdgeInsets.all(2.0),
