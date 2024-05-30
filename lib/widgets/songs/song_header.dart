@@ -21,12 +21,6 @@ class SongHeader extends StatefulWidget {
 class _SongHeaderState extends State<SongHeader> {
   var logger = Logger(level: LoggingUtil.loggingLevel('SongHeader'));
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   logger.d('SongHeader.initState()\nSong header: ${song!.title}');
-  // }
-
   @override
   Widget build(BuildContext context) {
     var currentSongProvider = context.watch<CurrentSongProvider>();
