@@ -19,6 +19,7 @@ class CurrentSongProvider extends ChangeNotifier {
 
   CurrentSongProvider() {
     _currentSong = Song(); // Initialize _currentSong with a default Song
+    _currentSong.id = "-2";
   }
 
   Future<List<Song>> get getAllSongs async {
@@ -43,27 +44,6 @@ class CurrentSongProvider extends ChangeNotifier {
     _currentSong = song;
     notifyListeners();
   }
-
-  // // Update the current song with the updated song
-  // // Use this when you've made changes to the current song and want to update all references to it
-  // void updateCurrentSong(Song updatedSong) {
-  //   logger.d(
-  //       "${_currentSong.getDebugOutput('Current Song')}\n${updatedSong.getDebugOutput('Updated Song')}");
-
-  //   // Find the index of the old song in the list
-  //   int index = allSongs
-  //       .indexWhere((_currentSong) => _currentSong.id == updatedSong.id);
-
-  //   // If the old song is found in the list, replace it with the new one
-  //   if (index != -1) {
-  //     logger
-  //         .d(updatedSong.getDebugOutput('Updating song in list of all songs'));
-  //     allSongs[index] = updatedSong;
-  //   }
-
-  //   _currentSong = updatedSong;
-  //   notifyListeners();
-  // }
 
   //Saves the song to the list of all songs and updates the current song.
   //This will update if the song already exists in the database, otherwise it will save a new song
@@ -107,4 +87,11 @@ class CurrentSongProvider extends ChangeNotifier {
   String get timeSignature => _currentSong.timeSignature;
   List<Section> get structure => _currentSong.structure;
   List<Version> get versions => _currentSong.versions;
+
+  void clearSelectedSong() {
+    _currentSong = Song();
+    _currentSong.id = "-2";
+    
+    notifyListeners();
+  }
 }

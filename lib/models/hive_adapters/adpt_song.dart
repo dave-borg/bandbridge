@@ -1,4 +1,6 @@
+import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/models/mdl_song.dart';
+import 'package:bandbridge/models/mdl_version.dart';
 import 'package:hive/hive.dart';
 
 class SongAdapter extends TypeAdapter<Song> {
@@ -15,8 +17,8 @@ class SongAdapter extends TypeAdapter<Song> {
       initialKey: reader.read(),
       tempo: reader.read(),
       timeSignature: reader.read(),
-      structure: reader.read(),
-      versions: reader.read(),
+      structure: reader.readList().cast<Section>(),
+      versions: reader.readList().cast<Version>(),
     );
   }
 
@@ -29,7 +31,7 @@ class SongAdapter extends TypeAdapter<Song> {
     writer.write(obj.initialKey);
     writer.write(obj.tempo);
     writer.write(obj.timeSignature);
-    writer.write(obj.structure);
-    writer.write(obj.versions);
+    writer.writeList(obj.structure);
+    writer.writeList(obj.versions);
   }
 }
