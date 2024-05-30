@@ -3,6 +3,7 @@ import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/songs/song_header_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -21,16 +22,25 @@ class SongHeader extends StatefulWidget {
 class _SongHeaderState extends State<SongHeader> {
   var logger = Logger(level: LoggingUtil.loggingLevel('SongHeader'));
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   logger.d('SongHeader.initState()\nSong header: ${song!.title}');
-  // }
-
   @override
   Widget build(BuildContext context) {
     var currentSongProvider = context.watch<CurrentSongProvider>();
     var currentSong = currentSongProvider.currentSong;
+    Song? boxSong;
+
+    var box = Hive.box<Song>('songs');
+    if (box.get(currentSong.id) == null || currentSong.id != "-2") {
+      logger.d(currentSong.getDebugOutput('build: Song does not exist in box'));
+      box.put(currentSong.id, currentSong);
+    }
+
+    boxSong = box.get(currentSong.id);
+
+    if (boxSong == null) {
+      logger.wtf(
+          'Failed to load song from box\nWe shouldn\'t be showing the song panels without a valid song\n\n ${currentSong.getDebugOutput()}');
+      throw Exception('Failed to load song from box');
+    }
 
     return SizedBox(
       height: 150,
@@ -53,6 +63,9 @@ class _SongHeaderState extends State<SongHeader> {
                               currentSong.title,
                               style: Theme.of(context).textTheme.headlineLarge,
                             ),
+
+                            //================================================================
+                            //Edit Button
                             IconButton(
                               icon: const Icon(Icons.edit),
                               onPressed: () {
@@ -75,6 +88,44 @@ class _SongHeaderState extends State<SongHeader> {
                                 );
                               },
                             ),
+
+                            //================================================================
+                            //Delete button
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Confirm'),
+                                      content: Text(
+                                          'Are you sure you want to delete \'${boxSong?.title}\'?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('CANCEL'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: const Text('DELETE'),
+                                          onPressed: () {
+                                            boxSong?.delete();
+                                            // currentSongProvider
+                                            //     .clearSelectedSong();
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+
+                            //================================================================
+                            //Share button
                             IconButton(
                               icon: const Icon(Icons.ios_share),
                               onPressed: () {

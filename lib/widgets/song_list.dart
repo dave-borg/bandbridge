@@ -161,82 +161,27 @@ class _SongListState extends State<SongList> {
 
                 if (allSongs.isEmpty) {
                   logger.d("No songs available.");
-                  return const Text("No data available");
+                  return const Text("No songs available");
                 } else {
                   logger.d("Got songs. Data: ${allSongs.length}");
 
                   _allSongs = allSongs;
 
                   Logger(level: LoggingUtil.loggingLevel('SongList')).d(
-                      'Songs read in from snapshot\n${_allSongs.map((song) => song.getDebugOutput()).join('\n')}');
+                      'Songs read in from snapshot\n${allSongs.map((song) => song.getDebugOutput()).join('\n')}');
 
                   Logger(level: LoggingUtil.loggingLevel('SongList')).d(
                       'Songs in _filteredSongs\n${_filteredSongs.map((song) => song.getDebugOutput()).join('\n')}');
 
-                  if (_allSongs.isEmpty) {
+                  if (allSongs.isEmpty) {
                     return const Text("No songs found");
                   } else {
-                    return buildSongs(_allSongs);
+                    return buildSongs(allSongs);
                   }
                 }
               },
             ),
           ),
-          // The heart of our app, the song list
-          // Expanded(
-          //   child: Consumer<CurrentSongProvider>(
-          //     builder: (context, currentSongProvider, child) {
-          //       logger.d('allSongsFuture.length: ${allSongsFuture.toString()}');
-          //       logger.d(
-          //           'currentSongProvider.getAllSongs: ${currentSongProvider.allSongs.toString()}');
-
-          //       return FutureBuilder<List<Song>>(
-          //         future: currentSongProvider.getAllSongs,
-          //         builder: (context, snapshot) {
-          //           // if (snapshot.connectionState == ConnectionState.waiting) {
-          //           //   logger.d("Waiting for songs.");
-          //           //   return const Column(
-          //           //     mainAxisAlignment: MainAxisAlignment.center,
-          //           //     children: [
-          //           //       CircularProgressIndicator(),
-          //           //     ],
-          //           //   );
-          //           // } else if (snapshot.hasError) {
-          //           if (snapshot.hasError) {
-          //             logger.e("Error fetching songs: ${snapshot.error}");
-          //             return const Text("Error fetching songs");
-          //           } else if (snapshot.hasData) {
-          //             logger.d("Got songs. Data: ${snapshot.data?.length}");
-
-          //             // If we haven't set _allSongs yet, set it to the snapshot data - should only happen on the first run
-          //             // if (_allSongs.isEmpty) {
-          //             //   logger.d('allSongs is empty');
-          //             _allSongs = snapshot.data!;
-          //             //_filteredSongs = _allSongs;
-
-          //             Logger(level: LoggingUtil.loggingLevel('SongList')).d(
-          //                 'Songs read in from snapshot\n${_allSongs.map((song) => song.getDebugOutput()).join('\n')}');
-          //             // }
-
-          //             Logger(level: LoggingUtil.loggingLevel('SongList')).d(
-          //                 'Songs in _filteredSongs\n${_filteredSongs.map((song) => song.getDebugOutput()).join('\n')}');
-
-          //             if (_allSongs.isEmpty) {
-          //               return const Text("No songs found");
-
-          //               // If we have no songs show a message
-          //             } else {
-          //               return buildSongs(_allSongs);
-          //             }
-          //           } else {
-          //             logger.d("No songs available.");
-          //             return const Text("No data available");
-          //           }
-          //         },
-          //       );
-          //     },
-          //   ),
-          // ),
         ]),
       ),
     );

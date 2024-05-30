@@ -17,12 +17,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final document = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(document.path);
-  await Hive.openBox<Song>('songs');
   Hive.registerAdapter(SectionAdapter());
   Hive.registerAdapter(ChordAdapter());
   Hive.registerAdapter(SongAdapter());
   Hive.registerAdapter(LyricAdapter());
   Hive.registerAdapter(VersionAdapter());
+
+  await Hive.openBox<Song>('songs');
   
   runApp(const BandBridge());
 }
