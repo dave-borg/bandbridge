@@ -1,4 +1,5 @@
 {
+    "id": "eeffgghhiijj",
     "title": "Seven Nation Army",
     "artist": "The White Stripes",
     "duration": "362",
@@ -48,7 +49,8 @@
                     "beats": "4"
                 }
 
-            ]
+            ],
+            "lyrics": []
         },
         {
             "section": "Verse",
@@ -473,7 +475,9 @@
         {
             "section": "Outro",
             "timestamp": "20",
-            "duration": "20"
+            "duration": "20",
+            "chords": [],
+            "lyrics": []
         }
     ],
     "versions": [

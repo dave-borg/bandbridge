@@ -8,7 +8,7 @@
 // - Display a '/' to repeat a chord for a beat
 // - Show the chord name if a repeated chord runs over a new line, ie. don't show a '/' as the first symbol on a line.
 
-import 'package:bandbridge/models/mdl_song.dart';
+import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -106,7 +106,8 @@ class ChordPanel {
     );
   }
 
-  static getChordBorder(bool isFirstBeat, bool isLastBeat, int sectionPosition) {
+  static getChordBorder(
+      bool isFirstBeat, bool isLastBeat, int sectionPosition) {
     if (sectionPosition == 0) {
       return const Border(
         left: BorderSide(
@@ -114,17 +115,15 @@ class ChordPanel {
           width: 2.0, // Set border width
         ),
       );
-    // } else if (isLastBeat) {
-    //   return const Border(
-    //     right: BorderSide(
-    //       color: Colors.black, // Set border color
-    //       width: 2.0, // Set border width
-    //     ),
-    //   );
+      // } else if (isLastBeat) {
+      //   return const Border(
+      //     right: BorderSide(
+      //       color: Colors.black, // Set border color
+      //       width: 2.0, // Set border width
+      //     ),
+      //   );
     } else {
       return null;
     }
   }
-  
-  
 }

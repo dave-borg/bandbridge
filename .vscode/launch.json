@@ -1,0 +1,10 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Flutter (iPad Pro (12.9-inch) (6th generation))",
+        "request": "launch",
+        "type": "dart"
+      }
+    ]
+}

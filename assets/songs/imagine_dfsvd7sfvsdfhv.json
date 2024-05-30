@@ -1,4 +1,5 @@
 {
+    "id": "ddeeffgghhii",
     "title": "Imagine",
     "artist": "John Lennon",
     "duration": "187",
@@ -37,7 +38,8 @@
                     "name": "F",
                     "beats": "4"
                 }
-            ]
+            ],
+            "lyrics": []
         },
         {
             "section": "Chorus",
@@ -71,7 +73,8 @@
                     "name": "F",
                     "beats": "4"
                 }
-            ]
+            ],
+            "lyrics": []
         },
         {
             "section": "Verse",
@@ -104,7 +107,8 @@
                     "name": "F",
                     "beats": "4"
                 }
-            ]
+            ],
+            "lyrics": []
         },
         {
             "section": "Chorus",
@@ -139,7 +143,8 @@
                     "name": "F",
                     "beats": "4"
                 }
-            ]
+            ],
+            "lyrics": []
         },
         {
             "section": "Outro",
@@ -155,7 +160,8 @@
                     "name": "G",
                     "beats": "4"
                 }
-            ]
+            ],
+            "lyrics": []
         }
     ],
     "versions": [

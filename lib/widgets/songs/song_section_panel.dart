@@ -1,4 +1,4 @@
-import 'package:bandbridge/models/mdl_song.dart';
+import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/chord-chart/bar_container.dart';
 import 'package:bandbridge/widgets/chord_panel.dart';
@@ -70,7 +70,7 @@ class SongSectionPanel extends StatelessWidget {
                 );
 
                 startingPositionRunningCount += int.parse(thisChord.beats);
-                
+
                 return chordPanels;
               }).toList(),
               4, //chunk size

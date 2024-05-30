@@ -1,22 +1,39 @@
+import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
+import 'package:bandbridge/widgets/songs/song_header_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class SongHeader extends StatelessWidget {
-  var logger = Logger(level: LoggingUtil.loggingLevel('SongArrangementPanel'));
-  Song song;
+class SongHeader extends StatefulWidget {
+  Song? song;
 
   SongHeader({
     super.key,
-    required this.song,
   });
 
   @override
+  _SongHeaderState createState() => _SongHeaderState();
+}
+
+class _SongHeaderState extends State<SongHeader> {
+  var logger = Logger(level: LoggingUtil.loggingLevel('SongHeader'));
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   logger.d('SongHeader.initState()\nSong header: ${song!.title}');
+  // }
+
+  @override
   Widget build(BuildContext context) {
+    var currentSongProvider = context.watch<CurrentSongProvider>();
+    var currentSong = currentSongProvider.currentSong;
+
     return SizedBox(
-height: 150,
+      height: 150,
       width: MediaQuery.of(context).size.width - 258,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -33,13 +50,29 @@ height: 150,
                         child: Row(
                           children: [
                             Text(
-                              song.title,
+                              currentSong.title,
                               style: Theme.of(context).textTheme.headlineLarge,
                             ),
                             IconButton(
                               icon: const Icon(Icons.edit),
                               onPressed: () {
-                                // Handle button press
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return SongHeaderDialog(
+                                      dialogTitle: 'Edit Song',
+                                      song: currentSong,
+                                      onSongCreated: (currentSong) {
+                                        setState(() {
+                                          logger.d(currentSong
+                                              .getDebugOutput('Editing Song'));
+                                          currentSongProvider
+                                              .saveSong(currentSong);
+                                        });
+                                      },
+                                    );
+                                  },
+                                );
                               },
                             ),
                             IconButton(
@@ -57,7 +90,7 @@ height: 150,
                         child: Row(
                           children: [
                             Text(
-                              song.artist,
+                              currentSong.artist,
                               style: Theme.of(context).textTheme.headlineSmall,
                             ),
                           ],
@@ -75,7 +108,7 @@ height: 150,
                                   right: 26.0,
                                   bottom: 8.0),
                               child: Text(
-                                song.timeSignature,
+                                currentSong.timeSignature,
                                 style:
                                     Theme.of(context).textTheme.headlineMedium,
                               ),
@@ -90,12 +123,12 @@ height: 150,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    song.tempo,
+                                    currentSong.tempo,
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineMedium,
                                   ),
-song.tempo.isEmpty
+                                  currentSong.tempo.isEmpty
                                       ? const SizedBox.shrink()
                                       : Text(
                                           'BPM',
@@ -113,7 +146,7 @@ song.tempo.isEmpty
                                   right: 26.0,
                                   bottom: 8.0),
                               child: Text(
-                                song.initialKey,
+                                currentSong.initialKey,
                                 style:
                                     Theme.of(context).textTheme.headlineMedium,
                               ),
