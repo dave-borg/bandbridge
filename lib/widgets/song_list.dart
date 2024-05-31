@@ -35,6 +35,7 @@ class _SongListState extends State<SongList> {
   @override
   void initState() {
     super.initState();
+    _updateAllSongs();
     _searchController.addListener(_onSearchChanged);
   }
 
@@ -77,8 +78,7 @@ class _SongListState extends State<SongList> {
                 ),
               ),
               // A button that does... something. It's a mystery!
-              
-              
+
               //================================================================================================
               // Sort btn
               // Change the sort order of the song list
@@ -105,8 +105,11 @@ class _SongListState extends State<SongList> {
                           dialogTitle: 'Add Song',
                           onSongCreated: (newSong) {
                             setState(() {
-                              currentSongProvider.saveSong(newSong);
-                              _filteredSongs = _allSongs;
+                              // currentSongProvider.saveSong(newSong);
+                              // _filteredSongs = _allSongs;
+
+                              _addSong(newSong);
+                              currentSongProvider.setCurrentSong(newSong);
                             });
                           },
                         ),
@@ -125,23 +128,25 @@ class _SongListState extends State<SongList> {
             child: Container(
               height: 45.0,
               alignment: Alignment.center,
-              child: TextField(
-                controller: _searchController,
-                textAlign: TextAlign.left,
-                textAlignVertical: TextAlignVertical.center,
-                decoration: InputDecoration(
-                  labelText: "Search",
-                  hintText: "Search",
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      logger.d("Clear search button pressed.");
-                      _searchController.clear();
-                    },
-                    icon: const Icon(Icons.clear),
-                  ),
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+              child: Center(
+                child: TextField(
+                  controller: _searchController,
+                  textAlign: TextAlign.left,
+                  textAlignVertical: TextAlignVertical.center,
+                  decoration: InputDecoration(
+                    labelText: "Search",
+                    hintText: "Search",
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        logger.d("Clear search button pressed.");
+                        _searchController.clear();
+                      },
+                      icon: const Icon(Icons.clear),
+                    ),
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                    ),
                   ),
                 ),
               ),
@@ -154,29 +159,31 @@ class _SongListState extends State<SongList> {
               valueListenable: Hive.box<Song>('songs').listenable(),
               builder: (context, Box<Song> box, widget) {
                 // Get all songs from the box
-                List<Song> allSongs = box.values.toList();
+                // List<Song> allSongs = box.values.toList();
+                // _filteredSongs = allSongs;
+                //_updateAllSongs();
 
                 logger.d(
-                    'allSongs selected from the database: ${allSongs.length}');
+                    'allSongs selected from the database: ${_filteredSongs.length}');
 
-                if (allSongs.isEmpty) {
+                if (_filteredSongs.isEmpty) {
                   logger.d("No songs available.");
                   return const Text("No songs available");
                 } else {
-                  logger.d("Got songs. Data: ${allSongs.length}");
+                  logger.d("Got songs. Data: ${_filteredSongs.length}");
 
-                  _allSongs = allSongs;
+                  // _allSongs = _filteredSongs;
+
+                  // Logger(level: LoggingUtil.loggingLevel('SongList')).d(
+                  //     'Songs read in from snapshot\n${allSongs.map((song) => song.getDebugOutput()).join('\n')}');
 
                   Logger(level: LoggingUtil.loggingLevel('SongList')).d(
-                      'Songs read in from snapshot\n${allSongs.map((song) => song.getDebugOutput()).join('\n')}');
+                      'ValueListenableBuilder: Songs in _filteredSongs\n${_filteredSongs.map((song) => song.getDebugOutput()).join('\n')}');
 
-                  Logger(level: LoggingUtil.loggingLevel('SongList')).d(
-                      'Songs in _filteredSongs\n${_filteredSongs.map((song) => song.getDebugOutput()).join('\n')}');
-
-                  if (allSongs.isEmpty) {
+                  if (_filteredSongs.isEmpty) {
                     return const Text("No songs found");
                   } else {
-                    return buildSongs(allSongs);
+                    return buildSongs(_filteredSongs);
                   }
                 }
               },
@@ -253,7 +260,7 @@ class _SongListState extends State<SongList> {
     if (_searchController.text.isEmpty || _searchController.text.length < 3) {
       logger.d("No search phrase - _allSongs: $_allSongs");
       setState(() {
-        _filteredSongs = _allSongs;
+        _filteredSongs = List.from(_allSongs);
       });
     } else {
       logger.d("Filtering songs - ${_searchController.text}");
@@ -280,5 +287,27 @@ class _SongListState extends State<SongList> {
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _updateAllSongs() async {
+    _allSongs = await Hive.box<Song>('songs').values.toList();
+    setState(() {
+      _filteredSongs = List.from(_allSongs);
+    });
+  }
+
+  void _addSong(Song song) {
+    Hive.box<Song>('songs').add(song);
+    _updateAllSongs();
+  }
+
+  void _removeSong(Song song) {
+    Hive.box<Song>('songs').delete(song.id);
+    _updateAllSongs();
+  }
+
+  void _editSong(Song oldSong, Song newSong) {
+    Hive.box<Song>('songs').put(oldSong.id, newSong);
+    _updateAllSongs();
   }
 }
