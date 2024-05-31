@@ -11,6 +11,7 @@ void main() {
     // Connect to the Flutter driver before running any tests.
     setUpAll(() async {
       driver = await FlutterDriver.connect();
+      // driver = await FlutterDriver.connect(dartVmServiceUrl: 'ws://127.0.0.1:55396');
     });
 
     // Close the connection to the driver after the tests have completed.
@@ -26,7 +27,6 @@ void main() {
 
       // Verify that the add song dialog is shown.
       await driver!.waitFor(addSongDialog);
-      expect(find.byValueKey('addSongDialog'), findsOneWidget);
     });
   });
 }
