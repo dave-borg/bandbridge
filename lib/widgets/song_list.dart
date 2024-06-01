@@ -219,6 +219,7 @@ class _SongListState extends State<SongList> {
                 Expanded(
                   flex: 3,
                   child: TextButton(
+                    key: Key('songList_btn_title_${thisSong.id}'),
                     style: TextButton.styleFrom(
                       backgroundColor: currentSongProvider.currentSong.title ==
                               thisSong.title

@@ -39,6 +39,7 @@ class SongHeaderDialog extends StatelessWidget {
           child: Column(
             children: <Widget>[
               TextFormField(
+                key: const Key('songHeaderDialog_songTitle'),
                 decoration: const InputDecoration(labelText: 'Song Title'),
                 initialValue: songTitle,
                 validator: (value) {
@@ -52,12 +53,13 @@ class SongHeaderDialog extends StatelessWidget {
                 },
               ),
               TextFormField(
+                key: const Key('songHeaderDialog_artist'),
                 decoration: const InputDecoration(labelText: 'Artist'),
                 initialValue: artist,
                 validator: (value) {
-                  // if (value == null || value.isEmpty) {
-                  //   return 'Please enter a song artist';
-                  // }
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter an artist';
+                  }
                   return null;
                 },
                 onSaved: (value) {
@@ -65,6 +67,7 @@ class SongHeaderDialog extends StatelessWidget {
                 },
               ),
               DropdownButtonFormField<String>(
+                key: const Key('songHeaderDialog_songKey'),
                 value: key,
                 decoration: const InputDecoration(labelText: 'Key'),
                 items: <String>[
@@ -103,13 +106,14 @@ class SongHeaderDialog extends StatelessWidget {
                 },
               ),
               TextFormField(
+                key: const Key('songHeaderDialog_tempo'),
                 initialValue: tempo,
                 decoration: const InputDecoration(labelText: 'Tempo'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null ||
                       value.isEmpty ||
-                      int.tryParse(value) == null) {
+                      num.tryParse(value) == null) {
                     return 'Please enter a tempo in BPM';
                   }
                   return null;
@@ -119,6 +123,7 @@ class SongHeaderDialog extends StatelessWidget {
                 },
               ),
               DropdownButtonFormField<String>(
+                key: const Key('songHeaderDialog_timeSignature'),
                 decoration: const InputDecoration(labelText: 'Time Signature'),
                 value: timeSignature,
                 items: <String>[
