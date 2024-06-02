@@ -1,5 +1,5 @@
 loggers:
   SongList:
-    level: DEBUG
+    level: INFO
   DEFAULT:
     level: INFO

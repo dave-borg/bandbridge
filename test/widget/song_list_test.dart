@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
-import 'package:path_provider/path_provider.dart';
+//import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:bandbridge/models/current_song.dart';
 import 'package:flutter/material.dart';
@@ -35,8 +35,8 @@ void main() {
 
   setUpAll(() async {
     // Initialize Hive and open the box.
-    final document = await getApplicationDocumentsDirectory();
-    await Hive.initFlutter(document.path);
+    //final document = await getApplicationDocumentsDirectory();
+    await Hive.initFlutter('./hive/');
     Hive.registerAdapter(SectionAdapter());
     Hive.registerAdapter(ChordAdapter());
     Hive.registerAdapter(SongAdapter());
