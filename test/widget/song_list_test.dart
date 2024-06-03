@@ -9,6 +9,7 @@ import 'package:bandbridge/widgets/song_list.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_test/hive_test.dart';
 import 'package:logger/logger.dart';
 //import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -33,44 +34,46 @@ void main() {
   CurrentSongProvider currentSongProvider = CurrentSongProvider();
   Song testSong;
 
-  setUpAll(() async {
-    // Initialize Hive and open the box.
-    //final document = await getApplicationDocumentsDirectory();
-    await Hive.initFlutter('./hive/');
-    Hive.registerAdapter(SectionAdapter());
-    Hive.registerAdapter(ChordAdapter());
-    Hive.registerAdapter(SongAdapter());
-    Hive.registerAdapter(LyricAdapter());
-    Hive.registerAdapter(VersionAdapter());
-
+  setUp(() async {
+    await setUpTestHive();
     await Hive.initFlutter();
-    if (!Hive.isBoxOpen('songs')) {
-      var box = await Hive.openBox<Song>('songs');
-
-      // Create a Song object
-      testSong = Song(
-        songId: '1',
-        title: 'Test Song',
-        artist: 'Test Artist',
-        initialKey: 'D',
-        tempo: '120',
-        timeSignature: '4/4',
-      );
-
-      box.put(testSong!.id, testSong!);
-
-      currentSongProvider.setCurrentSong(testSong);
+    if (!Hive.isAdapterRegistered(0)) {
+      // Check if the adapter is already registered
+      Hive.registerAdapter(SongAdapter());
     }
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(SectionAdapter());
+    }
+    if (!Hive.isAdapterRegistered(2)) {
+      Hive.registerAdapter(ChordAdapter());
+    }
+    if (!Hive.isAdapterRegistered(3)) {
+      Hive.registerAdapter(LyricAdapter());
+    }
+    if (!Hive.isAdapterRegistered(4)) {
+      Hive.registerAdapter(VersionAdapter());
+    }
+    await Hive.openBox<Song>('songs');
+
+    var box = await Hive.openBox<Song>('songs');
+
+    // Create a Song object
+    testSong = Song(
+      songId: '1',
+      title: 'Test Song',
+      artist: 'Test Artist',
+      initialKey: 'D',
+      tempo: '120',
+      timeSignature: '4/4',
+    );
+
+    box.put(testSong.id, testSong);
+
+    currentSongProvider.setCurrentSong(testSong);
   });
 
-  tearDownAll(() async {
-    try {
-      Hive.deleteBoxFromDisk('songs');
-      logger.d('Closing the songs Hive box');
-    } catch (e) {
-      logger.e('Error deleting box: $e');
-    }
-    // Close the box.
+  tearDown(() async {
+    tearDownTestHive();
   });
 
   testWidgets('SongList Widget Test with Song object',

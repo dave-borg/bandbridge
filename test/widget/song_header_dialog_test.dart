@@ -1,3 +1,10 @@
+import 'dart:async';
+
+import 'package:bandbridge/models/hive_adapters/adpt_chord.dart';
+import 'package:bandbridge/models/hive_adapters/adpt_lyric.dart';
+import 'package:bandbridge/models/hive_adapters/adpt_section.dart';
+import 'package:bandbridge/models/hive_adapters/adpt_song.dart';
+import 'package:bandbridge/models/hive_adapters/adpt_version.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/songs/song_header_dialog.dart';
@@ -6,223 +13,326 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:hive_test/hive_test.dart';
+
+import '../test_lock.dart';
 
 void main() {
-  var logger = Logger(level: LoggingUtil.loggingLevel('SongHeaderDialogTest'));
-  TestWidgetsFlutterBinding.ensureInitialized();
+  group('Song Header Dialog Tests', () {
+    var logger =
+        Logger(level: LoggingUtil.loggingLevel('SongHeaderDialogTest'));
+    TestWidgetsFlutterBinding.ensureInitialized();
+    Song testSong = Song();
 
-  const MethodChannel channel =
-      MethodChannel('plugins.flutter.io/path_provider');
+    const MethodChannel channel =
+        MethodChannel('plugins.flutter.io/path_provider');
 
-  // Set a mock method call handler.
-  channel.setMockMethodCallHandler((MethodCall methodCall) async {
-    if (methodCall.method == 'getApplicationDocumentsDirectory') {
-      // Return a dummy directory path.
-      return '.';
-    }
-    return null;
-  });
+    // Set a mock method call handler.
+    channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      if (methodCall.method == 'getApplicationDocumentsDirectory') {
+        // Return a dummy directory path.
+        return '.';
+      }
+      return null;
+    });
 
-  setUpAll(() async {
-    // Initialize Hive and open the box.
-    await Hive.initFlutter();
-    if (!Hive.isBoxOpen('songs')) {
-      await Hive.openBox<Song>('songs');
-    }
-  });
+    setUpAll(() async {
+      print('setUpAll');
+      await acquireTestLock();
+      await Hive.initFlutter();
+      await setUpTestHive();
+      print('\tsetUpAll done');
 
-  tearDownAll(() async {
-    try {
-      Hive.deleteBoxFromDisk('songs');
-      logger.d('Closing the songs Hive box');
-    } catch (e) {
-      logger.e('Error deleting box: $e');
-    }
-    // Close the box.
-  });
+      testSong = Song(
+        songId: '1',
+        title: 'Test Song',
+        artist: 'Test Artist',
+        initialKey: 'D',
+        tempo: '120',
+        timeSignature: '4/4',
+      );
+    });
 
-  testWidgets('Form is visable and basic validation', (tester) async {
-    await tester.pumpWidget(MaterialApp(
-      home: SongHeaderDialog(
-        dialogTitle: 'Test Song Dialog',
-        onSongCreated: (song) {},
-      ),
-    ));
+    tearDownAll(() async {
+      print('tearDownAll');
+      releaseTestLock();
+      print('\ttearDownAll done');
+    });
 
-    // Create the Finders.
-    final titleFinder = find.text('Test Song Dialog');
+    setUp(() async {
+      print('setUp');
+      if (!Hive.isAdapterRegistered(0)) {
+        // Check if the adapter is already registered
+        Hive.registerAdapter(SongAdapter());
+      }
+      if (!Hive.isAdapterRegistered(1)) {
+        Hive.registerAdapter(SectionAdapter());
+      }
+      if (!Hive.isAdapterRegistered(2)) {
+        Hive.registerAdapter(ChordAdapter());
+      }
+      if (!Hive.isAdapterRegistered(3)) {
+        Hive.registerAdapter(LyricAdapter());
+      }
+      if (!Hive.isAdapterRegistered(4)) {
+        Hive.registerAdapter(VersionAdapter());
+      }
 
-    // Find the form fields.
-    var songTitleField = find.byKey(const Key('songHeaderDialog_songTitle'));
-    var artistField = find.byKey(const Key('songHeaderDialog_artist'));
+      print('about to open box');
+      var box = Hive.isBoxOpen('songs')
+          ? Hive.box('songs')
+          : await Hive.openBox<Song>('songs');
+      print('opened box');
+      if (Hive.isBoxOpen('songs')) {
+        print('\tbox is open');
+      }
 
-    // Enter invalid values.
-    await tester.enterText(songTitleField, '');
-    await tester.enterText(artistField, '');
+      await box.add(testSong);
 
-    // Tap the Submit button to trigger validation.
-    var submitButton = find.text('Submit');
-    await tester.tap(submitButton);
-    await tester.pump();
+      var localSong = box.get(testSong.id);
 
-    // Check if the validation message is displayed.
-    expect(find.text('Please enter a song title'), findsOneWidget);
+      logger.d(localSong?.getDebugOutput('Song in setUp'));
 
-    expect(titleFinder, findsOneWidget);
-  });
+      print('\tsetup finished');
+    });
 
-  testWidgets('Form validation with different combinations', (tester) async {
-    await tester.pumpWidget(MaterialApp(
-      home: SongHeaderDialog(
-        dialogTitle: 'Test Song Dialog',
-        onSongCreated: (song) {},
-      ),
-    ));
+    tearDown(() async {
+      print('tearDown');
+      var box = Hive.box<Song>('songs');
+      print('got the box');
+      testSong.delete();
+      print('deleted the test song');
+      await box.close();
+      print('closed the box');
+      // print('tearDown');
+      // if (Hive.isBoxOpen('songs')) {
+      //   var box = Hive.box<Song>('songs');
+      //   print('\tgot box');
 
-    // Find the form fields.
-    var songTitleField = find.byKey(const Key('songHeaderDialog_songTitle'));
-    var artistField = find.byKey(const Key('songHeaderDialog_artist'));
+      //   //await box.deleteFromDisk();
+      //   //print('\tbox deleted from disk');
+      //   await box.clear();
+      //   // print('\tbox cleared');
+      //   await box.close();
+      //   await tearDownTestHive();
+      //   print('\tbtornDownTestHive');
+      // }
+    });
 
-    // Enter invalid values.
-    await tester.enterText(songTitleField, '');
-    await tester.enterText(artistField, '');
-    // Tap the Submit button to trigger validation.
-    var submitButton = find.text('Submit');
-    await tester.tap(submitButton);
-    await tester.pump();
-    // Check if the validation message is displayed.
-    expect(find.text('Please enter a song title'), findsOneWidget);
-
-    // Enter valid song title but invalid artist.
-    await tester.enterText(songTitleField, 'Test Song');
-    await tester.enterText(artistField, '');
-    await tester.tap(submitButton);
-    await tester.pump();
-    // Check if the validation message is displayed.
-    expect(find.text('Please enter an artist'), findsOneWidget);
-
-    // Enter valid values.
-    await tester.enterText(songTitleField, 'Test Song');
-    await tester.enterText(artistField, 'Test Artist');
-    await tester.tap(submitButton);
-    await tester.pump();
-    // Check if the validation message is not displayed.
-    expect(find.text('Please enter a song title'), findsNothing);
-    expect(find.text('Please enter an artist'), findsNothing);
-  });
-
-  testWidgets('Tempo field validation', (WidgetTester tester) async {
-    // Build the SongHeaderDialog widget.
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: SongHeaderDialog(
+    testWidgets('Form is visable and basic validation', (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: SongHeaderDialog(
+          dialogTitle: 'Test Song Dialog',
           onSongCreated: (song) {},
-          dialogTitle: 'Test Dialog',
+          song: testSong,
         ),
-      ),
-    ));
+      ));
 
-    // Find the Tempo field.
-    var tempoField = find.byKey(const Key('songHeaderDialog_tempo'));
-    expect(tempoField, findsOneWidget);
+      // Create the Finders.
+      final titleFinder = find.text('Test Song Dialog');
 
-    var submitButton = find.text('Submit');
+      // Find the form fields.
+      var songTitleField = find.byKey(const Key('songHeaderDialog_songTitle'));
+      var artistField = find.byKey(const Key('songHeaderDialog_artist'));
 
-    // Test valid input.
-    await tester.enterText(tempoField, '120');
-    await tester.tap(submitButton);
-    await tester.pump();
-    expect(find.text('Please enter a tempo in BPM'), findsNothing);
+      // Enter invalid values.
+      await tester.enterText(songTitleField, '');
+      await tester.enterText(artistField, '');
 
-    // Test space input.
-    await tester.enterText(tempoField, '120.5 ');
-    await tester.tap(submitButton);
-    await tester.pump();
-    expect(find.text('Please enter a tempo in BPM'), findsNothing);
+      // Tap the Submit button to trigger validation.
+      var submitButton = find.text('Submit');
+      await tester.tap(submitButton);
+      await tester.pump();
 
-    // Test space input.
-    await tester.enterText(tempoField, ' 120');
-    await tester.tap(submitButton);
-    await tester.pump();
-    expect(find.text('Please enter a tempo in BPM'), findsNothing);
+      // Check if the validation message is displayed.
+      expect(find.text('Please enter a song title'), findsOneWidget);
 
-    // Test double input.
-    await tester.enterText(tempoField, '120.5');
-    await tester.tap(submitButton);
-    await tester.pump();
-    expect(find.text('Please enter a tempo in BPM'), findsNothing);
+      expect(titleFinder, findsOneWidget);
+    });
 
-    // Test invalid input.
-    await tester.enterText(tempoField, 'abc');
-    await tester.tap(submitButton);
-    await tester.pump();
-    expect(find.text('Please enter a tempo in BPM'), findsOneWidget);
+    testWidgets('Tempo field validation', (WidgetTester tester) async {
+      var box = Hive.box<Song>('songs');
 
-    // Test invalid input.
-    await tester.enterText(tempoField, '12r');
-    await tester.tap(submitButton);
-    await tester.pump();
-    expect(find.text('Please enter a tempo in BPM'), findsOneWidget);
+      // Build the SongHeaderDialog widget.
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: SongHeaderDialog(
+            onSongCreated: (song) {},
+            dialogTitle: 'Test Dialog',
+            song: box.get(testSong.id),
+          ),
+        ),
+      ));
 
-    // Test invalid input.
-    await tester.enterText(tempoField, '125.p');
-    await tester.tap(submitButton);
-    await tester.pump();
-    expect(find.text('Please enter a tempo in BPM'), findsOneWidget);
+      // Find the Tempo field.
+      var tempoField = find.byKey(const Key('songHeaderDialog_tempo'));
+      expect(tempoField, findsOneWidget);
 
-    // Test invalid input.
-    await tester.enterText(tempoField, '#%^&');
-    await tester.tap(submitButton);
-    await tester.pump();
-    expect(find.text('Please enter a tempo in BPM'), findsOneWidget);
+      var submitButton = find.text('Submit');
 
-    // Test invalid input.
-    await tester.enterText(tempoField, '14**');
-    await tester.tap(submitButton);
-    await tester.pump();
-    expect(find.text('Please enter a tempo in BPM'), findsOneWidget);
-  });
+      // Test valid input.
+      await tester.enterText(tempoField, '120');
+      await tester.tap(submitButton);
+      await tester.pump();
+      expect(find.text('Please enter a tempo in BPM'), findsNothing);
 
-  testWidgets('Form fields are initialized with Song attributes',
-      (tester) async {
-    // Create a Song object with known attributes.
-    Song testSong = Song(
-      songId: '1',
-      title: 'Test Song',
-      artist: 'Test Artist',
-      initialKey: 'D',
-      tempo: '120',
-      timeSignature: '4/4',
-    );
+      // Test space input.
+      await tester.enterText(tempoField, '120.5 ');
+      await tester.tap(submitButton);
+      await tester.pump();
+      expect(find.text('Please enter a tempo in BPM'), findsNothing);
 
-    // Pump the SongHeaderDialog widget with the created Song object.
-    await tester.pumpWidget(MaterialApp(
-      home: SongHeaderDialog(
-        dialogTitle: 'Test Song Dialog',
-        onSongCreated: (song) {},
-        song: testSong,
-      ),
-    ));
+      // Test space input.
+      await tester.enterText(tempoField, ' 120');
+      await tester.tap(submitButton);
+      await tester.pump();
+      expect(find.text('Please enter a tempo in BPM'), findsNothing);
 
-    // Find the form fields.
-    var songTitleField = find.byKey(const Key('songHeaderDialog_songTitle'));
-    var artistField = find.byKey(const Key('songHeaderDialog_artist'));
-    var songKeyField = find.byKey(const Key('songHeaderDialog_songKey'));
-    var tempoField = find.byKey(const Key('songHeaderDialog_tempo'));
-    var timeSignatureField =
-        find.byKey(const Key('songHeaderDialog_timeSignature'));
+      // Test double input.
+      await tester.enterText(tempoField, '120.5');
+      await tester.tap(submitButton);
+      await tester.pump();
+      expect(find.text('Please enter a tempo in BPM'), findsNothing);
 
-    // Check if the initial values of the form fields match the attributes of the Song object.
-    expect(tester.widget<FormField>(songTitleField).initialValue,
-        equals(testSong.title));
-    expect(tester.widget<FormField>(artistField).initialValue,
-        equals(testSong.artist));
-    expect(tester.widget<DropdownButtonFormField>(songKeyField).initialValue,
-        equals(testSong.initialKey));
-    expect(tester.widget<FormField>(tempoField).initialValue,
-        equals(testSong.tempo));
-    expect(
-        tester.widget<DropdownButtonFormField>(timeSignatureField).initialValue,
-        equals(testSong.timeSignature));
+      // Test invalid input.
+      await tester.enterText(tempoField, 'abc');
+      await tester.tap(submitButton);
+      await tester.pump();
+      expect(find.text('Please enter a tempo in BPM'), findsOneWidget);
+
+      // Test invalid input.
+      await tester.enterText(tempoField, '12r');
+      await tester.tap(submitButton);
+      await tester.pump();
+      expect(find.text('Please enter a tempo in BPM'), findsOneWidget);
+
+      // Test invalid input.
+      await tester.enterText(tempoField, '125.p');
+      await tester.tap(submitButton);
+      await tester.pump();
+      expect(find.text('Please enter a tempo in BPM'), findsOneWidget);
+
+      // Test invalid input.
+      await tester.enterText(tempoField, '#%^&');
+      await tester.tap(submitButton);
+      await tester.pump();
+      expect(find.text('Please enter a tempo in BPM'), findsOneWidget);
+
+      // Test invalid input.
+      await tester.enterText(tempoField, '14**');
+      await tester.tap(submitButton);
+      await tester.pump();
+      expect(find.text('Please enter a tempo in BPM'), findsOneWidget);
+    });
+
+    testWidgets('Form fields are initialized with Song attributes',
+        (tester) async {
+      // Pump the SongHeaderDialog widget with the created Song object.
+      await tester.pumpWidget(MaterialApp(
+        home: SongHeaderDialog(
+          dialogTitle: 'Test Song Dialog',
+          onSongCreated: (song) {},
+          song: testSong,
+        ),
+      ));
+
+      // Find the form fields.
+      var songTitleField = find.byKey(const Key('songHeaderDialog_songTitle'));
+      var artistField = find.byKey(const Key('songHeaderDialog_artist'));
+      var songKeyField = find.byKey(const Key('songHeaderDialog_songKey'));
+      var tempoField = find.byKey(const Key('songHeaderDialog_tempo'));
+      var timeSignatureField =
+          find.byKey(const Key('songHeaderDialog_timeSignature'));
+
+      // Check if the initial values of the form fields match the attributes of the Song object.
+      expect(tester.widget<FormField>(songTitleField).initialValue,
+          equals(testSong.title));
+      expect(tester.widget<FormField>(artistField).initialValue,
+          equals(testSong.artist));
+      expect(tester.widget<DropdownButtonFormField>(songKeyField).initialValue,
+          equals(testSong.initialKey));
+      expect(tester.widget<FormField>(tempoField).initialValue,
+          equals(testSong.tempo));
+      expect(
+          tester
+              .widget<DropdownButtonFormField>(timeSignatureField)
+              .initialValue,
+          equals(testSong.timeSignature));
+    });
+
+    testWidgets('Form validation with different combinations', (tester) async {
+      var box = Hive.box<Song>('songs');
+
+      await tester.pumpWidget(MaterialApp(
+        home: SongHeaderDialog(
+          dialogTitle: 'Test Song Dialog',
+          onSongCreated: (song) {},
+          song: box.get(testSong.id),
+        ),
+      ));
+
+      // Find the form fields.
+      var songTitleField = find.byKey(const Key('songHeaderDialog_songTitle'));
+      var artistField = find.byKey(const Key('songHeaderDialog_artist'));
+
+      // Enter invalid values.
+      await tester.enterText(songTitleField, '');
+      await tester.enterText(artistField, '');
+      // Tap the Submit button to trigger validation.
+      var submitButton = find.text('Submit');
+      await tester.tap(submitButton);
+      await tester.pump();
+      // Check if the validation message is displayed.
+      expect(find.text('Please enter a song title'), findsOneWidget);
+
+      // Enter valid song title but invalid artist.
+      await tester.enterText(songTitleField, 'Test Song');
+      await tester.enterText(artistField, '');
+      await tester.tap(submitButton);
+      await tester.pump();
+      // Check if the validation message is displayed.
+      expect(find.text('Please enter an artist'), findsOneWidget);
+
+      // Enter valid values.
+      await tester.enterText(songTitleField, 'Test Song');
+      await tester.enterText(artistField, 'Test Artist');
+      await tester.tap(submitButton);
+      await tester.pump();
+      // Check if the validation message is not displayed.
+      expect(find.text('Please enter a song title'), findsNothing);
+      expect(find.text('Please enter an artist'), findsNothing);
+    });
+
+    testWidgets('Test saving changes to database', (tester) async {
+      var completer = Completer<Song>();
+
+      await tester.pumpWidget(MaterialApp(
+        home: SongHeaderDialog(
+          dialogTitle: 'Test Song Dialog',
+          onSongCreated: (song) {
+            // Complete the completer when the callback is called
+            completer.complete(song);
+          },
+          song: testSong,
+        ),
+      ));
+
+      // Find the form fields.
+      var songTitleField = find.byKey(const Key('songHeaderDialog_songTitle'));
+      var artistField = find.byKey(const Key('songHeaderDialog_artist'));
+      var submitButton = find.text('Submit');
+      tester.ensureVisible(submitButton);
+
+      // Enter valid song title but invalid artist.
+      await tester.enterText(songTitleField, 'Test Song2');
+      await tester.enterText(artistField, 'Test Artist2');
+      await tester.tap(submitButton);
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+      // Check if the validation message is displayed.
+
+      var createdSong = await completer.future;
+      expect(createdSong.title, 'Test Song2');
+      logger.d(testSong.getDebugOutput('Song in test saving changes'));
+    });
   });
 }
