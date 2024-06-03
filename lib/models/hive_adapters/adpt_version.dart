@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 
 class VersionAdapter extends TypeAdapter<Version> {
   @override
-  final typeId = 5;
+  final typeId = 4;
 
   @override
   Version read(BinaryReader reader) {

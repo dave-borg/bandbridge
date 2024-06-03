@@ -24,7 +24,7 @@ Future<void> main() async {
   Hive.registerAdapter(VersionAdapter());
 
   await Hive.openBox<Song>('songs');
-  
+
   runApp(const BandBridge());
 }
 
