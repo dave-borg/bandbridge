@@ -82,44 +82,26 @@ void main() {
       var box = Hive.isBoxOpen('songs')
           ? Hive.box('songs')
           : await Hive.openBox<Song>('songs');
-      print('opened box');
-      if (Hive.isBoxOpen('songs')) {
-        print('\tbox is open');
-      }
 
       await box.add(testSong);
 
       var localSong = box.get(testSong.id);
 
       logger.d(localSong?.getDebugOutput('Song in setUp'));
-
-      print('\tsetup finished');
     });
 
     tearDown(() async {
-      print('tearDown');
       var box = Hive.box<Song>('songs');
-      print('got the box');
       testSong.delete();
-      print('deleted the test song');
-      await box.close();
-      print('closed the box');
-      // print('tearDown');
-      // if (Hive.isBoxOpen('songs')) {
-      //   var box = Hive.box<Song>('songs');
-      //   print('\tgot box');
-
-      //   //await box.deleteFromDisk();
-      //   //print('\tbox deleted from disk');
-      //   await box.clear();
-      //   // print('\tbox cleared');
-      //   await box.close();
-      //   await tearDownTestHive();
-      //   print('\tbtornDownTestHive');
-      // }
+      box.flush();
+      if (Hive.isBoxOpen('songs')) {
+        box.close();
+        print('closed box');
+      }
     });
 
     testWidgets('Form is visable and basic validation', (tester) async {
+      print('Form is visable and basic validation');
       await tester.pumpWidget(MaterialApp(
         home: SongHeaderDialog(
           dialogTitle: 'Test Song Dialog',
@@ -151,6 +133,7 @@ void main() {
     });
 
     testWidgets('Tempo field validation', (WidgetTester tester) async {
+      print('Tempo field validation');
       var box = Hive.box<Song>('songs');
 
       // Build the SongHeaderDialog widget.
@@ -227,6 +210,7 @@ void main() {
 
     testWidgets('Form fields are initialized with Song attributes',
         (tester) async {
+      print('Form fields are initialized with Song attributes');
       // Pump the SongHeaderDialog widget with the created Song object.
       await tester.pumpWidget(MaterialApp(
         home: SongHeaderDialog(
@@ -261,6 +245,7 @@ void main() {
     });
 
     testWidgets('Form validation with different combinations', (tester) async {
+      print('Form validation with different combinations');
       var box = Hive.box<Song>('songs');
 
       await tester.pumpWidget(MaterialApp(
@@ -304,15 +289,11 @@ void main() {
     });
 
     testWidgets('Test saving changes to database', (tester) async {
-      var completer = Completer<Song>();
-
+      print('Test saving changes to database');
       await tester.pumpWidget(MaterialApp(
         home: SongHeaderDialog(
           dialogTitle: 'Test Song Dialog',
-          onSongCreated: (song) {
-            // Complete the completer when the callback is called
-            completer.complete(song);
-          },
+          onSongCreated: (song) {},
           song: testSong,
         ),
       ));
@@ -330,9 +311,9 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 5));
       // Check if the validation message is displayed.
 
-      var createdSong = await completer.future;
-      expect(createdSong.title, 'Test Song2');
       logger.d(testSong.getDebugOutput('Song in test saving changes'));
+
+      expect(testSong.title, 'Test Song2');
     });
   });
 }

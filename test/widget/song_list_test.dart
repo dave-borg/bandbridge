@@ -16,6 +16,8 @@ import 'package:provider/provider.dart';
 import 'package:bandbridge/models/current_song.dart';
 import 'package:flutter/material.dart';
 
+import '../test_lock.dart';
+
 void main() {
   var logger = Logger(level: LoggingUtil.loggingLevel('SongHeaderDialogTest'));
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -74,6 +76,22 @@ void main() {
 
   tearDown(() async {
     tearDownTestHive();
+  });
+
+  tearDownAll(() async {
+    print('tearDownAll');
+    if (Hive.isBoxOpen('songs')) {
+      Hive.box<Song>('songs').close();
+      //await box.deleteFromDisk();
+    }
+    releaseTestLock();
+
+    print('\ttearDownAll done');
+  });
+
+  setUpAll(() async {
+    await acquireTestLock();
+    await setUpTestHive();
   });
 
   testWidgets('SongList Widget Test with Song object',

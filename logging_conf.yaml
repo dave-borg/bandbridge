@@ -1,6 +1,6 @@
 loggers:
   SongHeaderDialog:
-    level: DEBUG
+    level: INFO
   SongHeaderDialogTest:
     level: DEBUG
   DEFAULT:
