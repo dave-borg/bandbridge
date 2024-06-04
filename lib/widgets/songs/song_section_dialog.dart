@@ -4,6 +4,7 @@ import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
+// ignore: must_be_immutable
 class SongArrangementDialog extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   var onSectionCreated;
@@ -60,9 +61,8 @@ class SongArrangementDialog extends StatelessWidget {
             logger.t('Submit button pressed');
             if (_formKey.currentState?.validate() ?? false) {
               _formKey.currentState?.save();
-              song.addSection(newSection);
-              onSectionCreated(song);
-              Navigator.of(context).pop();
+              // Return the new section instead of adding it to the song
+              Navigator.of(context).pop(newSection);
             } else {
               logger.d('Form is not valid');
             }

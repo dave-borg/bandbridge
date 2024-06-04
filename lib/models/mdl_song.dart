@@ -1,5 +1,5 @@
 import 'package:bandbridge/models/mdl_version.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 import 'mdl_section.dart';
@@ -85,9 +85,5 @@ class Song extends HiveObject {
     rValue += "Versions: ${versions.length}\n";
 
     return rValue;
-  }
-
-  addSection(Section newSection) {
-    structure.add(newSection);
   }
 }
