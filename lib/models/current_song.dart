@@ -69,16 +69,6 @@ class CurrentSongProvider extends ChangeNotifier {
     return _currentSong;
   }
 
-  // Future<void> deleteSong(Song song) async {
-  //   await SongsService_temp.deleteSong(song);
-  //   _refreshSongs();
-  // }
-
-  // Future<void> _refreshSongs() async {
-  //   allSongs = await SongsService_temp.getAllSongs();
-  //   notifyListeners();
-  // }
-
   String get title => _currentSong.title;
   String get artist => _currentSong.artist;
   String get duration => _currentSong.duration;
@@ -91,7 +81,7 @@ class CurrentSongProvider extends ChangeNotifier {
   void clearSelectedSong() {
     _currentSong = Song();
     _currentSong.id = "-2";
-    
+
     notifyListeners();
   }
 }
