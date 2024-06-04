@@ -94,6 +94,7 @@ class _SongListState extends State<SongList> {
               // Add a Song btn
               // This is the button that adds a new song to our list
               IconButton(
+                key: const Key('btn_songList_addSong'),
                 icon: const Icon(Icons.add),
                 onPressed: () {
                   showDialog(
@@ -102,6 +103,7 @@ class _SongListState extends State<SongList> {
                       return ChangeNotifierProvider<CurrentSongProvider>.value(
                         value: currentSongProvider,
                         child: SongHeaderDialog(
+                          key: const Key('dlg_songList_songHeaderDialog'),
                           dialogTitle: 'Add Song',
                           onSongCreated: (newSong) {
                             setState(() {
@@ -217,6 +219,7 @@ class _SongListState extends State<SongList> {
                 Expanded(
                   flex: 3,
                   child: TextButton(
+                    key: Key('songList_btn_title_${thisSong.id}'),
                     style: TextButton.styleFrom(
                       backgroundColor: currentSongProvider.currentSong.title ==
                               thisSong.title
