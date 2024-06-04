@@ -86,4 +86,8 @@ class Song extends HiveObject {
 
     return rValue;
   }
+
+  addSection(Section newSection) {
+    structure.add(newSection);
+  }
 }
