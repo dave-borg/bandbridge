@@ -26,16 +26,17 @@ class Song extends HiveObject {
   List<Version> versions;
 
   Song({
-    String? songId,
-    this.title = "[Title]",
-    this.artist = "[Artist]",
-    this.duration = "",
-    this.initialKey = "",
-    this.tempo = "",
-    this.timeSignature = "",
-    this.structure = const [],
-    this.versions = const [],
-  }) : id = songId == null || songId == "-1" ? const Uuid().v4() : songId;
+  String? songId,
+  this.title = "[Title]",
+  this.artist = "[Artist]",
+  this.duration = "",
+  this.initialKey = "",
+  this.tempo = "",
+  this.timeSignature = "",
+  List<Section>? structure,
+  this.versions = const [],
+}) : id = songId == null || songId == "-1" ? const Uuid().v4() : songId,
+   structure = structure ?? []; // Initialize structure in the constructor body
 
   factory Song.fromJson(Map<String, dynamic> json) {
     return Song(
@@ -85,5 +86,9 @@ class Song extends HiveObject {
     rValue += "Versions: ${versions.length}\n";
 
     return rValue;
+  }
+
+  addStructure(Section section) {
+    structure.add(section);
   }
 }

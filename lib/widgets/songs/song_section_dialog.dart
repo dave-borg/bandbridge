@@ -10,12 +10,14 @@ class SongArrangementDialog extends StatelessWidget {
   var onSectionCreated;
   Song song;
   String dialogTitle;
+  int sectionIndex;
 
   SongArrangementDialog({
     super.key,
     required this.onSectionCreated,
     required this.song,
-    required this.dialogTitle,
+    required this.dialogTitle, 
+    required this.sectionIndex,
   });
 
   Section newSection = Section();
@@ -34,7 +36,7 @@ class SongArrangementDialog extends StatelessWidget {
                 TextFormField(
                   key: const Key('songSectionDialog_sectionTitle'),
                   decoration: const InputDecoration(labelText: 'Section Title'),
-                  initialValue: newSection.section,
+                  initialValue: sectionIndex == -1 ? "" : song.structure[sectionIndex].section,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a section title\n(eg. Verse, Chorus)';

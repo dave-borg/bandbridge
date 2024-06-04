@@ -62,6 +62,7 @@ class _SongArrangementPanelState extends State<SongArrangementPanel> {
                           child: SongArrangementDialog(
                             dialogTitle: 'Add Section',
                             song: widget.song,
+                            sectionIndex: -1,
                             onSectionCreated: (newSection) {
                               setState(() {});
                             },
@@ -74,7 +75,7 @@ class _SongArrangementPanelState extends State<SongArrangementPanel> {
                       // Add the section
                       setState(() {
                         // Assuming sections is your list of sections
-                        widget.song.structure.add(result);
+                        widget.song.addStructure(result);
                       });
                     }
                   },
@@ -96,6 +97,7 @@ class _SongArrangementPanelState extends State<SongArrangementPanel> {
                               return SongArrangementDialog(
                                 dialogTitle: 'Edit Section',
                                 song: widget.song,
+                                sectionIndex: selectedSectionIndex!,
                                 onSectionCreated: (updatedSection) {
                                   setState(() {});
                                 },
@@ -133,13 +135,13 @@ class _SongArrangementPanelState extends State<SongArrangementPanel> {
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () =>
-                                        Navigator.of(context).pop(true),
-                                    child: const Text('Delete'),
+                                        Navigator.of(context).pop(false),
+                                    child: const Text('Cancel'),
                                   ),
                                   TextButton(
                                     onPressed: () =>
-                                        Navigator.of(context).pop(false),
-                                    child: const Text('Cancel'),
+                                        Navigator.of(context).pop(true),
+                                    child: const Text('Delete'),
                                   ),
                                 ],
                               );

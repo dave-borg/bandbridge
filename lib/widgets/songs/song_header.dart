@@ -111,9 +111,7 @@ class _SongHeaderState extends State<SongHeader> {
                                         TextButton(
                                           child: const Text('DELETE'),
                                           onPressed: () {
-                                            boxSong?.delete();
-                                            // currentSongProvider
-                                            //     .clearSelectedSong();
+                                            box.delete(currentSong.id);
                                             Navigator.of(context).pop();
                                           },
                                         ),
