@@ -25,12 +25,6 @@ class SongSectionPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     logger.d('SongSectionPanel rebuilt with section: ${section.section}');
 
-// List<int> testList = [1, 2, 3, 4, 5, 6, 7, 8];
-// var chunks = testList.chunked(4);
-// logger.d(chunks.toString());
-
-    // requiredRows = calculateRequiredRows(section);
-
     return SizedBox(
       width: 610,
       child: Column(

@@ -105,10 +105,21 @@ class _SongListState extends State<SongList> {
                         child: SongHeaderDialog(
                           key: const Key('dlg_songList_songHeaderDialog'),
                           dialogTitle: 'Add Song',
+                          song: Song(
+                            songId: "-2",
+                            title: "",
+                            artist: "",
+                            initialKey: "C",
+                            timeSignature: "4/4",
+                            tempo: "120",
+                          ),
                           onSongCreated: (newSong) {
                             setState(() {
                               // currentSongProvider.saveSong(newSong);
                               // _filteredSongs = _allSongs;
+
+                              logger
+                                  .d(newSong.getDebugOutput("Adding new song"));
 
                               _addSong(newSong);
                               currentSongProvider.setCurrentSong(newSong);
@@ -293,7 +304,7 @@ class _SongListState extends State<SongList> {
   }
 
   void _updateAllSongs() async {
-    _allSongs = await Hive.box<Song>('songs').values.toList();
+    _allSongs = Hive.box<Song>('songs').values.toList();
     setState(() {
       _filteredSongs = List.from(_allSongs);
     });

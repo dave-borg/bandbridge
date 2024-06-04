@@ -17,11 +17,11 @@ class Section {
   List<Lyric>? lyrics;
 
   Section({
-    required this.section,
-    required this.timestamp,
-    required this.duration,
-    this.chords,
-    this.lyrics,
+    this.section = '',
+    this.timestamp = '',
+    this.duration = '',
+    this.chords = const [],
+    this.lyrics = const [],
   });
 
   factory Section.fromJson(Map<String, dynamic> json) {

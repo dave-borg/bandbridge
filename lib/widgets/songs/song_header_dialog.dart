@@ -1,19 +1,18 @@
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 
 class SongHeaderDialog extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final Function(Song) onSongCreated;
-  Song? song;
+  Song song;
   final String dialogTitle;
 
   SongHeaderDialog({
     super.key,
     required this.onSongCreated,
-    this.song,
+    required this.song,
     required this.dialogTitle,
   });
 
@@ -21,14 +20,7 @@ class SongHeaderDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     var logger = Logger(level: LoggingUtil.loggingLevel('SongHeaderDialog'));
 
-    logger.d(song?.getDebugOutput('Song in SongHeaderDialog'));
-
-    // String songId = song?.id ?? '-1';
-    // String songTitle = song?.title ?? '';
-    // String artist = song?.artist ?? '';
-    // String key = song?.initialKey ?? 'A';
-    // String tempo = song?.tempo ?? '120';
-    // String timeSignature = song?.timeSignature ?? '4/4';
+    logger.d(song.getDebugOutput('Song in SongHeaderDialog'));
 
     return AlertDialog(
       title: Text(dialogTitle),
@@ -41,7 +33,7 @@ class SongHeaderDialog extends StatelessWidget {
               TextFormField(
                 key: const Key('songHeaderDialog_songTitle'),
                 decoration: const InputDecoration(labelText: 'Song Title'),
-                initialValue: song?.title,
+                initialValue: song.title,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a song title';
@@ -49,13 +41,13 @@ class SongHeaderDialog extends StatelessWidget {
                   return null;
                 },
                 onSaved: (value) {
-                  song?.title = value!;
+                  song.title = value!;
                 },
               ),
               TextFormField(
                 key: const Key('songHeaderDialog_artist'),
                 decoration: const InputDecoration(labelText: 'Artist'),
-                initialValue: song?.artist,
+                initialValue: song.artist,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter an artist';
@@ -63,12 +55,12 @@ class SongHeaderDialog extends StatelessWidget {
                   return null;
                 },
                 onSaved: (value) {
-                  song?.artist = value!;
+                  song.artist = value!;
                 },
               ),
               DropdownButtonFormField<String>(
                 key: const Key('songHeaderDialog_songKey'),
-                value: song?.initialKey,
+                value: song.initialKey,
                 decoration: const InputDecoration(labelText: 'Key'),
                 items: <String>[
                   'A',
@@ -102,12 +94,12 @@ class SongHeaderDialog extends StatelessWidget {
                   );
                 }).toList(),
                 onChanged: (value) {
-                  song?.initialKey = value!;
+                  song.initialKey = value!;
                 },
               ),
               TextFormField(
                 key: const Key('songHeaderDialog_tempo'),
-                initialValue: song?.tempo,
+                initialValue: song.tempo,
                 decoration: const InputDecoration(labelText: 'Tempo'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -119,13 +111,13 @@ class SongHeaderDialog extends StatelessWidget {
                   return null;
                 },
                 onSaved: (value) {
-                  song?.tempo = value!;
+                  song.tempo = value!;
                 },
               ),
               DropdownButtonFormField<String>(
                 key: const Key('songHeaderDialog_timeSignature'),
                 decoration: const InputDecoration(labelText: 'Time Signature'),
-                value: song?.timeSignature,
+                value: song.timeSignature,
                 items: <String>[
                   '4/4',
                   '3/4',
@@ -143,7 +135,7 @@ class SongHeaderDialog extends StatelessWidget {
                   );
                 }).toList(),
                 onChanged: (value) {
-                  song?.timeSignature = value!;
+                  song.timeSignature = value!;
                 },
               ),
             ],
@@ -163,8 +155,8 @@ class SongHeaderDialog extends StatelessWidget {
             logger.t('Submit button pressed');
             if (_formKey.currentState?.validate() ?? false) {
               _formKey.currentState?.save();
-              song?.save();
-              onSongCreated(song!);
+
+              onSongCreated(song);
               // }
               Navigator.of(context).pop();
             } else {
