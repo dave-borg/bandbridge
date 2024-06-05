@@ -36,7 +36,7 @@ class SongHasher {
 
       for (var lyric in section.lyrics!) {
         songString += lyric.text;
-        songString += lyric.timestamp;
+        songString += lyric.beats;
       }
     }
 

@@ -20,9 +20,10 @@ class Section {
     this.section = '',
     this.timestamp = '',
     this.duration = '',
-    this.chords = const [],
-    this.lyrics = const [],
-  });
+    List<Chord>? chords,
+    List<Lyric>? lyrics,
+  })  : chords = chords ?? [],
+        lyrics = lyrics ?? [];
 
   factory Section.fromJson(Map<String, dynamic> json) {
     var chordsJson = json['chords'] as List;

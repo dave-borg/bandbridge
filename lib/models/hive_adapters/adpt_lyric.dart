@@ -9,13 +9,13 @@ class LyricAdapter extends TypeAdapter<Lyric> {
   Lyric read(BinaryReader reader) {
     return Lyric(
       text: reader.read(),
-      timestamp: reader.read(),
+      beats: reader.read(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Lyric obj) {
     writer.write(obj.text);
-    writer.write(obj.timestamp);
+    writer.write(obj.beats);
   }
 }
