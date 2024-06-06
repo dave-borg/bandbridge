@@ -37,23 +37,19 @@ class _SongViewPanelState extends State<SongViewPanel>
           child: Container(
             width: double.maxFinite,
             height: double.maxFinite,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.black,
-                width: 1.0,
-              ),
-            ),
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 return Row(
                   children: [
-                    SizedBox(
-                      width: 140,
-                      child: SongArrangementPanel(song: currentSong),
+                    Expanded(
+                      child: SizedBox(
+                        width: 140,
+                        height: double.infinity,
+                        child: SongArrangementPanel(song: currentSong),
+                      ),
                     ),
                     SizedBox(
                       width: constraints.maxWidth - 150,
-                      //child: SongEditor(song: currentSong),
                       child: SongEditor(song: currentSong),
                     ),
                   ],
