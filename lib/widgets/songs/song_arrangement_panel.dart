@@ -1,4 +1,4 @@
-import 'package:bandbridge/models/current_song.dart';
+import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
@@ -23,7 +23,7 @@ class SongArrangementPanel extends StatefulWidget {
 }
 
 class _SongArrangementPanelState extends State<SongArrangementPanel> {
-  late CurrentSongProvider currentSongProvider;
+  late SongProvider currentSongProvider;
   int? selectedSectionIndex;
 
   State<StatefulWidget> createState() {
@@ -37,7 +37,7 @@ class _SongArrangementPanelState extends State<SongArrangementPanel> {
 
   @override
   Widget build(BuildContext context) {
-    currentSongProvider = Provider.of<CurrentSongProvider>(context);
+    currentSongProvider = Provider.of<SongProvider>(context);
 
     return SizedBox(
       width: 150,
@@ -60,7 +60,7 @@ class _SongArrangementPanelState extends State<SongArrangementPanel> {
                           context: context,
                           builder: (BuildContext context) {
                             return ChangeNotifierProvider<
-                                CurrentSongProvider>.value(
+                                SongProvider>.value(
                               value: currentSongProvider,
                               child: SongArrangementDialog(
                                 dialogTitle: 'Add Section',

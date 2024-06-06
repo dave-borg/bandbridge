@@ -1,4 +1,4 @@
-import 'package:bandbridge/models/current_song.dart';
+import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/songs/song_header_dialog.dart';
@@ -25,7 +25,7 @@ class _SongHeaderState extends State<SongHeader> {
 
   @override
   Widget build(BuildContext context) {
-    var currentSongProvider = context.watch<CurrentSongProvider>();
+    var currentSongProvider = context.watch<SongProvider>();
     var currentSong = currentSongProvider.currentSong;
     Song? boxSong;
 
@@ -99,6 +99,8 @@ class _SongHeaderState extends State<SongHeader> {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
+                                    logger.d(currentSong.getDebugOutput(
+                                        "Confirming the deletion of:"));
                                     return AlertDialog(
                                       title: const Text('Confirm'),
                                       content: Text(
@@ -113,7 +115,11 @@ class _SongHeaderState extends State<SongHeader> {
                                         TextButton(
                                           child: const Text('DELETE'),
                                           onPressed: () {
-                                            box.delete(currentSong.id);
+                                            currentSong.delete();
+                                            currentSongProvider
+                                                .deleteSong(currentSong);
+                                            logger.d(currentSong
+                                                .getDebugOutput("Deleting:"));
                                             Navigator.of(context).pop();
                                           },
                                         ),

@@ -1,4 +1,4 @@
-import 'package:bandbridge/models/current_song.dart';
+import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/song-editor/song_editor.dart';
 import 'package:bandbridge/widgets/songs/song_arrangement_panel.dart';
@@ -21,7 +21,7 @@ class _SongViewPanelState extends State<SongViewPanel>
   @override
   Widget build(BuildContext context) {
     // ignore: no_leading_underscores_for_local_identifiers
-    var currentSongProvider = context.watch<CurrentSongProvider>();
+    var currentSongProvider = context.watch<SongProvider>();
     var currentSong = currentSongProvider.currentSong;
 
     logger.d(
@@ -34,7 +34,7 @@ class _SongViewPanelState extends State<SongViewPanel>
         SongHeader(),
         Flexible(
           fit: FlexFit.loose,
-          child: Container(
+          child: SizedBox(
             width: double.maxFinite,
             height: double.maxFinite,
             child: LayoutBuilder(
