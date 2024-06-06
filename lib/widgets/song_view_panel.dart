@@ -1,13 +1,9 @@
 import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
-import 'package:bandbridge/widgets/song-editor/chord_chart_editor.dart';
-import 'package:bandbridge/widgets/song-editor/lyrics_editor.dart';
 import 'package:bandbridge/widgets/song-editor/song_editor.dart';
 import 'package:bandbridge/widgets/songs/song_arrangement_panel.dart';
 import 'package:bandbridge/widgets/songs/song_header.dart';
-import 'package:bandbridge/widgets/songs/song_section_panel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 

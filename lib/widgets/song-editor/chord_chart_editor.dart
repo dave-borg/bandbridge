@@ -8,13 +8,10 @@ class ChordChartEditor extends StatelessWidget {
   final Song song;
   final int? sectionIndex;
 
-  ChordChartEditor({super.key, required this.song, this.sectionIndex});
+  const ChordChartEditor({super.key, required this.song, this.sectionIndex});
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    print('Width: $width pixels');
-
     return Column(
       children: [
         AppBar(
@@ -22,19 +19,19 @@ class ChordChartEditor extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             IconButton(
-              icon: Icon(Icons.add),
+              icon: const Icon(Icons.add),
               onPressed: () {
                 // Add your onPressed code here.
               },
             ),
             IconButton(
-              icon: Icon(Icons.edit),
+              icon: const Icon(Icons.edit),
               onPressed: () {
                 // Add your onPressed code here.
               },
             ),
             IconButton(
-              icon: Icon(Icons.delete),
+              icon: const Icon(Icons.delete),
               onPressed: () {
                 // Add your onPressed code here.
               },

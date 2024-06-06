@@ -78,7 +78,7 @@ class SongGenerator {
     verse2.chords?.add(Chord(name: "A", beats: "4"));
     verse2.chords?.add(Chord(name: "A", beats: "8"));
     verse2.lyrics?.add(Lyric(
-        text: "All the girls around her say she\'s got it coming", beats: "8"));
+        text: "All the girls around her say she's got it coming", beats: "8"));
     verse2.chords?.add(Chord(name: "D", beats: "4"));
     verse2.lyrics
         ?.add(Lyric(text: "But she gets it while she can", beats: "8"));
@@ -105,15 +105,11 @@ class SongGenerator {
     chorus2.chords?.add(Chord(name: "A", beats: "4"));
     song.structure.add(chorus2);
 
-    print(song.getDebugOutput('Test Song'));
-
     var box = await Hive.openBox<Song>('songs');
 
     box.put(song.id, song);
 
     Song? rValue = box.get(song.id);
-
-    print(rValue?.getDebugOutput('Retrieved Song'));
 
     return rValue!;
   }

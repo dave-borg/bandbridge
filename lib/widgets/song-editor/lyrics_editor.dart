@@ -5,7 +5,7 @@ class LyricsEditor extends StatelessWidget {
   final Song song;
   final int? sectionIndex;
 
-  const LyricsEditor({Key? key, required this.song, this.sectionIndex});
+  const LyricsEditor({super.key, required this.song, this.sectionIndex});
 
   @override
   Widget build(BuildContext context) {

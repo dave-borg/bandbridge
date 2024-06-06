@@ -3,9 +3,6 @@ import 'package:bandbridge/models/hive_adapters/adpt_lyric.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_section.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_song.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_version.dart';
-import 'package:bandbridge/models/mdl_chord.dart';
-import 'package:bandbridge/models/mdl_lyric.dart';
-import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/song_generator.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +32,7 @@ class SongEditorWrapper extends StatefulWidget {
 }
 
 class _SongEditorWrapperState extends State<SongEditorWrapper> {
-  Song? song;
+  late Song song;
 
   @override
   void initState() {
@@ -49,11 +46,6 @@ class _SongEditorWrapperState extends State<SongEditorWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    if (song == null) {
-      return const CircularProgressIndicator(); // Show loading spinner while song is loading
-    } else {
-      print(song?.getDebugOutput("Launching editor with this song"));
-      return SongEditor(song: song, sectionIndex: null);
-    }
+    return SongEditor(song: song, sectionIndex: null);
   }
 }
