@@ -7,7 +7,7 @@ import 'package:logger/logger.dart';
 // ignore: must_be_immutable
 class SongArrangementDialog extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-  var onSectionCreated;
+  dynamic onSectionCreated;
   Song song;
   String dialogTitle;
   int sectionIndex;
@@ -27,6 +27,7 @@ class SongArrangementDialog extends StatelessWidget {
     var logger = Logger(level: LoggingUtil.loggingLevel('SongHeaderDialog'));
     return AlertDialog(
       title: Text(dialogTitle),
+      // ignore: sized_box_for_whitespace
       content: Container(
         height: 250,
         child: Form(

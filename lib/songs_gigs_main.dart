@@ -23,7 +23,7 @@ class SongsGigsMain extends StatelessWidget {
                 //====================
                 //====================
                 // Song List
-                SongList(),
+                const SongList(),
 
                 //====================
                 //====================

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:yaml/yaml.dart';
 import 'package:logger/logger.dart';
@@ -32,7 +34,7 @@ class LoggingUtil {
         level = Level.warning;
         break;
       case 'WTF':
-        level = Level.wtf;
+        level = Level.wtf; //new favorite thing
         break;
     }
 

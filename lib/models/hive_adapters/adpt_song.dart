@@ -1,7 +1,7 @@
 import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/models/mdl_version.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class SongAdapter extends TypeAdapter<Song> {
   @override

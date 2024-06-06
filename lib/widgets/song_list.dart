@@ -25,7 +25,7 @@ class SongList extends StatefulWidget {
 
 class _SongListState extends State<SongList> {
   var logger = Logger(level: LoggingUtil.loggingLevel('SongList'));
-  var currentSongProvider;
+  late CurrentSongProvider currentSongProvider;
 
   late Future<List<Song>> allSongsFuture = Future.value([]);
   final TextEditingController _searchController = TextEditingController();
@@ -86,7 +86,6 @@ class _SongListState extends State<SongList> {
                 icon: const Icon(Icons.sort),
                 onPressed: () {
                   logger.d("Sort songs button pressed!!!");
-                  //TODO: Implement sort functionality
                 },
               ),
 
@@ -312,16 +311,6 @@ class _SongListState extends State<SongList> {
 
   void _addSong(Song song) {
     Hive.box<Song>('songs').add(song);
-    _updateAllSongs();
-  }
-
-  void _removeSong(Song song) {
-    Hive.box<Song>('songs').delete(song.id);
-    _updateAllSongs();
-  }
-
-  void _editSong(Song oldSong, Song newSong) {
-    Hive.box<Song>('songs').put(oldSong.id, newSong);
     _updateAllSongs();
   }
 }

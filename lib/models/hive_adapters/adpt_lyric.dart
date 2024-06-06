@@ -1,5 +1,5 @@
 import 'package:bandbridge/models/mdl_lyric.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class LyricAdapter extends TypeAdapter<Lyric> {
   @override

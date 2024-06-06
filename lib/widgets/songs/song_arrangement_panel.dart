@@ -23,14 +23,14 @@ class SongArrangementPanel extends StatefulWidget {
 }
 
 class _SongArrangementPanelState extends State<SongArrangementPanel> {
-  var currentSongProvider;
+  late CurrentSongProvider currentSongProvider;
   int? selectedSectionIndex;
 
-  @override
   State<StatefulWidget> createState() {
     return _SongArrangementPanelState();
   }
 
+  @override
   void initState() {
     super.initState();
   }
@@ -71,13 +71,11 @@ class _SongArrangementPanelState extends State<SongArrangementPanel> {
                       },
                     );
 
-                    if (result != null) {
-                      // Add the section
-                      setState(() {
-                        // Assuming sections is your list of sections
-                        widget.song.addStructure(result);
-                      });
-                    }
+                    // Add the section
+                    setState(() {
+                      // Assuming sections is your list of sections
+                      widget.song.addStructure(result);
+                    });
                   },
                 ),
               ),
@@ -105,14 +103,12 @@ class _SongArrangementPanelState extends State<SongArrangementPanel> {
                             },
                           );
 
-                          if (result != null) {
-                            // Update the section
-                            setState(() {
-                              // Assuming sections is your list of sections
-                              widget.song.structure[selectedSectionIndex!] =
-                                  result;
-                            });
-                          }
+                          // Update the section
+                          setState(() {
+                            // Assuming sections is your list of sections
+                            widget.song.structure[selectedSectionIndex!] =
+                                result;
+                          });
                         }
                       : null, // Disable button if no item is selected
                 ),
@@ -223,10 +219,4 @@ class _SongArrangementPanelState extends State<SongArrangementPanel> {
     );
   }
 
-  void _addSection(updatedSong) {
-    updatedSong.save();
-    setState(() {
-      // Add your code here
-    });
-  }
 }

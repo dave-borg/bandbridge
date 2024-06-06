@@ -1,4 +1,5 @@
-import 'package:hive/hive.dart';
+
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'mdl_chord.dart';
 import 'mdl_lyric.dart';
@@ -32,14 +33,10 @@ class Section {
       section: json['section'],
       timestamp: json['timestamp'],
       duration: json['duration'],
-      chords: chordsJson != null
-          ? List<Chord>.from(chordsJson
-              .map((x) => Chord.fromJson(Map<String, dynamic>.from(x))))
-          : [],
-      lyrics: lyricsJson != null
-          ? List<Lyric>.from(lyricsJson
-              .map((x) => Lyric.fromJson(Map<String, dynamic>.from(x))))
-          : [],
+      chords: List<Chord>.from(chordsJson
+              .map((x) => Chord.fromJson(Map<String, dynamic>.from(x)))),
+      lyrics: List<Lyric>.from(lyricsJson
+              .map((x) => Lyric.fromJson(Map<String, dynamic>.from(x)))),
     );
   }
 
