@@ -1,7 +1,7 @@
 loggers:
   SongHeader:
     level: DEBUG
-  CurrentSongProvider:
+  SongArrangementPanel:
     level: DEBUG
   DEFAULT:
     level: INFO
