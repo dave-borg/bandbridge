@@ -48,6 +48,34 @@ class SongArrangementDialog extends StatelessWidget {
                     newSection.section = value!;
                   },
                 ),
+                sectionIndex == -1 //section is new. Hide if the section is being edited - only offer the name to be edited
+                    ? DropdownButtonFormField<Section>(
+                        key: const Key('songSectionDialog_sectionDropdown'),
+                        decoration: const InputDecoration(labelText: 'Duplicate from...'),
+                        value: sectionIndex == -1 ? null : song.structure[sectionIndex],
+                        items: <DropdownMenuItem<Section>>[
+                          const DropdownMenuItem<Section>(
+                            value: null,
+                            child: Text('None'),
+                          ),
+                          ...song.structure.map((section) {
+                            return DropdownMenuItem<Section>(
+                              value: section,
+                              child: Text(section.section),
+                            );
+                          }),
+                        ],
+                        onChanged: (value) {
+                          // newSection.lyrics = 
+                        },
+                        onSaved: (value) {
+                          if (value != null) {
+                            newSection.lyrics = value.lyrics;
+                            newSection.chords = value.chords;
+                          }
+                        },
+                      )
+                    : Container(), // return an empty Container when sectionIndex is not null
               ],
             )),
       ),

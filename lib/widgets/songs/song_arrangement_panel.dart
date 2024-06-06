@@ -78,6 +78,7 @@ class _SongArrangementPanelState extends State<SongArrangementPanel> {
                     setState(() {
                       // Assuming sections is your list of sections
                       widget.song.addStructure(result);
+                      widget.song.save();
                     });
                   },
                 ),
