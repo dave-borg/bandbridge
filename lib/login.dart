@@ -109,8 +109,8 @@ class LoginScreen extends StatelessWidget {
               icon: const Icon(Icons.apple, size: 24.0),
               label: const Text('Sign in with Apple'),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.black),
-                foregroundColor: MaterialStateProperty.all(Colors.white),
+                backgroundColor: WidgetStateProperty.all(Colors.black),
+                foregroundColor: WidgetStateProperty.all(Colors.white),
               ),
             ),
             const SizedBox(height: 20.0), // Add some spacing between the buttons
@@ -123,8 +123,8 @@ class LoginScreen extends StatelessWidget {
               icon: Image.asset('assets/images/google_logo.png', height: 24.0),
               label: const Text('Sign in with Google'),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-                foregroundColor: MaterialStateProperty.all(Colors.black),
+                backgroundColor: WidgetStateProperty.all(Colors.white),
+                foregroundColor: WidgetStateProperty.all(Colors.black),
               ),
             ),
             const SizedBox(height: 20.0), // Add some spacing between the buttons
@@ -137,8 +137,8 @@ class LoginScreen extends StatelessWidget {
               icon: const Icon(Icons.facebook, size: 24.0),
               label: const Text('Sign in with Facebook'),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(const Color(0xFF3b5998)),
-                foregroundColor: MaterialStateProperty.all(Colors.white),
+                backgroundColor: WidgetStateProperty.all(const Color(0xFF3b5998)),
+                foregroundColor: WidgetStateProperty.all(Colors.white),
               ),
             ),
           ],

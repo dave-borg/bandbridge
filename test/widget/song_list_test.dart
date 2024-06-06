@@ -1,17 +1,16 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:bandbridge/models/hive_adapters/adpt_chord.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_lyric.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_section.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_song.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_version.dart';
 import 'package:bandbridge/models/mdl_song.dart';
-import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/song_list.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive_test/hive_test.dart';
-import 'package:logger/logger.dart';
-//import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:bandbridge/models/current_song.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +18,6 @@ import 'package:flutter/material.dart';
 import '../test_lock.dart';
 
 void main() {
-  var logger = Logger(level: LoggingUtil.loggingLevel('SongHeaderDialogTest'));
   TestWidgetsFlutterBinding.ensureInitialized();
   const MethodChannel channel =
       MethodChannel('plugins.flutter.io/path_provider');
@@ -79,14 +77,12 @@ void main() {
   });
 
   tearDownAll(() async {
-    print('tearDownAll');
     if (Hive.isBoxOpen('songs')) {
       Hive.box<Song>('songs').close();
       //await box.deleteFromDisk();
     }
     releaseTestLock();
 
-    print('\ttearDownAll done');
   });
 
   setUpAll(() async {
@@ -96,10 +92,6 @@ void main() {
 
   testWidgets('SongList Widget Test with Song object',
       (WidgetTester tester) async {
-    // Create a fake CurrentSongProvider for the test
-
-    // Add the song to the provider
-    //currentSongProvider.setCurrentSong(testSong);
 
     // Build our app and trigger a frame.
     await tester.pumpWidget(

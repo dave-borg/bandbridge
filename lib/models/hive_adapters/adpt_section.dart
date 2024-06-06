@@ -1,7 +1,7 @@
 import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/models/mdl_lyric.dart';
 import 'package:bandbridge/models/mdl_section.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class SectionAdapter extends TypeAdapter<Section> {
   @override

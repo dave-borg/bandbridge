@@ -99,6 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 //   child: const SongsGigsMain(),
                 // ),
               ); // Sho w home page if user is logged in
+            // ignore: dead_code
             } else {
               return const Scaffold(
                   body:

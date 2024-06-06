@@ -6,7 +6,7 @@ import 'package:logger/logger.dart';
 class SongHeaderDialog extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final Function(Song) onSongCreated;
-  Song song;
+  final Song song;
   final String dialogTitle;
 
   SongHeaderDialog({
@@ -24,6 +24,7 @@ class SongHeaderDialog extends StatelessWidget {
 
     return AlertDialog(
       title: Text(dialogTitle),
+      // ignore: sized_box_for_whitespace
       content: Container(
         height: 500,
         child: Form(

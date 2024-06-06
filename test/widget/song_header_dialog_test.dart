@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bandbridge/models/hive_adapters/adpt_chord.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_lyric.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_section.dart';
@@ -28,6 +26,7 @@ void main() {
         MethodChannel('plugins.flutter.io/path_provider');
 
     // Set a mock method call handler.
+    // ignore: deprecated_member_use
     channel.setMockMethodCallHandler((MethodCall methodCall) async {
       if (methodCall.method == 'getApplicationDocumentsDirectory') {
         // Return a dummy directory path.
@@ -37,11 +36,9 @@ void main() {
     });
 
     setUpAll(() async {
-      print('setUpAll');
       await acquireTestLock();
       await Hive.initFlutter();
       await setUpTestHive();
-      print('\tsetUpAll done');
 
       testSong = Song(
         songId: '1',
@@ -54,13 +51,10 @@ void main() {
     });
 
     tearDownAll(() async {
-      print('tearDownAll');
       releaseTestLock();
-      print('\ttearDownAll done');
     });
 
     setUp(() async {
-      print('setUp');
       if (!Hive.isAdapterRegistered(0)) {
         // Check if the adapter is already registered
         Hive.registerAdapter(SongAdapter());
@@ -78,7 +72,6 @@ void main() {
         Hive.registerAdapter(VersionAdapter());
       }
 
-      print('about to open box');
       var box = Hive.isBoxOpen('songs')
           ? Hive.box('songs')
           : await Hive.openBox<Song>('songs');
@@ -96,12 +89,10 @@ void main() {
       box.flush();
       if (Hive.isBoxOpen('songs')) {
         box.close();
-        print('closed box');
       }
     });
 
     testWidgets('Form is visable and basic validation', (tester) async {
-      print('Form is visable and basic validation');
       await tester.pumpWidget(MaterialApp(
         home: SongHeaderDialog(
           dialogTitle: 'Test Song Dialog',
@@ -133,16 +124,22 @@ void main() {
     });
 
     testWidgets('Tempo field validation', (WidgetTester tester) async {
-      print('Tempo field validation');
       var box = Hive.box<Song>('songs');
 
       // Build the SongHeaderDialog widget.
+      Song? song = box.get(testSong.id);
+      if (song == null) {
+        // Handle the case where the song is null.
+        // For example, you might throw an error or return.
+        throw Exception('Song not found');
+      }
+
       await tester.pumpWidget(MaterialApp(
         home: Scaffold(
           body: SongHeaderDialog(
             onSongCreated: (song) {},
             dialogTitle: 'Test Dialog',
-            song: box.get(testSong.id),
+            song: song,
           ),
         ),
       ));
@@ -210,7 +207,6 @@ void main() {
 
     testWidgets('Form fields are initialized with Song attributes',
         (tester) async {
-      print('Form fields are initialized with Song attributes');
       // Pump the SongHeaderDialog widget with the created Song object.
       await tester.pumpWidget(MaterialApp(
         home: SongHeaderDialog(
@@ -245,14 +241,22 @@ void main() {
     });
 
     testWidgets('Form validation with different combinations', (tester) async {
-      print('Form validation with different combinations');
       var box = Hive.box<Song>('songs');
 
+      Song? song = box.get(testSong.id);
+      if (song == null) {
+        // Handle the case where the song is null.
+        // For example, you might throw an error or return.
+        throw Exception('Song not found');
+      }
+
       await tester.pumpWidget(MaterialApp(
-        home: SongHeaderDialog(
-          dialogTitle: 'Test Song Dialog',
-          onSongCreated: (song) {},
-          song: box.get(testSong.id),
+        home: Scaffold(
+          body: SongHeaderDialog(
+            onSongCreated: (song) {},
+            dialogTitle: 'Test Dialog',
+            song: song,
+          ),
         ),
       ));
 
@@ -289,7 +293,6 @@ void main() {
     });
 
     testWidgets('Test saving changes to database', (tester) async {
-      print('Test saving changes to database');
       await tester.pumpWidget(MaterialApp(
         home: SongHeaderDialog(
           dialogTitle: 'Test Song Dialog',

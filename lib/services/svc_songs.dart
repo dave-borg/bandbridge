@@ -3,7 +3,6 @@
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../models/mdl_song.dart';

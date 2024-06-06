@@ -53,7 +53,7 @@ class CurrentSongProvider extends ChangeNotifier {
 
     // Find the index of the old song in the list
     int index = allSongs
-        .indexWhere((_currentSong) => _currentSong.id == updatedSong.id);
+        .indexWhere((localCurrentSong) => localCurrentSong.id == updatedSong.id);
 
     // If the old song is found in the list, replace it with the new one
     if (index != -1) {

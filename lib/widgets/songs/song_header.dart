@@ -16,6 +16,7 @@ class SongHeader extends StatefulWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _SongHeaderState createState() => _SongHeaderState();
 }
 
@@ -37,6 +38,7 @@ class _SongHeaderState extends State<SongHeader> {
     boxSong = box.get(currentSong.id);
 
     if (boxSong == null) {
+      // ignore: deprecated_member_use
       logger.wtf(
           'Failed to load song from box\nWe shouldn\'t be showing the song panels without a valid song\n\n ${currentSong.getDebugOutput()}');
       throw Exception('Failed to load song from box');
@@ -222,12 +224,12 @@ class _SongHeaderState extends State<SongHeader> {
                             },
                             style: ButtonStyle(
                               backgroundColor:
-                                  MaterialStateProperty.all(Colors.transparent),
+                                  WidgetStateProperty.all(Colors.transparent),
                               shadowColor:
-                                  MaterialStateProperty.all(Colors.transparent),
+                                  WidgetStateProperty.all(Colors.transparent),
                               surfaceTintColor:
-                                  MaterialStateProperty.all(Colors.transparent),
-                              shape: MaterialStateProperty.all(
+                                  WidgetStateProperty.all(Colors.transparent),
+                              shape: WidgetStateProperty.all(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15),
                                 ),
