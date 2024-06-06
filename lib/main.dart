@@ -1,5 +1,5 @@
 import 'package:bandbridge/models/current_gig.dart';
-import 'package:bandbridge/models/current_song.dart';
+import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_chord.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_lyric.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_section.dart';
@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 body: MultiProvider(
                   providers: [
                     ChangeNotifierProvider(
-                        create: (context) => CurrentSongProvider()),
+                        create: (context) => SongProvider()),
                     ChangeNotifierProvider(
                         create: (context) => CurrentGigProvider()),
                   ],

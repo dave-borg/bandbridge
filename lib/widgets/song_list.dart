@@ -1,4 +1,4 @@
-import 'package:bandbridge/models/current_song.dart';
+import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/songs/song_header_dialog.dart';
@@ -25,7 +25,7 @@ class SongList extends StatefulWidget {
 
 class _SongListState extends State<SongList> {
   var logger = Logger(level: LoggingUtil.loggingLevel('SongList'));
-  late CurrentSongProvider currentSongProvider;
+  late SongProvider currentSongProvider;
 
   late Future<List<Song>> allSongsFuture = Future.value([]);
   final TextEditingController _searchController = TextEditingController();
@@ -42,8 +42,8 @@ class _SongListState extends State<SongList> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    currentSongProvider = Provider.of<CurrentSongProvider>(context);
-    // _loadAllSongs();
+    _updateAllSongs();
+    currentSongProvider = Provider.of<SongProvider>(context);
   }
 
   @override
@@ -99,7 +99,7 @@ class _SongListState extends State<SongList> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return ChangeNotifierProvider<CurrentSongProvider>.value(
+                      return ChangeNotifierProvider<SongProvider>.value(
                         value: currentSongProvider,
                         child: SongHeaderDialog(
                           key: const Key('dlg_songList_songHeaderDialog'),
@@ -121,6 +121,7 @@ class _SongListState extends State<SongList> {
                                   .d(newSong.getDebugOutput("Adding new song"));
 
                               _addSong(newSong);
+                              _updateAllSongs();
                               currentSongProvider.setCurrentSong(newSong);
                             });
                           },
@@ -170,11 +171,6 @@ class _SongListState extends State<SongList> {
             child: ValueListenableBuilder<Box<Song>>(
               valueListenable: Hive.box<Song>('songs').listenable(),
               builder: (context, Box<Song> box, widget) {
-                // Get all songs from the box
-                // List<Song> allSongs = box.values.toList();
-                // _filteredSongs = allSongs;
-                //_updateAllSongs();
-
                 logger.d(
                     'allSongs selected from the database: ${_filteredSongs.length}');
 
@@ -183,11 +179,6 @@ class _SongListState extends State<SongList> {
                   return const Text("No songs available");
                 } else {
                   logger.d("Got songs. Data: ${_filteredSongs.length}");
-
-                  // _allSongs = _filteredSongs;
-
-                  // Logger(level: LoggingUtil.loggingLevel('SongList')).d(
-                  //     'Songs read in from snapshot\n${allSongs.map((song) => song.getDebugOutput()).join('\n')}');
 
                   Logger(level: LoggingUtil.loggingLevel('SongList')).d(
                       'ValueListenableBuilder: Songs in _filteredSongs\n${_filteredSongs.map((song) => song.getDebugOutput()).join('\n')}');
@@ -214,7 +205,7 @@ class _SongListState extends State<SongList> {
   Widget buildSongs(List<Song> filteredSongs) {
     logger.d("Building the song list with ${filteredSongs.length} songs.");
 
-    return Consumer<CurrentSongProvider>(
+    return Consumer<SongProvider>(
         builder: (context, currentSongProvider, child) {
       return ListView.builder(
         itemCount: filteredSongs.length,
@@ -311,6 +302,5 @@ class _SongListState extends State<SongList> {
 
   void _addSong(Song song) {
     Hive.box<Song>('songs').add(song);
-    _updateAllSongs();
   }
 }

@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive_test/hive_test.dart';
 import 'package:provider/provider.dart';
-import 'package:bandbridge/models/current_song.dart';
+import 'package:bandbridge/models/song_provider.dart';
 import 'package:flutter/material.dart';
 
 import '../test_lock.dart';
@@ -31,7 +31,7 @@ void main() {
     return null;
   });
 
-  CurrentSongProvider currentSongProvider = CurrentSongProvider();
+  SongProvider currentSongProvider = SongProvider();
   Song testSong;
 
   setUp(() async {
@@ -95,7 +95,7 @@ void main() {
 
     // Build our app and trigger a frame.
     await tester.pumpWidget(
-      ChangeNotifierProvider<CurrentSongProvider>.value(
+      ChangeNotifierProvider<SongProvider>.value(
         value: currentSongProvider,
         child: const MaterialApp(
           home: Scaffold(

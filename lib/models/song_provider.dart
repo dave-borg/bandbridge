@@ -6,7 +6,7 @@ import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
-class CurrentSongProvider extends ChangeNotifier {
+class SongProvider extends ChangeNotifier {
   var logger = Logger(level: LoggingUtil.loggingLevel('CurrentSongProvider'));
 
   // The current song that is being edited
@@ -17,7 +17,7 @@ class CurrentSongProvider extends ChangeNotifier {
   // A list of all songs in the temp
   List<Song> allSongs = [];
 
-  CurrentSongProvider() {
+  SongProvider() {
     _currentSong = Song(); // Initialize _currentSong with a default Song
     _currentSong.id = "-2";
   }
@@ -83,5 +83,10 @@ class CurrentSongProvider extends ChangeNotifier {
     _currentSong.id = "-2";
 
     notifyListeners();
+  }
+
+  Future<void> deleteSong(Song songToDelete) async {
+    clearSelectedSong();
+    notifyListeners(); 
   }
 }
