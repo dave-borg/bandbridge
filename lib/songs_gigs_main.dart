@@ -1,3 +1,4 @@
+import 'package:bandbridge/utils/song_generator.dart';
 import 'package:bandbridge/widgets/song_view_panel.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,13 @@ class SongsGigsMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const isTestSong = bool.fromEnvironment('test-song', defaultValue: false);
+    if (isTestSong) {
+      //run with the following command to add a completed song into the database:
+      //flutter run --dart-define=test-song=true
+      SongGenerator.createTestSong();
+    }
+
     return Scaffold(
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -32,18 +40,21 @@ class SongsGigsMain extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            margin: const EdgeInsets.only(left: 0, top: 6, right: 0, bottom: 6),
-            decoration: BoxDecoration(
-              color: Colors.white, // Your desired color
-              borderRadius: BorderRadius.circular(9.0),
-              border: Border.all(
-                color: const Color.fromRGBO(
-                    203, 203, 203, 1.0), // Your desired border color
-                width: 1.0, // Your desired border width
-              ), // Your desired corner radius
+          Expanded(
+            child: Container(
+              margin:
+                  const EdgeInsets.only(left: 0, top: 6, right: 0, bottom: 6),
+              decoration: BoxDecoration(
+                color: Colors.white, // Your desired color
+                borderRadius: BorderRadius.circular(9.0),
+                border: Border.all(
+                  color: const Color.fromRGBO(
+                      203, 203, 203, 1.0), // Your desired border color
+                  width: 1.0, // Your desired border width
+                ), // Your desired corner radius
+              ),
+              child: const SongViewPanel(),
             ),
-            child: const SongViewPanel(),
           ),
         ],
       ),

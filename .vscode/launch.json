@@ -5,6 +5,12 @@
         "name": "Flutter (iPad Pro (12.9-inch) (6th generation))",
         "request": "launch",
         "type": "dart"
+      },
+      {
+        "name": "Flutter (lib/main.dart)",
+        "type": "dart",
+        "request": "launch",
+        "program": "lib/main.dart"
       }
     ]
 }

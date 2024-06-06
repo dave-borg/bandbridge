@@ -40,36 +40,39 @@ class _SongArrangementPanelState extends State<SongArrangementPanel> {
     currentSongProvider = Provider.of<CurrentSongProvider>(context);
 
     return SizedBox(
-      width: 130,
-      child: Column(
-        children: [
-          // Toolbar
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      width: 150,
+      child: SingleChildScrollView(
+        child: Align(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(
-                width: 30.0, // Your desired width
-                child: IconButton(
-                  padding: EdgeInsets.zero, // Remove padding
-                  icon: const Icon(Icons.add, size: 20.0), // Set icon size
-                  onPressed: () async {
-                    final Section result = await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return ChangeNotifierProvider<
-                            CurrentSongProvider>.value(
-                          value: currentSongProvider,
-                          child: SongArrangementDialog(
-                            dialogTitle: 'Add Section',
-                            song: widget.song,
-                            sectionIndex: -1,
-                            onSectionCreated: (newSection) {
-                              setState(() {});
-                            },
-                          ),
+              // Toolbar
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    width: 30.0, // Your desired width
+                    child: IconButton(
+                      padding: EdgeInsets.zero, // Remove padding
+                      icon: const Icon(Icons.add, size: 20.0), // Set icon size
+                      onPressed: () async {
+                        final Section result = await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return ChangeNotifierProvider<
+                                CurrentSongProvider>.value(
+                              value: currentSongProvider,
+                              child: SongArrangementDialog(
+                                dialogTitle: 'Add Section',
+                                song: widget.song,
+                                sectionIndex: -1,
+                                onSectionCreated: (newSection) {
+                                  setState(() {});
+                                },
+                              ),
+                            );
+                          },
                         );
-                      },
-                    );
 
                     // Add the section
                     setState(() {
@@ -144,77 +147,42 @@ class _SongArrangementPanelState extends State<SongArrangementPanel> {
                             },
                           );
 
-                          if (confirm) {
-                            // Delete the section
-                            setState(() {
-                              // Assuming sections is your list of sections
-                              widget.song.structure
-                                  .removeAt(selectedSectionIndex!);
-                              selectedSectionIndex = null; // Reset selection
-                            });
-                          }
-                        }
-                      : null, // Disable button if no item is selected
-                ),
+                              if (confirm) {
+                                // Delete the section
+                                setState(() {
+                                  // Assuming sections is your list of sections
+                                  widget.song.structure
+                                      .removeAt(selectedSectionIndex!);
+                                  selectedSectionIndex =
+                                      null; // Reset selection
+                                });
+                              }
+                            }
+                          : null, // Disable button if no item is selected
+                    ),
+                  ),
+                ],
+              ),
+              // ListView
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: widget.song.structure.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final section = widget.song.structure[index];
+                  return ListTile(
+                    title: Text(section.section),
+                    selected: selectedSectionIndex == index,
+                    onTap: () {
+                      setState(() {
+                        selectedSectionIndex = index;
+                      });
+                    },
+                  );
+                },
               ),
             ],
           ),
-          // ListView
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(8),
-              children: <Widget>[
-                Column(
-                  children: (widget.song.structure as List)
-                      .asMap()
-                      .entries
-                      .map((entry) {
-                    var index = entry.key;
-                    var arrangementItem = entry.value;
-                    return SizedBox(
-                      height: 40,
-                      child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: TextButton(
-                            key: Key(
-                                'songList_btn_title_${widget.song.id}_${arrangementItem.section}'),
-                            style: TextButton.styleFrom(
-                              backgroundColor: selectedSectionIndex == index
-                                  ? const Color.fromARGB(255, 237, 243, 248)
-                                  : Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                selectedSectionIndex = index;
-                                widget.logger.d(
-                                    'selectedSectionIndex: $selectedSectionIndex');
-                              });
-                            },
-                            child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      widget.song.structure[index].section,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                          )),
-                    );
-                  }).toList(),
-                )
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

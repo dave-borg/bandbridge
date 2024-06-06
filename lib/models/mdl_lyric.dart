@@ -5,25 +5,25 @@ import 'package:hive_flutter/hive_flutter.dart';
 class Lyric {
   @HiveField(0)
   String text;
-  @HiveField(1)
-  String timestamp;
+  @HiveField(2)
+  String beats;
 
   Lyric({
     required this.text,
-    required this.timestamp,
+    required this.beats,
   });
 
   factory Lyric.fromJson(Map<String, dynamic> json) {
     return Lyric(
       text: json['text'],
-      timestamp: json['timestamp'],
+      beats: json['beats'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'text': text,
-      'timestamp': timestamp,
+      'beats': beats,
     };
   }
 }

@@ -1,5 +1,8 @@
 import 'package:bandbridge/models/current_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
+import 'package:bandbridge/widgets/song-editor/chord_chart_editor.dart';
+import 'package:bandbridge/widgets/song-editor/lyrics_editor.dart';
+import 'package:bandbridge/widgets/song-editor/song_editor.dart';
 import 'package:bandbridge/widgets/songs/song_arrangement_panel.dart';
 import 'package:bandbridge/widgets/songs/song_header.dart';
 import 'package:bandbridge/widgets/songs/song_section_panel.dart';
@@ -15,7 +18,8 @@ class SongViewPanel extends StatefulWidget {
   State<StatefulWidget> createState() => _SongViewPanelState();
 }
 
-class _SongViewPanelState extends State<SongViewPanel> {
+class _SongViewPanelState extends State<SongViewPanel>
+    with SingleTickerProviderStateMixin {
   var logger = Logger(level: LoggingUtil.loggingLevel('SongViewPanel'));
 
   @override
@@ -31,31 +35,35 @@ class _SongViewPanelState extends State<SongViewPanel> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        //====================
-        //====================
-        // Song header panel
         SongHeader(),
-
-        //====================
-        //====================
-        // Song panel with arrangement and chart
-        Expanded(
-          child: Row(
-            children: [
-              SongArrangementPanel(song: currentSong),
-              SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    if ((currentSong.structure as List).isEmpty)
-                      const Text('No structure defined for this song')
-                    else
-                      ...((currentSong.structure as List).map((section) {
-                        return SongSectionPanel(section: section);
-                      }).toList()),
-                  ],
-                ),
+        Flexible(
+          fit: FlexFit.loose,
+          child: Container(
+            width: double.maxFinite,
+            height: double.maxFinite,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black,
+                width: 1.0,
               ),
-            ],
+            ),
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return Row(
+                  children: [
+                    SizedBox(
+                      width: 140,
+                      child: SongArrangementPanel(song: currentSong),
+                    ),
+                    SizedBox(
+                      width: constraints.maxWidth - 150,
+                      //child: SongEditor(song: currentSong),
+                      child: SongEditor(song: currentSong),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ],
