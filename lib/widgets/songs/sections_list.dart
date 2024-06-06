@@ -7,9 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
+/// SongArrangementPanel
+/// 
+/// This widget displays a list of sections for a song. It allows the user to add, edit, and delete sections. It contains the 
+/// list of song sections for CRUD operations.
 // ignore: must_be_immutable
-class SongArrangementPanel extends StatefulWidget {
-  SongArrangementPanel({
+class SectionsList extends StatefulWidget {
+  SectionsList({
     super.key,
     required this.song,
   });
@@ -19,15 +23,15 @@ class SongArrangementPanel extends StatefulWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  _SongArrangementPanelState createState() => _SongArrangementPanelState();
+  _SectionsListState createState() => _SectionsListState();
 }
 
-class _SongArrangementPanelState extends State<SongArrangementPanel> {
+class _SectionsListState extends State<SectionsList> {
   late SongProvider currentSongProvider;
   int? selectedSectionIndex;
 
   State<StatefulWidget> createState() {
-    return _SongArrangementPanelState();
+    return _SectionsListState();
   }
 
   @override

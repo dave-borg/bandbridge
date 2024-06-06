@@ -1,6 +1,6 @@
 import 'package:bandbridge/models/mdl_song.dart';
-import 'package:bandbridge/widgets/song-editor/chord_chart_editor.dart';
-import 'package:bandbridge/widgets/song-editor/lyrics_editor.dart';
+import 'package:bandbridge/widgets/songs/song-editor/chord_chart_editor.dart';
+import 'package:bandbridge/widgets/songs/song-editor/lyrics_editor.dart';
 import 'package:flutter/material.dart';
 
 class SongEditor extends StatefulWidget {

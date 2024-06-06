@@ -6,7 +6,7 @@ import 'package:bandbridge/models/hive_adapters/adpt_version.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/song_generator.dart';
 import 'package:flutter/material.dart';
-import 'package:bandbridge/widgets/song-editor/song_editor.dart';
+import 'package:bandbridge/widgets/songs/song-editor/song_editor.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart'; // Replace with your actual import path
 

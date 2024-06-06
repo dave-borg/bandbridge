@@ -1,7 +1,7 @@
 import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/utils/logging_util.dart';
-import 'package:bandbridge/widgets/song-editor/song_editor.dart';
-import 'package:bandbridge/widgets/songs/song_arrangement_panel.dart';
+import 'package:bandbridge/widgets/songs/song-editor/song_editor.dart';
+import 'package:bandbridge/widgets/songs/sections_list.dart';
 import 'package:bandbridge/widgets/songs/song_header.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -45,7 +45,7 @@ class _SongViewPanelState extends State<SongViewPanel>
                       child: SizedBox(
                         width: 140,
                         height: double.infinity,
-                        child: SongArrangementPanel(song: currentSong),
+                        child: SectionsList(song: currentSong),
                       ),
                     ),
                     SizedBox(
