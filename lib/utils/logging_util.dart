@@ -1,13 +1,22 @@
 // ignore_for_file: deprecated_member_use
-
-import 'dart:io';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:yaml/yaml.dart';
 import 'package:logger/logger.dart';
 
 class LoggingUtil {
+  static YamlMap? _yamlCache;
+  // Method to preload YAML content asynchronously
+  static Future<void> preloadYamlContent() async {
+    final yamlString = await rootBundle.loadString('assets/logging_conf.yaml');
+    _yamlCache = loadYaml(yamlString);
+  }
+
   static Level loggingLevel(String className) {
-    var yaml = loadYaml(File('/Users/borg/dev/bandbridge/logging_conf.yaml')
-        .readAsStringSync());
+    if (_yamlCache == null) {
+      throw Exception(
+          'YAML content not preloaded. Call preloadYamlContent first.');
+    }
+    var yaml = _yamlCache!;
     var level = Level.info;
 
     // If the class name is not in the loggers section of the YAML file, use the DEFAULT logger

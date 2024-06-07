@@ -7,6 +7,7 @@ import 'package:bandbridge/models/hive_adapters/adpt_song.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_version.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/songs_gigs_main.dart';
+import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,6 +25,9 @@ Future<void> main() async {
   Hive.registerAdapter(VersionAdapter());
 
   await Hive.openBox<Song>('songs');
+
+  //Load the logging configuration from the YAML file
+  LoggingUtil.preloadYamlContent();
 
   runApp(const BandBridge());
 }
@@ -86,8 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 body: MultiProvider(
                   providers: [
-                    ChangeNotifierProvider(
-                        create: (context) => SongProvider()),
+                    ChangeNotifierProvider(create: (context) => SongProvider()),
                     ChangeNotifierProvider(
                         create: (context) => CurrentGigProvider()),
                   ],
@@ -99,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 //   child: const SongsGigsMain(),
                 // ),
               ); // Sho w home page if user is logged in
-            // ignore: dead_code
+              // ignore: dead_code
             } else {
               return const Scaffold(
                   body:
