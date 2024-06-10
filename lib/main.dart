@@ -27,7 +27,7 @@ Future<void> main() async {
   await Hive.openBox<Song>('songs');
 
   //Load the logging configuration from the YAML file
-  LoggingUtil.preloadYamlContent();
+  await LoggingUtil.preloadYamlContent();
 
   runApp(const BandBridge());
 }

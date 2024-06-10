@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:bandbridge/models/mdl_chord.dart';
+import 'package:bandbridge/widgets/chord-chart/chord_container.dart';
 import 'package:flutter/material.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 
@@ -97,15 +98,24 @@ class ChordChartEditor extends StatelessWidget {
                           border: Border.all(color: Colors.blueAccent),
                           borderRadius: BorderRadius.circular(5.0),
                         ),
-                        child: Text(
-                          bar
-                              .map((chord) =>
-                                  '${chord.name} ${List.filled(int.parse(chord.beats) - 1, "/").join(" ")}')
-                              .join(' '),
+                        child: Wrap(
+                          spacing: 6.0, // Adjust spacing as needed
+                          children: bar.expand((chord) {
+                            // Create a list of widgets for each chord and its slashes
+                            List<Widget> widgets = [
+                              ChordContainer(chord: chord), // Use ChordContainer for the chord
+                            ];
+                            // Add slashes for beats, if any
+                            int beats = int.parse(chord.beats) - 1;
+                            for (int i = 0; i < beats; i++) {
+                              widgets.add(const Text(" /")); // Add a Text widget for each slash, with a leading space for separation
+                            }
+                            return widgets;
+                          }).toList(),
                         ),
                       );
                     }).toList(),
-                  ),
+                  )
                 ],
               );
             },
