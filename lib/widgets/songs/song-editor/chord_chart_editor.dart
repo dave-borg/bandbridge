@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/models/song_provider.dart';
+import 'package:bandbridge/widgets/chord-chart/bar_dialog.dart';
 import 'package:bandbridge/widgets/chord-chart/chord_container.dart';
 import 'package:flutter/material.dart';
 import 'package:bandbridge/models/mdl_song.dart';
@@ -187,18 +188,10 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Add a Bar'),
-                                content: const Text('You tapped the bar!'),
-                                actions: [
-                                  TextButton(
-                                    child: const Text('Close'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
+                              return BarDialog(
+                                  song: widget.song,
+                                  bar: [],
+                                  dialogTitle: 'Add Bar');
                             },
                           );
                         },
