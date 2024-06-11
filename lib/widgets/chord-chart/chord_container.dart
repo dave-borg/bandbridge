@@ -9,7 +9,8 @@ class ChordContainer extends StatelessWidget {
   late Chord chord;
 
   ChordContainer({super.key, required Chord chord}) {
-    this.chord = chord; // Initialize the chord field with the constructor parameter.
+    this.chord =
+        chord; // Initialize the chord field with the constructor parameter.
   }
 
   @override
@@ -18,38 +19,55 @@ class ChordContainer extends StatelessWidget {
       logger.d("Chord: ${chord.name}/${chord.bass}");
     }
 
-    return Stack(
-      children: <Widget>[
-        Positioned(
-          top: 0,
-          left: 0,
-          child: Container(
-            color: Colors.blue,
-            child: Text(chord.name),
-          ),
-        ),
-        Positioned(
-          top: 20, // Adjust the positioning to overlap
-          left: 20, // Adjust the positioning to overlap
-          child: Container(
-            color: Colors.red,
-            child: Text(
-              chord.bass ?? '',
+    return Container(
+      child: SizedBox(
+        width: 40, // Specify your desired width
+        height: 60,
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Text(chord.name, style: const TextStyle(fontSize: 30)),
             ),
-          ),
+            if (chord.bass != null)
+              Positioned(
+                top: 25, // Adjust the positioning to overlap
+                left: 20, // Adjust the positioning to overlap
+                child: Text(chord.bass ?? '',
+                    style: const TextStyle(
+                        fontSize: 16,
+                        color: Color.fromARGB(255, 146, 141, 141))),
+              ),
+            if (chord.bass != null)
+              CustomPaint(
+                size: const Size(200, 200), // Canvas size
+                painter: DiagonalLinePainter(),
+              ),
+          ],
         ),
-      ],
+      ),
     );
   }
+}
 
-  //   return FittedBox(
-  //       fit: BoxFit.scaleDown,
-  //       child: Text(
-  //         "${chord.name}${chord.bass != null ? '/${chord.bass}' : ''}",
-  //         style: const TextStyle(
-  //           fontWeight: FontWeight.bold,
-  //           color: Colors.green,
-  //         ),
-  //       ));
-  // }
+class DiagonalLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Color.fromARGB(255, 146, 141, 141) // Line color
+      ..strokeWidth = 2; // Line width
+
+    // Starting point of the line (bottom-right of the first Text widget)
+    const start = Offset(10, 42); // Adjust these values as needed
+    // Ending point of the line (top-left of the second Text widget)
+    const end = Offset(30, 20); // Adjust these values as needed
+
+    canvas.drawLine(start, end, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
 }
