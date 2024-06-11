@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:bandbridge/models/mdl_chord.dart';
+import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/widgets/chord-chart/chord_container.dart';
 import 'package:flutter/material.dart';
 import 'package:bandbridge/models/mdl_song.dart';
+import 'package:provider/provider.dart';
 
 /**
  * Ah, the ChordChartEditor class, a true masterpiece of the Dart language. 
@@ -20,45 +22,54 @@ And let's not forget the grand finale, where a circular container adorned with t
 
 In conclusion, the ChordChartEditor class is a true virtuoso, combining the elegance of Dart with the creativity of a composer. It's a symphony of widgets, a visual feast, and an interactive experience all rolled into one. Just like Richard, Jeremy, and James, this code leaves you in awe and wanting more. Bravo!
  */
-class ChordChartEditor extends StatelessWidget {
+class ChordChartEditor extends StatefulWidget {
   final Song song;
   final int? sectionIndex;
 
-  const ChordChartEditor({super.key, required this.song, this.sectionIndex});
+  const ChordChartEditor({Key? key, required this.song, this.sectionIndex})
+      : super(key: key);
 
   @override
+  _ChordChartEditorState createState() => _ChordChartEditorState();
+}
+
+class _ChordChartEditorState extends State<ChordChartEditor> {
+  @override
   Widget build(BuildContext context) {
+    final songProvider = Provider.of<SongProvider>(context);
+
     return Column(
       children: [
         AppBar(
-            title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                // Add your onPressed code here.
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () {
-                // Add your onPressed code here.
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                // Add your onPressed code here.
-              },
-            ),
-          ],
-        )),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  // Add your onPressed code here.
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  // Add your onPressed code here.
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  // Add your onPressed code here.
+                },
+              ),
+            ],
+          ),
+        ),
         Expanded(
           child: ListView.builder(
-            itemCount: song.structure.length,
+            itemCount: widget.song.structure.length,
             itemBuilder: (context, i) {
-              if (sectionIndex != null && sectionIndex != i) {
+              if (widget.sectionIndex != null && widget.sectionIndex != i) {
                 return Container(); // Return an empty container if sectionIndex is not null and does not match the current index
               }
 
@@ -66,7 +77,7 @@ class ChordChartEditor extends StatelessWidget {
               List<List<Chord>> bars = [];
               List<Chord> currentBar = [];
               int currentBeats = 0;
-              for (var chord in song.structure[i].chords!) {
+              for (var chord in widget.song.structure[i].chords!) {
                 int beats = int.parse(chord.beats);
                 while (beats > 0) {
                   int beatsToAdd = min(4 - currentBeats, beats);
@@ -98,9 +109,11 @@ class ChordChartEditor extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.only(top: 16.0),
                     child: Text(
-                      song.structure[i].section,
+                      widget.song.structure[i].section,
                       style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Wrap(
@@ -144,20 +157,24 @@ class ChordChartEditor extends StatelessWidget {
                                 // Create a list of widgets for each chord and its slashes
                                 List<Widget> widgets = [
                                   ChordContainer(
-                                      chord:
-                                          chord), // Use ChordContainer for the chord
+                                    chord: chord,
+                                  ), // Use ChordContainer for the chord
                                   // Text(
                                   //     "${chord.name} ${chord.bass}"), // Use Text for the chord
                                 ];
                                 // Add slashes for beats, if any
                                 int beats = int.parse(chord.beats) - 1;
                                 for (int i = 0; i < beats; i++) {
-                                  widgets.add(const SizedBox(
-                                    width: 40, // Specify your desired width
-                                    height: 60,
-                                    child: Text(" /",
-                                        style: TextStyle(fontSize: 24)),
-                                  )); // Add a Text widget for each slash, with a leading space for separation
+                                  widgets.add(
+                                    const SizedBox(
+                                      width: 40, // Specify your desired width
+                                      height: 60,
+                                      child: Text(
+                                        " /",
+                                        style: TextStyle(fontSize: 24),
+                                      ),
+                                    ),
+                                  ); // Add a Text widget for each slash, with a leading space for separation
                                 }
                                 return widgets;
                               }).toList(),
