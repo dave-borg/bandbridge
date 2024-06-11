@@ -2,10 +2,12 @@ import 'dart:math';
 
 import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/models/song_provider.dart';
+import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/chord-chart/bar_dialog.dart';
 import 'package:bandbridge/widgets/chord-chart/chord_container.dart';
 import 'package:flutter/material.dart';
 import 'package:bandbridge/models/mdl_song.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 /**
@@ -38,6 +40,9 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
   @override
   Widget build(BuildContext context) {
     final songProvider = Provider.of<SongProvider>(context);
+    var logger = Logger(level: LoggingUtil.loggingLevel('ChordChartEditor'));
+
+    logger.d(widget.song.getDebugOutput("SongEditor"));
 
     return Column(
       children: [
@@ -127,19 +132,10 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Container Tapped'),
-                                  content:
-                                      const Text('You tapped the container!'),
-                                  actions: [
-                                    TextButton(
-                                      child: const Text('Close'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
+                                return BarDialog(
+                                    song: widget.song,
+                                    bar: bar,
+                                    dialogTitle: 'Edit Bar');
                               },
                             );
                           },
@@ -190,7 +186,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                             builder: (BuildContext context) {
                               return BarDialog(
                                   song: widget.song,
-                                  bar: [],
+                                  bar: const [],
                                   dialogTitle: 'Add Bar');
                             },
                           );

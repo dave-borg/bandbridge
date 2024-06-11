@@ -1,5 +1,6 @@
 import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/models/mdl_song.dart';
+import 'package:bandbridge/music_theory/diatonic_chords.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -14,7 +15,7 @@ class BarDialog extends StatelessWidget {
 
   BarDialog({
     super.key,
-    required Song song,
+    required this.song,
     required this.bar,
     required this.dialogTitle,
   });
@@ -39,46 +40,74 @@ class BarDialog extends StatelessWidget {
                     ),
                   ),
                 ),
-                child: Text('Bar: '),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    bar.isEmpty ? " / " : bar[0].name,
+                    style: const TextStyle(fontSize: 36),
+                  ),
+                ),
               ),
               Container(
                 width: 100,
-                child: Text('Bar: '),
+                height: 100,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    bar.isEmpty ? " / " : bar[1].name,
+                    style: const TextStyle(fontSize: 36),
+                  ),
+                ),
               ),
               Container(
                 width: 100,
-                child: Text('Bar: '),
+                height: 100,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    bar.isEmpty ? " / " : bar[2].name,
+                    style: const TextStyle(fontSize: 36),
+                  ),
+                ),
               ),
               Container(
                 width: 100,
-                child: Text('Bar: '),
+                height: 100,
+                decoration: const BoxDecoration(
+                  border: Border(
+                    right: BorderSide(
+                      color: Colors.black, // Color of the border
+                      width: 5.0, // Thickness of the border
+                      style: BorderStyle.solid, // Style of the border
+                    ),
+                  ),
+                ),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    bar.isEmpty ? " / " : bar[3].name,
+                    style: const TextStyle(fontSize: 36),
+                  ),
+                ),
               ),
             ],
           ),
           Container(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    key: const Key('barDialog_chords'),
-                    decoration: const InputDecoration(labelText: 'Chords'),
-                    initialValue: bar.map((e) => e.name).join(' '),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter chords';
-                      }
-                      return null;
+            child: Row(
+              children: List.generate(7, (index) {
+                return Container(
+                  width: 75,
+                  height: 60,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Add your button logic here
                     },
-                    onSaved: (value) {
-                      bar = value!
-                          .split(' ')
-                          .map((e) => Chord(name: e, beats: '1'))
-                          .toList();
-                    },
+                    child: Text(DiatonicChords.getDiatonicChord(
+                            song.initialKey, song.initialKeyType, index)
+                        .name),
                   ),
-                ],
-              ),
+                );
+              }),
             ),
           ),
         ],

@@ -1,7 +1,7 @@
 loggers:
-  ChordContainer:
+  SongList:
     level: DEBUG
-  SongArrangementPanel:
+  ChordChartEditor:
     level: DEBUG
   DEFAULT:
     level: INFO

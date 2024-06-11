@@ -1,4 +1,5 @@
 import 'package:bandbridge/models/mdl_version.dart';
+import 'package:bandbridge/music_theory/diatonic_chords.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -24,19 +25,24 @@ class Song extends HiveObject {
   List<Section> structure;
   @HiveField(8)
   List<Version> versions;
+  @HiveField(4)
+  ChordType initialKeyType;
 
   Song({
-  String? songId,
-  this.title = "[Title]",
-  this.artist = "[Artist]",
-  this.duration = "",
-  this.initialKey = "",
-  this.tempo = "",
-  this.timeSignature = "",
-  List<Section>? structure,
-  this.versions = const [],
-}) : id = songId == null || songId == "-1" ? const Uuid().v4() : songId,
-   structure = structure ?? []; // Initialize structure in the constructor body
+    String? songId,
+    this.title = "[Title]",
+    this.artist = "[Artist]",
+    this.duration = "",
+    this.initialKey = "",
+    this.tempo = "",
+    this.timeSignature = "",
+    List<Section>? structure,
+    this.versions = const [],
+  })  : id = songId == null || songId == "-2" ? const Uuid().v4() : songId,
+        initialKeyType =
+            initialKey.endsWith('m') ? ChordType.minor : ChordType.major,
+        structure =
+            structure ?? []; // Initialize structure in the constructor body
 
   factory Song.fromJson(Map<String, dynamic> json) {
     return Song(
@@ -80,6 +86,7 @@ class Song extends HiveObject {
     rValue += "Artist: $artist\n";
     rValue += "Duration: $duration\n";
     rValue += "Initial Key: $initialKey\n";
+    rValue += "Initial Key Type: $initialKeyType\n";
     rValue += "Tempo: $tempo\n";
     rValue += "Time Signature: $timeSignature\n";
     rValue += "Structure: ${structure.length}\n";

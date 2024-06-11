@@ -105,7 +105,6 @@ class _SongListState extends State<SongList> {
                           key: const Key('dlg_songList_songHeaderDialog'),
                           dialogTitle: 'Add Song',
                           song: Song(
-                            songId: "-2",
                             title: "",
                             artist: "",
                             initialKey: "C",
@@ -114,9 +113,6 @@ class _SongListState extends State<SongList> {
                           ),
                           onSongCreated: (newSong) {
                             setState(() {
-                              // currentSongProvider.saveSong(newSong);
-                              // _filteredSongs = _allSongs;
-
                               logger
                                   .d(newSong.getDebugOutput("Adding new song"));
 

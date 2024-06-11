@@ -17,6 +17,7 @@ import 'login.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final document = await getApplicationDocumentsDirectory();
+  print(document.path);
   await Hive.initFlutter(document.path);
   Hive.registerAdapter(SectionAdapter());
   Hive.registerAdapter(ChordAdapter());
