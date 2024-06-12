@@ -1,5 +1,4 @@
 import 'package:bandbridge/models/mdl_bar.dart';
-import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/music_theory/diatonic_chords.dart';
 import 'package:bandbridge/utils/logging_util.dart';
@@ -10,16 +9,16 @@ import 'package:logger/logger.dart';
 // ignore: must_be_immutable
 class BarDialog extends StatefulWidget {
   var logger = Logger(level: LoggingUtil.loggingLevel('BarDialog'));
-  late List<Chord> bar;
-  late Song song;
+  final Bar bar;
+  Song song;
   String dialogTitle;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   BarDialog({
     super.key,
-    required Song song,
-    required Bar bar,
+    required this.song,
     required this.dialogTitle,
+    required this.bar,
   });
 
   @override
@@ -40,7 +39,7 @@ class _BarDialogState extends State<BarDialog> {
           Row(
             children: [
               for (int i = 0;
-                  i <= 3;
+                  i < widget.bar.beats.length;
                   i++) // Assuming you want to make containers for bar[2] and bar[3] selectable
                 Expanded(
                   child: GestureDetector(
@@ -61,7 +60,7 @@ class _BarDialogState extends State<BarDialog> {
                                   style: BorderStyle.solid,
                                 ),
                               )
-                            : i == 3
+                            : i == widget.bar.beats.length - 1
                                 ? const Border(
                                     right: BorderSide(
                                       color: Colors.black,
@@ -77,12 +76,12 @@ class _BarDialogState extends State<BarDialog> {
                       ),
                       child: Align(
                         alignment: Alignment.center,
-                        child: widget.bar.isEmpty
+                        child: widget.bar.beats[i].chord == null
                             ? const Text(
                                 " / ",
                                 style: TextStyle(fontSize: 36),
                               )
-                            : ChordContainer(chord: widget.bar[i]),
+                            : ChordContainer(chord: widget.bar.beats[i].chord!),
                       ),
                     ),
                   ),
@@ -103,7 +102,8 @@ class _BarDialogState extends State<BarDialog> {
                   child: ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        widget.bar[_selectedContainerIndex!] = thisChord;
+                        widget.bar.beats[_selectedContainerIndex!].chord =
+                            thisChord;
                       });
                     },
                     child: Text(thisChord.name),
