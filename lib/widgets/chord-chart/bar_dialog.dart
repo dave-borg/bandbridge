@@ -1,110 +1,112 @@
+import 'package:bandbridge/models/mdl_bar.dart';
 import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/music_theory/diatonic_chords.dart';
 import 'package:bandbridge/utils/logging_util.dart';
+import 'package:bandbridge/widgets/chord-chart/chord_container.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 // ignore: must_be_immutable
-class BarDialog extends StatelessWidget {
+class BarDialog extends StatefulWidget {
   var logger = Logger(level: LoggingUtil.loggingLevel('BarDialog'));
-  List<Chord> bar;
+  late List<Chord> bar;
   late Song song;
   String dialogTitle;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   BarDialog({
     super.key,
-    required this.song,
-    required this.bar,
+    required Song song,
+    required Bar bar,
     required this.dialogTitle,
   });
 
   @override
+  _BarDialogState createState() => _BarDialogState();
+}
+
+class _BarDialogState extends State<BarDialog> {
+  int? _selectedContainerIndex;
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(dialogTitle),
+      title: Text(widget.dialogTitle),
       content: Column(
         children: [
+          //====================================================================================
+          //Renders the bar with 4 beats per bar
           Row(
             children: [
-              Container(
-                width: 100,
-                height: 100,
-                decoration: const BoxDecoration(
-                  border: Border(
-                    left: BorderSide(
-                      color: Colors.black, // Color of the border
-                      width: 5.0, // Thickness of the border
-                      style: BorderStyle.solid, // Style of the border
+              for (int i = 0;
+                  i <= 3;
+                  i++) // Assuming you want to make containers for bar[2] and bar[3] selectable
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedContainerIndex = i;
+                      });
+                    },
+                    child: Container(
+                      // width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        border: i == 0
+                            ? const Border(
+                                left: BorderSide(
+                                  color: Colors.black,
+                                  width: 5.0,
+                                  style: BorderStyle.solid,
+                                ),
+                              )
+                            : i == 3
+                                ? const Border(
+                                    right: BorderSide(
+                                      color: Colors.black,
+                                      width: 5.0,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  )
+                                : null,
+                        color: _selectedContainerIndex == i
+                            ? Colors.blue
+                            : Colors
+                                .transparent, // Highlight selected container
+                      ),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: widget.bar.isEmpty
+                            ? const Text(
+                                " / ",
+                                style: TextStyle(fontSize: 36),
+                              )
+                            : ChordContainer(chord: widget.bar[i]),
+                      ),
                     ),
                   ),
                 ),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    bar.isEmpty ? " / " : bar[0].name,
-                    style: const TextStyle(fontSize: 36),
-                  ),
-                ),
-              ),
-              Container(
-                width: 100,
-                height: 100,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    bar.isEmpty ? " / " : bar[1].name,
-                    style: const TextStyle(fontSize: 36),
-                  ),
-                ),
-              ),
-              Container(
-                width: 100,
-                height: 100,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    bar.isEmpty ? " / " : bar[2].name,
-                    style: const TextStyle(fontSize: 36),
-                  ),
-                ),
-              ),
-              Container(
-                width: 100,
-                height: 100,
-                decoration: const BoxDecoration(
-                  border: Border(
-                    right: BorderSide(
-                      color: Colors.black, // Color of the border
-                      width: 5.0, // Thickness of the border
-                      style: BorderStyle.solid, // Style of the border
-                    ),
-                  ),
-                ),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    bar.isEmpty ? " / " : bar[3].name,
-                    style: const TextStyle(fontSize: 36),
-                  ),
-                ),
-              ),
             ],
           ),
+
+          //====================================================================================
+          //Renders the diatonic chords for the initial key
           Container(
             child: Row(
               children: List.generate(7, (index) {
+                var thisChord = DiatonicChords.getDiatonicChord(
+                    widget.song.initialKey, widget.song.initialKeyType, index);
                 return Container(
                   width: 75,
                   height: 60,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Add your button logic here
+                      setState(() {
+                        widget.bar[_selectedContainerIndex!] = thisChord;
+                      });
                     },
-                    child: Text(DiatonicChords.getDiatonicChord(
-                            song.initialKey, song.initialKeyType, index)
-                        .name),
+                    child: Text(thisChord.name),
                   ),
                 );
               }),
@@ -112,6 +114,9 @@ class BarDialog extends StatelessWidget {
           ),
         ],
       ),
+
+      //====================================================================================
+      //Cancel and Submit btns
       actions: <Widget>[
         TextButton(
           child: const Text('Cancel'),
@@ -120,17 +125,17 @@ class BarDialog extends StatelessWidget {
           },
         ),
         TextButton(
-          child: const Text('Submit'),
+          child: const Text('Done'),
           onPressed: () async {
-            logger.t('Submit button pressed');
-            if (_formKey.currentState?.validate() ?? false) {
-              _formKey.currentState?.save();
+            widget.logger.t('Submit button pressed');
+            if (widget._formKey.currentState?.validate() ?? false) {
+              widget._formKey.currentState?.save();
 
-              //onSongCreated(song);
+              //onSongCreated(widget.song);
               // }
               Navigator.of(context).pop();
             } else {
-              logger.d('Form is not valid');
+              widget.logger.d('Form is not valid');
             }
           },
         ),

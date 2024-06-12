@@ -1,3 +1,7 @@
+import 'package:bandbridge/models/mbl_beat.dart';
+import 'package:bandbridge/models/mdl_bar.dart';
+import 'package:bandbridge/models/mdl_lyric.dart';
+import 'package:bandbridge/models/mdl_section.dart';
 import 'package:flutter/material.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 
@@ -37,7 +41,7 @@ class LyricsEditor extends StatelessWidget {
         )),
         Expanded(
           child: ListView.builder(
-              itemCount: song.structure.length,
+              itemCount: song.sections.length,
               itemBuilder: (context, i) {
                 //================================================================================================
                 //Only show the section if the sectionIndex is null or matches the current index
@@ -53,7 +57,7 @@ class LyricsEditor extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.only(top: 16.0),
                       child: Text(
-                        song.structure[i].section,
+                        song.sections[i].section,
                         style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
@@ -61,12 +65,12 @@ class LyricsEditor extends StatelessWidget {
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: song.structure[i].lyrics!.length,
+                      itemCount: extractLyrics(song.sections[i]).length,
                       itemBuilder: (context, j) {
                         return Container(
                           margin: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            song.structure[i].lyrics![j].text,
+                            extractLyrics(song.sections[i])[j].text,
                             style: const TextStyle(fontSize: 16),
                           ),
                         );
@@ -78,5 +82,17 @@ class LyricsEditor extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  List<Lyric> extractLyrics(Section section) {
+    List<Lyric> lyrics = [];
+    for (Bar bar in section.bars!) {
+      for (Beat beat in bar.beats) {
+        if (beat.lyric != null) {
+          lyrics.add(beat.lyric!);
+        }
+      }
+    }
+    return lyrics;
   }
 }

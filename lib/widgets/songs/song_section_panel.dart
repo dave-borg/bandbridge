@@ -53,29 +53,30 @@ class SongSectionPanel extends StatelessWidget {
           //================================================================
           //================================================================
           // Section chords
-          Wrap(
-            children: chunk<Widget>(
-              section.chords!.expand((thisChord) {
-                var chordPanels = ChordPanel.buildChordPanels(
-                  chord: thisChord,
-                  start: startingPositionRunningCount,
-                  timeSignature: "4/4",
-                  sectionPosition: sectionPosition,
-                );
+          // TODO - this is a temporary solution. The chords should be displayed in a grid
+          // Wrap(
+          //   children: chunk<Widget>(
+          //     section.bars!.beats.expand((thisChord) {
+          //       var chordPanels = ChordPanel.buildChordPanels(
+          //         chord: thisChord,
+          //         start: startingPositionRunningCount,
+          //         timeSignature: "4/4",
+          //         sectionPosition: sectionPosition,
+          //       );
 
-                startingPositionRunningCount += int.parse(thisChord.beats);
+          //       startingPositionRunningCount += int.parse(thisChord.beats);
 
-                return chordPanels;
-              }).toList(),
-              4, //chunk size
-            )
-                .map((barChords) => BarContainer(
-                    Wrap(
-                      children: barChords,
-                    ),
-                    sectionPosition++))
-                .toList(),
-          )
+          //       return chordPanels;
+          //     }).toList(),
+          //     4, //chunk size
+          //   )
+          //       .map((barChords) => BarContainer(
+          //           Wrap(
+          //             children: barChords,
+          //           ),
+          //           sectionPosition++))
+          //       .toList(),
+          // )
         ],
       ),
     );

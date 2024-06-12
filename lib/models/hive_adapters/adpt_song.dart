@@ -31,7 +31,7 @@ class SongAdapter extends TypeAdapter<Song> {
     writer.write(obj.initialKey);
     writer.write(obj.tempo);
     writer.write(obj.timeSignature);
-    writer.writeList(obj.structure);
+    writer.writeList(obj.sections);
     writer.writeList(obj.versions);
   }
 }

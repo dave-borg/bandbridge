@@ -1,4 +1,4 @@
-
+import 'package:bandbridge/models/mdl_bar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'mdl_chord.dart';
@@ -13,31 +13,23 @@ class Section {
   @HiveField(2)
   String duration;
   @HiveField(3)
-  List<Chord>? chords;
-  @HiveField(4)
-  List<Lyric>? lyrics;
+  List<Bar>? bars;
 
   Section({
     this.section = '',
     this.timestamp = '',
     this.duration = '',
-    List<Chord>? chords,
-    List<Lyric>? lyrics,
-  })  : chords = chords ?? [],
-        lyrics = lyrics ?? [];
+    List<Bar>? bars,
+  }) : bars = bars ?? [];
 
   factory Section.fromJson(Map<String, dynamic> json) {
-    var chordsJson = json['chords'] as List;
-    var lyricsJson = json['lyrics'] as List;
-
     return Section(
-      section: json['section'],
-      timestamp: json['timestamp'],
-      duration: json['duration'],
-      chords: List<Chord>.from(chordsJson
-              .map((x) => Chord.fromJson(Map<String, dynamic>.from(x)))),
-      lyrics: List<Lyric>.from(lyricsJson
-              .map((x) => Lyric.fromJson(Map<String, dynamic>.from(x)))),
+      section: json['section'] ?? '',
+      timestamp: json['timestamp'] ?? '',
+      duration: json['duration'] ?? '',
+      bars: (json['bars'] as List<dynamic>?)
+          ?.map((barJson) => Bar.fromJson(barJson))
+          .toList(),
     );
   }
 
@@ -46,11 +38,7 @@ class Section {
       'section': section,
       'timestamp': timestamp,
       'duration': duration,
-      'chords': List<dynamic>.from(chords!.map((x) => x.toJson())),
-      // ignore: unnecessary_null_comparison
-      'lyrics': lyrics != null
-          ? List<dynamic>.from(lyrics!.map((x) => x.toJson()))
-          : null,
+      'bars': bars?.map((bar) => bar.toJson()).toList(),
     };
   }
 }

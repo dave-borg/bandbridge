@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'package:bandbridge/models/mdl_bar.dart';
 import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/utils/logging_util.dart';
@@ -73,37 +72,17 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: widget.song.structure.length,
+            itemCount: widget.song.sections.length,
             itemBuilder: (context, i) {
               if (widget.sectionIndex != null && widget.sectionIndex != i) {
                 return Container(); // Return an empty container if sectionIndex is not null and does not match the current index
               }
 
               // Create a new list of bars where each bar has a maximum of 4 beats
-              List<List<Chord>> bars = [];
+              List<Bar> bars = [];
               List<Chord> currentBar = [];
               int currentBeats = 0;
-              for (var chord in widget.song.structure[i].chords!) {
-                int beats = int.parse(chord.beats);
-                while (beats > 0) {
-                  int beatsToAdd = min(4 - currentBeats, beats);
-                  currentBar.add(Chord(
-                    name: chord.name,
-                    beats: beatsToAdd.toString(),
-                    bass: chord.bass,
-                  ));
-                  currentBeats += beatsToAdd;
-                  beats -= beatsToAdd;
-                  if (currentBeats == 4) {
-                    bars.add(currentBar);
-                    currentBar = [];
-                    currentBeats = 0;
-                  }
-                }
-              }
-              if (currentBar.isNotEmpty) {
-                bars.add(currentBar);
-              }
+              bars = widget.song.sections[i].bars!;
 
               // Create a list of keys for the containers
               List<GlobalKey> keys =
@@ -115,7 +94,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                   Container(
                     margin: const EdgeInsets.only(top: 16.0),
                     child: Text(
-                      widget.song.structure[i].section,
+                      widget.song.sections[i].section,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -150,17 +129,17 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                             ),
                             child: Wrap(
                               spacing: 6.0, // Adjust spacing as needed
-                              children: bar.expand((chord) {
+                              children: bar.expand((beat) {
                                 // Create a list of widgets for each chord and its slashes
                                 List<Widget> widgets = [
                                   ChordContainer(
-                                    chord: chord,
+                                    chord: beat.chord,
                                   ), // Use ChordContainer for the chord
                                   // Text(
                                   //     "${chord.name} ${chord.bass}"), // Use Text for the chord
                                 ];
                                 // Add slashes for beats, if any
-                                int beats = int.parse(chord.beats) - 1;
+                                int beats = int.parse(beat.chord.beats) - 1;
                                 for (int i = 0; i < beats; i++) {
                                   widgets.add(
                                     const SizedBox(
@@ -186,7 +165,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                             builder: (BuildContext context) {
                               return BarDialog(
                                   song: widget.song,
-                                  bar: const [],
+                                  bar: Bar(),
                                   dialogTitle: 'Add Bar');
                             },
                           );
