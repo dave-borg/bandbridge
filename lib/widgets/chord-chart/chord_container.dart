@@ -1,3 +1,5 @@
+import 'dart:ffi' hide Size;
+
 import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
@@ -7,28 +9,38 @@ import 'package:logger/logger.dart';
 class ChordContainer extends StatelessWidget {
   var logger = Logger(level: LoggingUtil.loggingLevel('ChordContainer'));
   late Chord chord;
+  double? width;
+  double? height;
 
-  ChordContainer({super.key, required Chord chord}) {
+  ChordContainer(
+      {super.key, required Chord chord, double? width, double? height}) {
     this.chord =
         chord; // Initialize the chord field with the constructor parameter.
+    this.width =
+        width ?? 40.0; // If the width parameter is null, set it to 40.0.
+    this.height =
+        height ?? 50.0; // If the height parameter is null, set it to 60.0.
   }
 
   @override
   Widget build(BuildContext context) {
     if (chord.bass != null) {
-      logger.d("Chord: ${chord.name}/${chord.bass}");
+      logger.d("Chord: ${chord.rootNote}/${chord.bass}");
     }
 
     return Container(
+      margin: const EdgeInsets.all(2),
+      width: width,
       child: SizedBox(
-        width: 40, // Specify your desired width
-        height: 60,
+        // width: width, // Specify your desired width
+        height: height,
         child: Stack(
           children: <Widget>[
             Positioned(
               top: 0,
               left: 0,
-              child: Text(chord.name, style: const TextStyle(fontSize: 30)),
+              child: Text(chord.rootNote + chord.renderElements(),
+                  style: const TextStyle(fontSize: 18)),
             ),
             if (chord.bass != null)
               Positioned(

@@ -17,7 +17,7 @@ class SongAdapter extends TypeAdapter<Song> {
       initialKey: reader.read(),
       tempo: reader.read(),
       timeSignature: reader.read(),
-      structure: reader.readList().cast<Section>(),
+      sections: reader.readList().cast<Section>(),
       versions: reader.readList().cast<Version>(),
     );
   }
@@ -31,7 +31,7 @@ class SongAdapter extends TypeAdapter<Song> {
     writer.write(obj.initialKey);
     writer.write(obj.tempo);
     writer.write(obj.timeSignature);
-    writer.writeList(obj.structure);
+    writer.writeList(obj.sections);
     writer.writeList(obj.versions);
   }
 }

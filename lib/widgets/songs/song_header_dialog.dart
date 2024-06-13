@@ -158,7 +158,6 @@ class SongHeaderDialog extends StatelessWidget {
               _formKey.currentState?.save();
 
               onSongCreated(song);
-              // }
               Navigator.of(context).pop();
             } else {
               logger.d('Form is not valid');

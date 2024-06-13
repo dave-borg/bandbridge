@@ -1,5 +1,4 @@
-import 'package:bandbridge/models/mdl_chord.dart';
-import 'package:bandbridge/models/mdl_lyric.dart';
+import 'package:bandbridge/models/mdl_bar.dart';
 import 'package:bandbridge/models/mdl_section.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -13,8 +12,7 @@ class SectionAdapter extends TypeAdapter<Section> {
       section: reader.read(),
       timestamp: reader.read(),
       duration: reader.read(),
-      chords: reader.readList().cast<Chord>(),
-      lyrics: reader.readList().cast<Lyric>(),
+      bars: reader.readList().cast<Bar>(),
     );
   }
 
@@ -23,7 +21,6 @@ class SectionAdapter extends TypeAdapter<Section> {
     writer.write(obj.section);
     writer.write(obj.timestamp);
     writer.write(obj.duration);
-    writer.writeList(obj.chords ?? []);
-    writer.writeList(obj.lyrics ?? []);
+    writer.writeList(obj.bars ?? []);
   }
 }

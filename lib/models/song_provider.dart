@@ -52,8 +52,8 @@ class SongProvider extends ChangeNotifier {
         "${_currentSong.getDebugOutput('Current Song')}\n${updatedSong.getDebugOutput('Updated Song')}");
 
     // Find the index of the old song in the list
-    int index = allSongs
-        .indexWhere((localCurrentSong) => localCurrentSong.id == updatedSong.id);
+    int index = allSongs.indexWhere(
+        (localCurrentSong) => localCurrentSong.id == updatedSong.id);
 
     // If the old song is found in the list, replace it with the new one
     if (index != -1) {
@@ -75,7 +75,7 @@ class SongProvider extends ChangeNotifier {
   String get tempo => _currentSong.tempo;
   String get initialKey => _currentSong.initialKey;
   String get timeSignature => _currentSong.timeSignature;
-  List<Section> get structure => _currentSong.structure;
+  List<Section> get structure => _currentSong.sections;
   List<Version> get versions => _currentSong.versions;
 
   void clearSelectedSong() {
@@ -87,6 +87,6 @@ class SongProvider extends ChangeNotifier {
 
   Future<void> deleteSong(Song songToDelete) async {
     clearSelectedSong();
-    notifyListeners(); 
+    notifyListeners();
   }
 }

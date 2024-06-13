@@ -1,3 +1,4 @@
+import 'package:bandbridge/models/mdl_bar.dart';
 import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
@@ -16,7 +17,7 @@ class SongArrangementDialog extends StatelessWidget {
     super.key,
     required this.onSectionCreated,
     required this.song,
-    required this.dialogTitle, 
+    required this.dialogTitle,
     required this.sectionIndex,
   });
 
@@ -37,7 +38,9 @@ class SongArrangementDialog extends StatelessWidget {
                 TextFormField(
                   key: const Key('songSectionDialog_sectionTitle'),
                   decoration: const InputDecoration(labelText: 'Section Title'),
-                  initialValue: sectionIndex == -1 ? "" : song.structure[sectionIndex].section,
+                  initialValue: sectionIndex == -1
+                      ? ""
+                      : song.sections[sectionIndex].section,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a section title\n(eg. Verse, Chorus)';
@@ -48,17 +51,21 @@ class SongArrangementDialog extends StatelessWidget {
                     newSection.section = value!;
                   },
                 ),
-                sectionIndex == -1 //section is new. Hide if the section is being edited - only offer the name to be edited
+                sectionIndex ==
+                        -1 //section is new. Hide if the section is being edited - only offer the name to be edited
                     ? DropdownButtonFormField<Section>(
                         key: const Key('songSectionDialog_sectionDropdown'),
-                        decoration: const InputDecoration(labelText: 'Duplicate from...'),
-                        value: sectionIndex == -1 ? null : song.structure[sectionIndex],
+                        decoration: const InputDecoration(
+                            labelText: 'Duplicate from...'),
+                        value: sectionIndex == -1
+                            ? null
+                            : song.sections[sectionIndex],
                         items: <DropdownMenuItem<Section>>[
                           const DropdownMenuItem<Section>(
                             value: null,
                             child: Text('None'),
                           ),
-                          ...song.structure.map((section) {
+                          ...song.sections.map((section) {
                             return DropdownMenuItem<Section>(
                               value: section,
                               child: Text(section.section),
@@ -66,12 +73,11 @@ class SongArrangementDialog extends StatelessWidget {
                           }),
                         ],
                         onChanged: (value) {
-                          // newSection.lyrics = 
+                          // newSection.lyrics =
                         },
                         onSaved: (value) {
                           if (value != null) {
-                            newSection.lyrics = value.lyrics;
-                            newSection.chords = value.chords;
+                            newSection.bars = value.bars!.map((bar) => bar.copy()).cast<Bar>().toList();
                           }
                         },
                       )

@@ -8,8 +8,8 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 /// SongArrangementPanel
-/// 
-/// This widget displays a list of sections for a song. It allows the user to add, edit, and delete sections. It contains the 
+///
+/// This widget displays a list of sections for a song. It allows the user to add, edit, and delete sections. It contains the
 /// list of song sections for CRUD operations.
 // ignore: must_be_immutable
 class SectionsList extends StatefulWidget {
@@ -70,7 +70,7 @@ class _SectionsListState extends State<SectionsList> {
                                 song: widget.song,
                                 sectionIndex: -1,
                                 onSectionCreated: (newSection) {
-                                  setState(() {});
+                                  //setState(() {});
                                 },
                               ),
                             );
@@ -115,7 +115,7 @@ class _SectionsListState extends State<SectionsList> {
                               // Update the section
                               setState(() {
                                 // Assuming sections is your list of sections
-                                widget.song.structure[selectedSectionIndex!] =
+                                widget.song.sections[selectedSectionIndex!] =
                                     result;
                               });
                             }
@@ -158,7 +158,7 @@ class _SectionsListState extends State<SectionsList> {
                                 // Delete the section
                                 setState(() {
                                   // Assuming sections is your list of sections
-                                  widget.song.structure
+                                  widget.song.sections
                                       .removeAt(selectedSectionIndex!);
                                   selectedSectionIndex =
                                       null; // Reset selection
@@ -173,9 +173,9 @@ class _SectionsListState extends State<SectionsList> {
               // ListView
               ListView.builder(
                 shrinkWrap: true,
-                itemCount: widget.song.structure.length,
+                itemCount: widget.song.sections.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final section = widget.song.structure[index];
+                  final section = widget.song.sections[index];
                   return ListTile(
                     title: Text(section.section),
                     selected: selectedSectionIndex == index,

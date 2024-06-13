@@ -1,4 +1,5 @@
 import 'package:bandbridge/models/mdl_version.dart';
+import 'package:bandbridge/music_theory/diatonic_chords.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -21,22 +22,27 @@ class Song extends HiveObject {
   @HiveField(6)
   String timeSignature = "";
   @HiveField(7)
-  List<Section> structure;
+  List<Section> sections;
   @HiveField(8)
   List<Version> versions;
+  @HiveField(4)
+  ChordType initialKeyType;
 
   Song({
-  String? songId,
-  this.title = "[Title]",
-  this.artist = "[Artist]",
-  this.duration = "",
-  this.initialKey = "",
-  this.tempo = "",
-  this.timeSignature = "",
-  List<Section>? structure,
-  this.versions = const [],
-}) : id = songId == null || songId == "-1" ? const Uuid().v4() : songId,
-   structure = structure ?? []; // Initialize structure in the constructor body
+    String? songId,
+    this.title = "[Title]",
+    this.artist = "[Artist]",
+    this.duration = "",
+    this.initialKey = "",
+    this.tempo = "",
+    this.timeSignature = "",
+    List<Section>? sections,
+    this.versions = const [],
+  })  : id = songId == null || songId == "-2" ? const Uuid().v4() : songId,
+        initialKeyType =
+            initialKey.endsWith('m') ? ChordType.minor : ChordType.major,
+        sections =
+            sections ?? []; // Initialize structure in the constructor body
 
   factory Song.fromJson(Map<String, dynamic> json) {
     return Song(
@@ -47,7 +53,7 @@ class Song extends HiveObject {
       initialKey: json['initialKey'],
       tempo: json['tempo'],
       timeSignature: json['timeSignature'],
-      structure: List<Section>.from(
+      sections: List<Section>.from(
         json['structure']
             .map((x) => Section.fromJson(Map<String, dynamic>.from(x))),
       ),
@@ -67,7 +73,7 @@ class Song extends HiveObject {
       'initialKey': initialKey,
       'tempo': tempo,
       'timeSignature': timeSignature,
-      'structure': List<dynamic>.from(structure.map((x) => x.toJson())),
+      'sections': List<dynamic>.from(sections.map((x) => x.toJson())),
       'versions': List<dynamic>.from(versions.map((x) => x.toJson())),
     };
   }
@@ -80,15 +86,16 @@ class Song extends HiveObject {
     rValue += "Artist: $artist\n";
     rValue += "Duration: $duration\n";
     rValue += "Initial Key: $initialKey\n";
+    rValue += "Initial Key Type: $initialKeyType\n";
     rValue += "Tempo: $tempo\n";
     rValue += "Time Signature: $timeSignature\n";
-    rValue += "Structure: ${structure.length}\n";
+    rValue += "Sections: ${sections.length}\n";
     rValue += "Versions: ${versions.length}\n";
 
     return rValue;
   }
 
   addStructure(Section section) {
-    structure.add(section);
+    sections.add(section);
   }
 }

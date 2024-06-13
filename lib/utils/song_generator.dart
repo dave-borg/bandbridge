@@ -1,3 +1,4 @@
+import 'package:bandbridge/models/mdl_bar.dart';
 import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/models/mdl_lyric.dart';
 import 'package:bandbridge/models/mdl_section.dart';
@@ -15,95 +16,156 @@ class SongGenerator {
 
     Section intro = Section();
     intro.section = 'Intro';
-    intro.chords?.add(Chord(name: "A", beats: "14"));
-    intro.chords?.add(Chord(name: "G", beats: "1"));
-    intro.chords?.add(Chord(name: "D", bass: "F#", beats: "1"));
-    song.structure.add(intro);
+    intro.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    intro.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    intro.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    intro.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "A", beats: "2"),
+      2: Chord(rootNote: "G", beats: "1"),
+      3: Chord(rootNote: "D", bass: "F#", beats: "1")
+    }));
+    song.sections.add(intro);
 
     Section verse = Section();
     verse.section = 'Verse';
-    verse.chords?.add(Chord(name: "A", beats: "8"));
-    verse.lyrics?.add(
-        Lyric(text: "Jojo was a man who thought he was a loner", beats: "8"));
-    verse.chords?.add(Chord(name: "D", beats: "4"));
-    verse.lyrics?.add(Lyric(text: "But he knew it couldn't last", beats: "8"));
-    verse.chords?.add(Chord(name: "A", beats: "4"));
-    verse.chords?.add(Chord(name: "A", beats: "8"));
-    verse.lyrics
-        ?.add(Lyric(text: "Jojo left his home in Tuscon, Arizona", beats: "8"));
-    verse.chords?.add(Chord(name: "D", beats: "4"));
-    verse.lyrics?.add(Lyric(text: "For some Californian grass", beats: "8"));
-    verse.chords?.add(Chord(name: "A", beats: "2"));
-    verse.chords?.add(Chord(name: "G", beats: "1"));
-    verse.chords?.add(Chord(name: "D", bass: "F#", beats: "1"));
-    song.structure.add(verse);
+    verse.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "A", beats: "4")
+    }, lyrics: {
+      0: Lyric(text: "Jojo was a man who thought he was a loner", beats: "8")
+    }));
+    verse.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    verse.bars?.add(buildBar(
+        chords: {0: Chord(rootNote: "D", beats: "4")},
+        lyrics: {0: Lyric(text: "But he knew it couldn't last", beats: "8")}));
+    verse.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    verse.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "A", beats: "4")
+    }, lyrics: {
+      0: Lyric(text: "Jojo left his home in Tuscon, Arizona", beats: "8")
+    }));
+    verse.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    verse.bars?.add(buildBar(
+        chords: {0: Chord(rootNote: "D", beats: "4")},
+        lyrics: {0: Lyric(text: "For some Californian grass", beats: "8")}));
+    verse.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    song.sections.add(verse);
 
     Section chorus = Section();
     chorus.section = 'Chorus';
-    chorus.chords?.add(Chord(name: "A", beats: "8"));
-    chorus.lyrics?.add(Lyric(text: "Get back", beats: "4"));
-    chorus.lyrics?.add(Lyric(text: "Get back", beats: "4"));
-    chorus.chords?.add(Chord(name: "D", beats: "4"));
-    chorus.lyrics
-        ?.add(Lyric(text: "Get back to where you once belong", beats: "8"));
-    chorus.chords?.add(Chord(name: "A", beats: "4"));
-    chorus.chords?.add(Chord(name: "A", beats: "8"));
-    chorus.lyrics?.add(Lyric(text: "Get back", beats: "4"));
-    chorus.lyrics?.add(Lyric(text: "Get back", beats: "4"));
-    chorus.chords?.add(Chord(name: "D", beats: "4"));
-    chorus.lyrics
-        ?.add(Lyric(text: "Get back to where you once belong", beats: "8"));
-    chorus.chords?.add(Chord(name: "A", beats: "4"));
-    song.structure.add(chorus);
+    chorus.bars?.add(buildBar(
+        chords: {0: Chord(rootNote: "A", beats: "4")},
+        lyrics: {0: Lyric(text: "Get back", beats: "4")}));
+    chorus.bars?.add(buildBar(
+        chords: {0: Chord(rootNote: "A", beats: "4")},
+        lyrics: {0: Lyric(text: "Get back", beats: "4")}));
+    chorus.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "D", beats: "4")
+    }, lyrics: {
+      0: Lyric(text: "Get back to where you once belong", beats: "8")
+    }));
+    chorus.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "A", beats: "2"),
+      2: Chord(rootNote: "G", beats: "1"),
+      3: Chord(rootNote: "D", bass: "F#", beats: "1")
+    }));
+    chorus.bars?.add(buildBar(
+        chords: {0: Chord(rootNote: "A", beats: "4")},
+        lyrics: {0: Lyric(text: "Get back", beats: "4")}));
+    chorus.bars?.add(buildBar(
+        chords: {0: Chord(rootNote: "A", beats: "4")},
+        lyrics: {0: Lyric(text: "Get back", beats: "4")}));
+    chorus.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "D", beats: "4")
+    }, lyrics: {
+      0: Lyric(text: "Get back to where you once belong", beats: "8")
+    }));
+    chorus.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "A", beats: "2"),
+      2: Chord(rootNote: "G", beats: "1"),
+      3: Chord(rootNote: "D", bass: "F#", beats: "1")
+    }));
+    song.sections.add(chorus);
 
     Section solo = Section();
     solo.section = 'Keyboard Solo (Verse)';
-    solo.chords?.add(Chord(name: "A", beats: "8"));
-    solo.chords?.add(Chord(name: "D", beats: "4"));
-    solo.chords?.add(Chord(name: "A", beats: "4"));
-    solo.chords?.add(Chord(name: "A", beats: "8"));
-    solo.chords?.add(Chord(name: "D", beats: "4"));
-    solo.chords?.add(Chord(name: "A", beats: "2"));
-    solo.chords?.add(Chord(name: "G", beats: "1"));
-    solo.chords?.add(Chord(name: "D", bass: "F#", beats: "1"));
-    song.structure.add(solo);
+    solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "D", beats: "4")}));
+    solo.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "A", beats: "2"),
+      2: Chord(rootNote: "G", beats: "1"),
+      3: Chord(rootNote: "D", bass: "F#", beats: "1")
+    }));
+    solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "D", beats: "4")}));
+    solo.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "A", beats: "2"),
+      2: Chord(rootNote: "G", beats: "1"),
+      3: Chord(rootNote: "D", bass: "F#", beats: "1")
+    }));
+    song.sections.add(solo);
 
     Section verse2 = Section();
     verse2.section = 'Verse';
-    verse2.chords?.add(Chord(name: "A", beats: "8"));
-    verse2.lyrics?.add(Lyric(
-        text: "Sweet Loretta Martin thought she was a woman", beats: "8"));
-    verse2.chords?.add(Chord(name: "D", beats: "4"));
-    verse2.lyrics?.add(Lyric(text: "But she was another man", beats: "8"));
-    verse2.chords?.add(Chord(name: "A", beats: "4"));
-    verse2.chords?.add(Chord(name: "A", beats: "8"));
-    verse2.lyrics?.add(Lyric(
-        text: "All the girls around her say she's got it coming", beats: "8"));
-    verse2.chords?.add(Chord(name: "D", beats: "4"));
-    verse2.lyrics
-        ?.add(Lyric(text: "But she gets it while she can", beats: "8"));
-    verse2.chords?.add(Chord(name: "A", beats: "2"));
-    verse2.chords?.add(Chord(name: "G", beats: "1"));
-    verse2.chords?.add(Chord(name: "D", bass: "F#", beats: "1"));
-    song.structure.add(verse2);
+    verse2.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "A", beats: "4")
+    }, lyrics: {
+      0: Lyric(text: "Sweet Loretta Martin thought she was a woman", beats: "8")
+    }));
+    verse2.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    verse2.bars?.add(buildBar(
+        chords: {0: Chord(rootNote: "D", beats: "4")},
+        lyrics: {0: Lyric(text: "But she was another man", beats: "8")}));
+    verse2.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    verse2.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "A", beats: "4")
+    }, lyrics: {
+      0: Lyric(
+          text: "All the girls around her say she's got it coming", beats: "8")
+    }));
+    verse2.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    verse2.bars?.add(buildBar(
+        chords: {0: Chord(rootNote: "D", beats: "4")},
+        lyrics: {0: Lyric(text: "But she gets it while she can", beats: "8")}));
+    verse2.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    song.sections.add(verse2);
 
     Section chorus2 = Section();
     chorus2.section = 'Chorus';
-    chorus2.chords?.add(Chord(name: "A", beats: "8"));
-    chorus2.lyrics?.add(Lyric(text: "Get back", beats: "4"));
-    chorus2.lyrics?.add(Lyric(text: "Get back", beats: "4"));
-    chorus2.chords?.add(Chord(name: "D", beats: "4"));
-    chorus2.lyrics
-        ?.add(Lyric(text: "Get back to where you once belong", beats: "8"));
-    chorus2.chords?.add(Chord(name: "A", beats: "4"));
-    chorus2.chords?.add(Chord(name: "A", beats: "8"));
-    chorus2.lyrics?.add(Lyric(text: "Get back", beats: "4"));
-    chorus2.lyrics?.add(Lyric(text: "Get back", beats: "4"));
-    chorus2.chords?.add(Chord(name: "D", beats: "4"));
-    chorus2.lyrics
-        ?.add(Lyric(text: "Get back to where you once belong", beats: "8"));
-    chorus2.chords?.add(Chord(name: "A", beats: "4"));
-    song.structure.add(chorus2);
+    chorus2.bars?.add(buildBar(
+        chords: {0: Chord(rootNote: "A", beats: "4")},
+        lyrics: {0: Lyric(text: "Get back", beats: "4")}));
+    chorus2.bars?.add(buildBar(
+        chords: {0: Chord(rootNote: "A", beats: "4")},
+        lyrics: {0: Lyric(text: "Get back", beats: "4")}));
+    chorus2.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "D", beats: "4")
+    }, lyrics: {
+      0: Lyric(text: "Get back to where you once belong", beats: "8")
+    }));
+    chorus2.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "A", beats: "2"),
+      2: Chord(rootNote: "G", beats: "1"),
+      3: Chord(rootNote: "D", bass: "F#", beats: "1")
+    }));
+    chorus2.bars?.add(buildBar(
+        chords: {0: Chord(rootNote: "A", beats: "4")},
+        lyrics: {0: Lyric(text: "Get back", beats: "4")}));
+    chorus2.bars?.add(buildBar(
+        chords: {0: Chord(rootNote: "A", beats: "4")},
+        lyrics: {0: Lyric(text: "Get back", beats: "4")}));
+    chorus2.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "D", beats: "4")
+    }, lyrics: {
+      0: Lyric(text: "Get back to where you once belong", beats: "8")
+    }));
+    chorus2.bars?.add(buildBar(chords: {
+      0: Chord(rootNote: "A", beats: "2"),
+      2: Chord(rootNote: "G", beats: "1"),
+      3: Chord(rootNote: "D", bass: "F#", beats: "1")
+    }));
+    song.sections.add(chorus2);
 
     var box = await Hive.openBox<Song>('songs');
 
@@ -112,5 +174,25 @@ class SongGenerator {
     Song? rValue = box.get(song.id);
 
     return rValue!;
+  }
+
+  static Bar buildBar({Map<int, Chord>? chords, Map<int, Lyric>? lyrics}) {
+    Bar bar = Bar();
+    int chordIndex = chords!.keys.first;
+    for (int i = 0; i < chords.length; i++) {
+      bar.setChord(chordIndex, chords[i]!);
+
+      chordIndex += int.parse(chords[i]!.beats);
+    }
+
+    int lyricIndex = 0;
+    for (int j = 0; j < lyrics!.length; j++) {
+      if (lyrics.containsKey(lyricIndex)) {
+        bar.setLyric(lyricIndex, lyrics[lyricIndex]!);
+        lyricIndex += int.parse(lyrics[lyricIndex]!.beats);
+      }
+    }
+
+    return bar;
   }
 }

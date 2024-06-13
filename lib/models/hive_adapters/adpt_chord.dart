@@ -8,18 +8,20 @@ class ChordAdapter extends TypeAdapter<Chord> {
   @override
   Chord read(BinaryReader reader) {
     return Chord(
-      name: reader.read(),
+      rootNote: reader.read(),
       beats: reader.read(),
-      modifications: reader.read(),
+      chordQuality: reader.read(),
+      chordExtension: reader.read(),
       bass: reader.read(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Chord obj) {
-    writer.write(obj.name);
+    writer.write(obj.rootNote);
     writer.write(obj.beats);
-    writer.write(obj.modifications);
+    writer.write(obj.chordQuality);
+    writer.write(obj.chordExtension);
     writer.write(obj.bass);
   }
 }

@@ -1,39 +1,45 @@
 
+import 'package:bandbridge/music_theory/chord_modifiers.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 @HiveType(typeId: 2)
 class Chord {
   @HiveField(0)
-  String name;
+  String rootNote;
   @HiveField(1)
   String beats;
-  @HiveField(2)
-  String? modifications = "";
   @HiveField(3)
   String? bass;
+  @HiveField(4)
+  int? chordQuality;
+  @HiveField(5)
+  int? chordExtension;
 
   Chord({
-    required this.name,
+    required this.rootNote,
     required this.beats,
-    this.modifications,
     this.bass,
+    this.chordQuality,
+    this.chordExtension,
   });
 
   factory Chord.fromJson(Map<String, dynamic> json) {
     return Chord(
-      name: json['name'],
+      rootNote: json['name'],
       beats: json['beats'],
-      modifications: json['modifications'],
       bass: json['bass'],
+      chordQuality: json['chordQuality'] as int,
+      chordExtension: json['chordExtension'] as int,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
+      'name': rootNote,
       'beats': beats,
-      'modifications': modifications,
       'bass': bass,
+      'chordQuality': chordQuality,
+      'chordExtension': chordExtension,
     };
   }
 
@@ -41,4 +47,32 @@ class Chord {
   String toString() {
     return toJson().toString();
   }
+
+  /// This returns a string of the chord modifiers such as m, 7, 9, etc.
+  renderElements() {
+    String rValue = "";
+    if (chordQuality != null) {
+      rValue += ChordModifiers.render(chordQuality!);
+    }
+    if (chordExtension != null) {
+      rValue += ChordModifiers.render(chordExtension!);
+    }
+    return rValue;
+  }
+
+  /// This returns the full chord name including the root note and modifiers. For example it will return G7 for a G minor 7 chord.
+  renderFullChord() {
+    return rootNote + renderElements();
+  }
+
+  copy() {
+    return Chord(
+      rootNote: rootNote,
+      beats: beats,
+      bass: bass,
+      chordQuality: chordQuality,
+      chordExtension: chordExtension,
+    );
+  }
+
 }

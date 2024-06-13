@@ -1,11 +1,12 @@
-import 'dart:math';
-
+import 'package:bandbridge/models/mdl_bar.dart';
 import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/models/song_provider.dart';
+import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/chord-chart/bar_dialog.dart';
 import 'package:bandbridge/widgets/chord-chart/chord_container.dart';
 import 'package:flutter/material.dart';
 import 'package:bandbridge/models/mdl_song.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 /**
@@ -25,9 +26,10 @@ In conclusion, the ChordChartEditor class is a true virtuoso, combining the eleg
  */
 class ChordChartEditor extends StatefulWidget {
   final Song song;
-  final int? sectionIndex;
+  final int? selectedSectionIndex;
 
-  const ChordChartEditor({Key? key, required this.song, this.sectionIndex})
+  const ChordChartEditor(
+      {Key? key, required this.song, this.selectedSectionIndex})
       : super(key: key);
 
   @override
@@ -38,6 +40,9 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
   @override
   Widget build(BuildContext context) {
     final songProvider = Provider.of<SongProvider>(context);
+    var logger = Logger(level: LoggingUtil.loggingLevel('ChordChartEditor'));
+
+    logger.d(widget.song.getDebugOutput("SongEditor"));
 
     return Column(
       children: [
@@ -68,37 +73,16 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: widget.song.structure.length,
-            itemBuilder: (context, i) {
-              if (widget.sectionIndex != null && widget.sectionIndex != i) {
+            itemCount: widget.song.sections.length,
+            itemBuilder: (context, currentSection) {
+              if (widget.selectedSectionIndex != null &&
+                  widget.selectedSectionIndex != currentSection) {
                 return Container(); // Return an empty container if sectionIndex is not null and does not match the current index
               }
 
               // Create a new list of bars where each bar has a maximum of 4 beats
-              List<List<Chord>> bars = [];
-              List<Chord> currentBar = [];
-              int currentBeats = 0;
-              for (var chord in widget.song.structure[i].chords!) {
-                int beats = int.parse(chord.beats);
-                while (beats > 0) {
-                  int beatsToAdd = min(4 - currentBeats, beats);
-                  currentBar.add(Chord(
-                    name: chord.name,
-                    beats: beatsToAdd.toString(),
-                    bass: chord.bass,
-                  ));
-                  currentBeats += beatsToAdd;
-                  beats -= beatsToAdd;
-                  if (currentBeats == 4) {
-                    bars.add(currentBar);
-                    currentBar = [];
-                    currentBeats = 0;
-                  }
-                }
-              }
-              if (currentBar.isNotEmpty) {
-                bars.add(currentBar);
-              }
+              List<Bar> bars = [];
+              bars = widget.song.sections[currentSection].bars!;
 
               // Create a list of keys for the containers
               List<GlobalKey> keys =
@@ -110,7 +94,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                   Container(
                     margin: const EdgeInsets.only(top: 16.0),
                     child: Text(
-                      widget.song.structure[i].section,
+                      widget.song.sections[currentSection].section,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -123,25 +107,31 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                     children: [
                       ...bars.map((bar) {
                         return GestureDetector(
-                          onTap: () {
-                            showDialog(
+                          onTap: () async {
+                            final Bar result = await showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Container Tapped'),
-                                  content:
-                                      const Text('You tapped the container!'),
-                                  actions: [
-                                    TextButton(
-                                      child: const Text('Close'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
+                                return BarDialog(
+                                    song: widget.song,
+                                    bar: bar,
+                                    dialogTitle: 'Edit Bar');
                               },
                             );
+                            logger.d("Returned edited bar: $result");
+                            if (result != null) {
+                              setState(() {
+                                int index = widget
+                                    .song.sections[currentSection].bars!
+                                    .indexOf(bar);
+                                if (index != -1) {
+                                  widget.song.sections[currentSection]
+                                      .bars![index] = result;
+                                }
+                                songProvider.saveSong(widget.song);
+                                logger.d( result.getDebugOutput("Saving song with edited bar") );
+                                widget.song.save();
+                              });
+                            }
                           },
                           child: Container(
                             width: 200.0,
@@ -154,46 +144,65 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                             ),
                             child: Wrap(
                               spacing: 6.0, // Adjust spacing as needed
-                              children: bar.expand((chord) {
-                                // Create a list of widgets for each chord and its slashes
-                                List<Widget> widgets = [
-                                  ChordContainer(
-                                    chord: chord,
-                                  ), // Use ChordContainer for the chord
-                                  // Text(
-                                  //     "${chord.name} ${chord.bass}"), // Use Text for the chord
-                                ];
-                                // Add slashes for beats, if any
-                                int beats = int.parse(chord.beats) - 1;
-                                for (int i = 0; i < beats; i++) {
-                                  widgets.add(
-                                    const SizedBox(
-                                      width: 40, // Specify your desired width
-                                      height: 60,
-                                      child: Text(
-                                        " /",
-                                        style: TextStyle(fontSize: 24),
-                                      ),
-                                    ),
-                                  ); // Add a Text widget for each slash, with a leading space for separation
-                                }
-                                return widgets;
-                              }).toList(),
+                              children: bar.beats
+                                  .map((beat) {
+                                    List<Widget> widgets = [];
+
+                                    if (beat.chord != null) {
+                                      widgets.add(
+                                        ChordContainer(
+                                          chord: beat.chord!,
+                                          width: 35,
+                                          height: 50,
+                                        ),
+                                      );
+                                    } else {
+                                      widgets.add(
+                                        const SizedBox(
+                                          width: 35,
+                                          height: 30,
+                                          child: Text(
+                                            " /",
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                        ),
+                                      );
+                                    }
+
+                                    return widgets;
+                                  })
+                                  .expand((i) => i)
+                                  .toList(), // Flatten the list of lists into a single list
                             ),
                           ),
                         );
                       }).toList(),
                       GestureDetector(
-                        onTap: () {
-                          showDialog(
+                        onTap: () async {
+                          final Bar result = await showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return BarDialog(
                                   song: widget.song,
-                                  bar: [],
+                                  bar: Bar(),
                                   dialogTitle: 'Add Bar');
                             },
                           );
+                          logger.d("Returned new bar: $result");
+                          final section = widget.song.sections[currentSection!];
+                          if (section.bars != null) {
+                            setState(() {
+                              section.bars!.add(result);
+                              songProvider.saveSong(widget.song);
+
+                              logger.d( result.getDebugOutput("Saving song with new bar") );
+                              widget.song.save();
+                            });
+                          } else {
+                            // Handle the case where bars is null or result is null
+                            logger.d(
+                                "Bars is null or no result returned from dialog");
+                          }
                         },
                         child: Container(
                           margin: const EdgeInsets.only(top: 16.0),

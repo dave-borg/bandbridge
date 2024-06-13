@@ -30,19 +30,8 @@ class _SongHeaderState extends State<SongHeader> {
     Song? boxSong;
 
     var box = Hive.box<Song>('songs');
-    if (box.get(currentSong.id) == null || currentSong.id != "-2") {
-      logger.d(currentSong.getDebugOutput('build: Song does not exist in box'));
-      box.put(currentSong.id, currentSong);
-    }
 
-    boxSong = box.get(currentSong.id);
-
-    if (boxSong == null) {
-      // ignore: deprecated_member_use
-      logger.wtf(
-          'Failed to load song from box\nWe shouldn\'t be showing the song panels without a valid song\n\n ${currentSong.getDebugOutput()}');
-      throw Exception('Failed to load song from box');
-    }
+    boxSong = currentSong;
 
     return SizedBox(
       height: 150,
@@ -83,6 +72,7 @@ class _SongHeaderState extends State<SongHeader> {
                                               .getDebugOutput('Editing Song'));
                                           currentSongProvider
                                               .saveSong(currentSong);
+                                          currentSong.save();
                                         });
                                       },
                                     );
