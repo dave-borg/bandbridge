@@ -1,5 +1,3 @@
-import 'dart:ffi' hide Size;
-
 import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';

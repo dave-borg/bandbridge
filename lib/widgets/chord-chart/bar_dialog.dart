@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:bandbridge/models/mdl_bar.dart';
 import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/models/mdl_song.dart';
@@ -189,10 +187,10 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordQuality == ChordModifiers.MAJOR) {
+                            if (selectedChord?.chordQuality == ChordModifiers.major) {
                               selectedChord?.chordQuality = null;
                             } else {
-                              selectedChord?.chordQuality = ChordModifiers.MAJOR;
+                              selectedChord?.chordQuality = ChordModifiers.major;
                             }
                             
                             _chordNameController.text = selectedChord?.renderFullChord();
@@ -219,10 +217,10 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordQuality == ChordModifiers.MINOR) {
+                            if (selectedChord?.chordQuality == ChordModifiers.minor) {
                               selectedChord?.chordQuality = null;
                             } else {
-                              selectedChord?.chordQuality = ChordModifiers.MINOR;
+                              selectedChord?.chordQuality = ChordModifiers.minor;
                             }
                             _chordNameController.text = selectedChord?.renderFullChord();
                           });
@@ -234,7 +232,7 @@ class _BarDialogState extends State<BarDialog> {
                           BorderRadius.circular(8), // Reduce corner radius
                     ),
                   ),
-                  child: Text(ChordModifiers.render(ChordModifiers.MINOR)),
+                  child: Text(ChordModifiers.render(ChordModifiers.minor)),
                 ),
               ),
             ),
@@ -248,10 +246,10 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordExtension == ChordModifiers.MINOR_SEVENTH) {
+                            if (selectedChord?.chordExtension == ChordModifiers.minorSeventh) {
                               selectedChord?.chordExtension = null;
                             } else {
-                              selectedChord?.chordExtension = ChordModifiers.MINOR_SEVENTH;
+                              selectedChord?.chordExtension = ChordModifiers.minorSeventh;
                             }
                             _chordNameController.text = selectedChord?.renderFullChord();
                           });
@@ -263,7 +261,7 @@ class _BarDialogState extends State<BarDialog> {
                           BorderRadius.circular(8), // Reduce corner radius
                     ),
                   ),
-                  child: Text(ChordModifiers.render(ChordModifiers.MINOR_SEVENTH)),
+                  child: Text(ChordModifiers.render(ChordModifiers.minorSeventh)),
                 ),
               ),
             ),
@@ -277,10 +275,10 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordExtension == ChordModifiers.NINTH) {
+                            if (selectedChord?.chordExtension == ChordModifiers.ninth) {
                               selectedChord?.chordExtension = null;
                             } else {
-                              selectedChord?.chordExtension = ChordModifiers.NINTH;
+                              selectedChord?.chordExtension = ChordModifiers.ninth;
                             }
                             _chordNameController.text = selectedChord?.renderFullChord();
                           });
@@ -292,7 +290,7 @@ class _BarDialogState extends State<BarDialog> {
                           BorderRadius.circular(8), // Reduce corner radius
                     ),
                   ),
-                  child: Text(ChordModifiers.render(ChordModifiers.NINTH)),
+                  child: Text(ChordModifiers.render(ChordModifiers.ninth)),
                 ),
               ),
             ),
@@ -306,10 +304,10 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordExtension == ChordModifiers.ELEVENTH) {
+                            if (selectedChord?.chordExtension == ChordModifiers.eleventh) {
                               selectedChord?.chordExtension = null;
                             } else {
-                              selectedChord?.chordExtension = ChordModifiers.ELEVENTH;
+                              selectedChord?.chordExtension = ChordModifiers.eleventh;
                             }
                             _chordNameController.text = selectedChord?.renderFullChord();
                           });
@@ -321,7 +319,7 @@ class _BarDialogState extends State<BarDialog> {
                           BorderRadius.circular(8), // Reduce corner radius
                     ),
                   ),
-                  child: Text(ChordModifiers.render(ChordModifiers.ELEVENTH)),
+                  child: Text(ChordModifiers.render(ChordModifiers.eleventh)),
                 ),
               ),
             ),
@@ -335,10 +333,10 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordExtension == ChordModifiers.THIRTEENTH) {
+                            if (selectedChord?.chordExtension == ChordModifiers.thirteenth) {
                               selectedChord?.chordExtension = null;
                             } else {
-                              selectedChord?.chordExtension = ChordModifiers.THIRTEENTH;
+                              selectedChord?.chordExtension = ChordModifiers.thirteenth;
                             }
                             _chordNameController.text = selectedChord?.renderFullChord();
                           });
@@ -350,7 +348,7 @@ class _BarDialogState extends State<BarDialog> {
                           BorderRadius.circular(8), // Reduce corner radius
                     ),
                   ),
-                  child: Text(ChordModifiers.render(ChordModifiers.THIRTEENTH)),
+                  child: Text(ChordModifiers.render(ChordModifiers.thirteenth)),
                 ),
               ),
             ),
@@ -366,10 +364,10 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordExtension == ChordModifiers.MAJOR_SEVENTH) {
+                            if (selectedChord?.chordExtension == ChordModifiers.majorSeventh) {
                               selectedChord?.chordExtension = null;
                             } else {
-                              selectedChord?.chordExtension = ChordModifiers.MAJOR_SEVENTH;
+                              selectedChord?.chordExtension = ChordModifiers.majorSeventh;
                             }
                             _chordNameController.text = selectedChord?.renderFullChord();
                           });
@@ -381,7 +379,7 @@ class _BarDialogState extends State<BarDialog> {
                           BorderRadius.circular(8), // Reduce corner radius
                     ),
                   ),
-                  child: Text(ChordModifiers.render(ChordModifiers.MAJOR_SEVENTH)),
+                  child: Text(ChordModifiers.render(ChordModifiers.majorSeventh)),
                 ),
               ),
             ),
@@ -395,10 +393,10 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordQuality == ChordModifiers.DIMINISHED) {
+                            if (selectedChord?.chordQuality == ChordModifiers.diminished) {
                               selectedChord?.chordQuality = null;
                             } else {
-                              selectedChord?.chordQuality = ChordModifiers.DIMINISHED;
+                              selectedChord?.chordQuality = ChordModifiers.diminished;
                             }
                             _chordNameController.text = selectedChord?.renderFullChord();
                           });
@@ -410,7 +408,7 @@ class _BarDialogState extends State<BarDialog> {
                           BorderRadius.circular(8), // Reduce corner radius
                     ),
                   ),
-                  child: Text(ChordModifiers.render(ChordModifiers.DIMINISHED)),
+                  child: Text(ChordModifiers.render(ChordModifiers.diminished)),
                 ),
               ),
             ),
@@ -424,10 +422,10 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordQuality == ChordModifiers.HALF_DIMINISHED) {
+                            if (selectedChord?.chordQuality == ChordModifiers.halfDiminished) {
                               selectedChord?.chordQuality = null;
                             } else {
-                              selectedChord?.chordQuality = ChordModifiers.HALF_DIMINISHED;
+                              selectedChord?.chordQuality = ChordModifiers.halfDiminished;
                             }
                             _chordNameController.text = selectedChord?.renderFullChord();
                           });
@@ -439,7 +437,7 @@ class _BarDialogState extends State<BarDialog> {
                           BorderRadius.circular(8), // Reduce corner radius
                     ),
                   ),
-                  child: Text(ChordModifiers.render(ChordModifiers.HALF_DIMINISHED)),
+                  child: Text(ChordModifiers.render(ChordModifiers.halfDiminished)),
                 ),
               ),
             ),
@@ -453,10 +451,10 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordQuality == ChordModifiers.AUGMENTED) {
+                            if (selectedChord?.chordQuality == ChordModifiers.augmented) {
                               selectedChord?.chordQuality = null;
                             } else {
-                              selectedChord?.chordQuality = ChordModifiers.AUGMENTED;
+                              selectedChord?.chordQuality = ChordModifiers.augmented;
                             }
                             _chordNameController.text = selectedChord?.renderFullChord();
                           });
@@ -468,7 +466,7 @@ class _BarDialogState extends State<BarDialog> {
                           BorderRadius.circular(8), // Reduce corner radius
                     ),
                   ),
-                  child: Text(ChordModifiers.render(ChordModifiers.AUGMENTED)),
+                  child: Text(ChordModifiers.render(ChordModifiers.augmented)),
                 ),
               ),
             ),
@@ -482,10 +480,10 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordExtension == ChordModifiers.SUSPENDED) {
+                            if (selectedChord?.chordExtension == ChordModifiers.suspended) {
                               selectedChord?.chordExtension = null;
                             } else {
-                              selectedChord?.chordExtension = ChordModifiers.SUSPENDED;
+                              selectedChord?.chordExtension = ChordModifiers.suspended;
                             }
                             _chordNameController.text = selectedChord?.renderFullChord();
                           });
@@ -497,7 +495,7 @@ class _BarDialogState extends State<BarDialog> {
                           BorderRadius.circular(8), // Reduce corner radius
                     ),
                   ),
-                  child: Text(ChordModifiers.render(ChordModifiers.SUSPENDED)),
+                  child: Text(ChordModifiers.render(ChordModifiers.suspended)),
                 ),
               ),
             ),

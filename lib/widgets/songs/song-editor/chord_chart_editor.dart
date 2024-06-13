@@ -1,5 +1,4 @@
 import 'package:bandbridge/models/mdl_bar.dart';
-import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/chord-chart/bar_dialog.dart';
@@ -9,30 +8,30 @@ import 'package:bandbridge/models/mdl_song.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
-/**
- * Ah, the ChordChartEditor class, a true masterpiece of the Dart language. 
-
-As we dive into the build method, we are greeted with a Column widget, the backbone of this code symphony. It orchestrates a harmonious arrangement of widgets, creating a visually stunning user interface. And what's a great UI without an AppBar? Here, we find a row of IconButtons, each waiting to be pressed and unleash its own unique action.
-
-But the real showstopper lies within the Expanded widget, which takes center stage with a ListView.builder. This virtuoso of a widget dynamically generates a list of items based on the length of the song's structure. It's like a never-ending playlist, ensuring that every section gets its moment in the spotlight.
-
-Now, let's talk about the magic happening inside the itemBuilder. Brace yourself for a journey through the world of chords and bars. The code cleverly constructs a list of bars, each limited to a maximum of 4 beats. It's like a musical measure, perfectly timed and synchronized.
-
-But wait, there's more! The ChordChartEditor also showcases its versatility with the use of GestureDetector. With a simple tap, a dialog box appears, inviting the user to interact and explore. It's like a backstage pass to the inner workings of the code.
-
-And let's not forget the grand finale, where a circular container adorned with the iconic "+" icon steals the show. With a tap on this magnificent creation, another dialog box emerges, inviting the user to add a bar and shape the musical masterpiece even further.
-
-In conclusion, the ChordChartEditor class is a true virtuoso, combining the elegance of Dart with the creativity of a composer. It's a symphony of widgets, a visual feast, and an interactive experience all rolled into one. Just like Richard, Jeremy, and James, this code leaves you in awe and wanting more. Bravo!
- */
+///
+///  * Ah, he ChordChartEditor class, a true masterpiece of the Dart language. 
+///
+///As we dive into the build method, we are greeted with a Column widget, the backbone of this code symphony. It orchestrates a harmonious arrangement of widgets, creating a visually stunning user interface. And what's a great UI without an AppBar? Here, we find a row of IconButtons, each waiting to be pressed and unleash its own unique action.
+///
+///But the real showstopper lies within the Expanded widget, which takes center stage with a ListView.builder. This virtuoso of a widget dynamically generates a list of items based on the length of the song's structure. It's like a never-ending playlist, ensuring that every section gets its moment in the spotlight.
+///
+///Now, let's talk about the magic happening inside the itemBuilder. Brace yourself for a journey through the world of chords and bars. The code cleverly constructs a list of bars, each limited to a maximum of 4 beats. It's like a musical measure, perfectly timed and synchronized.
+///
+///But wait, there's more! The ChordChartEditor also showcases its versatility with the use of GestureDetector. With a simple tap, a dialog box appears, inviting the user to interact and explore. It's like a backstage pass to the inner workings of the code.
+///
+///And let's not forget the grand finale, where a circular container adorned with the iconic "+" icon steals the show. With a tap on this magnificent creation, another dialog box emerges, inviting the user to add a bar and shape the musical masterpiece even further.
+///
+///In conclusion, the ChordChartEditor class is a true virtuoso, combining the elegance of Dart with the creativity of a composer. It's a symphony of widgets, a visual feast, and an interactive experience all rolled into one. Just like Richard, Jeremy, and James, this code leaves you in awe and wanting more. Bravo!
+///
 class ChordChartEditor extends StatefulWidget {
   final Song song;
   final int? selectedSectionIndex;
 
   const ChordChartEditor(
-      {Key? key, required this.song, this.selectedSectionIndex})
-      : super(key: key);
+      {super.key, required this.song, this.selectedSectionIndex});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ChordChartEditorState createState() => _ChordChartEditorState();
 }
 
@@ -118,20 +117,19 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                               },
                             );
                             logger.d("Returned edited bar: $result");
-                            if (result != null) {
-                              setState(() {
-                                int index = widget
-                                    .song.sections[currentSection].bars!
-                                    .indexOf(bar);
-                                if (index != -1) {
-                                  widget.song.sections[currentSection]
-                                      .bars![index] = result;
-                                }
-                                songProvider.saveSong(widget.song);
-                                logger.d( result.getDebugOutput("Saving song with edited bar") );
-                                widget.song.save();
-                              });
-                            }
+                            setState(() {
+                              int index = widget
+                                  .song.sections[currentSection].bars!
+                                  .indexOf(bar);
+                              if (index != -1) {
+                                widget.song.sections[currentSection]
+                                    .bars![index] = result;
+                              }
+                              songProvider.saveSong(widget.song);
+                              logger.d(result.getDebugOutput(
+                                  "Saving song with edited bar"));
+                              widget.song.save();
+                            });
                           },
                           child: Container(
                             width: 200.0,
@@ -176,7 +174,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                             ),
                           ),
                         );
-                      }).toList(),
+                      }),
                       GestureDetector(
                         onTap: () async {
                           final Bar result = await showDialog(
@@ -189,13 +187,14 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                             },
                           );
                           logger.d("Returned new bar: $result");
-                          final section = widget.song.sections[currentSection!];
+                          final section = widget.song.sections[currentSection];
                           if (section.bars != null) {
                             setState(() {
                               section.bars!.add(result);
                               songProvider.saveSong(widget.song);
 
-                              logger.d( result.getDebugOutput("Saving song with new bar") );
+                              logger.d(result
+                                  .getDebugOutput("Saving song with new bar"));
                               widget.song.save();
                             });
                           } else {

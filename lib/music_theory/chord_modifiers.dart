@@ -1,15 +1,15 @@
 class ChordModifiers {
-  static const int MAJOR = 0;
-  static const int MINOR = 1;
-  static const int DIMINISHED = 2;
-  static const int HALF_DIMINISHED = 3;
-  static const int AUGMENTED = 4;
-  static const int SUSPENDED = 5;
-  static const int MAJOR_SEVENTH = 6;
-  static const int MINOR_SEVENTH = 7;
-  static const int NINTH = 8;
-  static const int ELEVENTH = 9;
-  static const int THIRTEENTH = 10;
+  static const int major = 0;
+  static const int minor = 1;
+  static const int diminished = 2;
+  static const int halfDiminished = 3;
+  static const int augmented = 4;
+  static const int suspended = 5;
+  static const int majorSeventh = 6;
+  static const int minorSeventh = 7;
+  static const int ninth = 8;
+  static const int eleventh = 9;
+  static const int thirteenth = 10;
 
   //  This method, render, takes an integer modifier as input and returns a string representation of the
   //  corresponding chord symbol.

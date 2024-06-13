@@ -3,7 +3,6 @@ import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/songs/song_header_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -28,8 +27,6 @@ class _SongHeaderState extends State<SongHeader> {
     var currentSongProvider = context.watch<SongProvider>();
     var currentSong = currentSongProvider.currentSong;
     Song? boxSong;
-
-    var box = Hive.box<Song>('songs');
 
     boxSong = currentSong;
 
