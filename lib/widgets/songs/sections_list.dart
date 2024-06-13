@@ -70,7 +70,7 @@ class _SectionsListState extends State<SectionsList> {
                                 song: widget.song,
                                 sectionIndex: -1,
                                 onSectionCreated: (newSection) {
-                                  setState(() {});
+                                  //setState(() {});
                                 },
                               ),
                             );

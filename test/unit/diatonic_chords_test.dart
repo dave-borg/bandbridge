@@ -5,25 +5,25 @@ void main() {
   group('Diatonic Chords', () {
     test('Major scale chords in C - 2nd', () {
       final chord = DiatonicChords.getDiatonicChord('C', ChordType.major, 2);
-      expect(chord.name, 'Dm');
+      expect(chord.rootNote, 'Dm');
       expect(chord.beats, '1');
     });
 
     test('Major scale chords in C - 7th', () {
       final chord = DiatonicChords.getDiatonicChord('C', ChordType.major, 7);
-      expect(chord.name, 'Bdim');
+      expect(chord.rootNote, 'Bdim');
       expect(chord.beats, '1');
     });
 
     test('Minor scale chords in A - 3rd', () {
       final chord = DiatonicChords.getDiatonicChord('A', ChordType.minor, 3);
-      expect(chord.name, 'C');
+      expect(chord.rootNote, 'C');
       expect(chord.beats, '1');
     });
 
     test('Minor scale chords in A - 2nd', () {
       final chord = DiatonicChords.getDiatonicChord('A', ChordType.minor, 2);
-      expect(chord.name, 'Bdim');
+      expect(chord.rootNote, 'Bdim');
       expect(chord.beats, '1');
     });
 

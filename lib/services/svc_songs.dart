@@ -140,13 +140,7 @@ class SongsService {
   /// ```
   static Future<void> saveSong(Song thisSong) async {
     Box box;
-
-    //if (Hive.isBoxOpen('songs')) {
-      box = Hive.box('songs');
-    //} else {
-    //  box = await Hive.openBox('songs');
-    //}
-
+    box = Hive.box('songs');
     await box.put(thisSong.id, thisSong.toJson());
   }
 }

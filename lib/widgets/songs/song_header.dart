@@ -72,6 +72,7 @@ class _SongHeaderState extends State<SongHeader> {
                                               .getDebugOutput('Editing Song'));
                                           currentSongProvider
                                               .saveSong(currentSong);
+                                          currentSong.save();
                                         });
                                       },
                                     );

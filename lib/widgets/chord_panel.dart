@@ -44,8 +44,8 @@ class ChordPanel {
     List<Widget> chordPanels = [];
 
     //container for chord name
-    chordPanels.add(chordPanel(chord.name, start, sectionPosition,
-        modifier: chord.modifications));
+    chordPanels.add(chordPanel(chord.rootNote, start, sectionPosition,
+        modifier: chord.renderElements()));
 
     //repeat symbols
     for (var i = 1; i < int.parse(chord.beats); i++) {

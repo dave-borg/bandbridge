@@ -26,9 +26,10 @@ In conclusion, the ChordChartEditor class is a true virtuoso, combining the eleg
  */
 class ChordChartEditor extends StatefulWidget {
   final Song song;
-  final int? sectionIndex;
+  final int? selectedSectionIndex;
 
-  const ChordChartEditor({Key? key, required this.song, this.sectionIndex})
+  const ChordChartEditor(
+      {Key? key, required this.song, this.selectedSectionIndex})
       : super(key: key);
 
   @override
@@ -73,16 +74,15 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
         Expanded(
           child: ListView.builder(
             itemCount: widget.song.sections.length,
-            itemBuilder: (context, i) {
-              if (widget.sectionIndex != null && widget.sectionIndex != i) {
+            itemBuilder: (context, currentSection) {
+              if (widget.selectedSectionIndex != null &&
+                  widget.selectedSectionIndex != currentSection) {
                 return Container(); // Return an empty container if sectionIndex is not null and does not match the current index
               }
 
               // Create a new list of bars where each bar has a maximum of 4 beats
               List<Bar> bars = [];
-              List<Chord> currentBar = [];
-              int currentBeats = 0;
-              bars = widget.song.sections[i].bars!;
+              bars = widget.song.sections[currentSection].bars!;
 
               // Create a list of keys for the containers
               List<GlobalKey> keys =
@@ -94,7 +94,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                   Container(
                     margin: const EdgeInsets.only(top: 16.0),
                     child: Text(
-                      widget.song.sections[i].section,
+                      widget.song.sections[currentSection].section,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -107,8 +107,8 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                     children: [
                       ...bars.map((bar) {
                         return GestureDetector(
-                          onTap: () {
-                            showDialog(
+                          onTap: () async {
+                            final Bar result = await showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return BarDialog(
@@ -117,6 +117,21 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                                     dialogTitle: 'Edit Bar');
                               },
                             );
+                            logger.d("Returned edited bar: $result");
+                            if (result != null) {
+                              setState(() {
+                                int index = widget
+                                    .song.sections[currentSection].bars!
+                                    .indexOf(bar);
+                                if (index != -1) {
+                                  widget.song.sections[currentSection]
+                                      .bars![index] = result;
+                                }
+                                songProvider.saveSong(widget.song);
+                                logger.d( result.getDebugOutput("Saving song with edited bar") );
+                                widget.song.save();
+                              });
+                            }
                           },
                           child: Container(
                             width: 200.0,
@@ -129,38 +144,42 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                             ),
                             child: Wrap(
                               spacing: 6.0, // Adjust spacing as needed
-                              children: bar.expand((beat) {
-                                // Create a list of widgets for each chord and its slashes
-                                List<Widget> widgets = [
-                                  ChordContainer(
-                                    chord: beat.chord,
-                                  ), // Use ChordContainer for the chord
-                                  // Text(
-                                  //     "${chord.name} ${chord.bass}"), // Use Text for the chord
-                                ];
-                                // Add slashes for beats, if any
-                                int beats = int.parse(beat.chord.beats) - 1;
-                                for (int i = 0; i < beats; i++) {
-                                  widgets.add(
-                                    const SizedBox(
-                                      width: 40, // Specify your desired width
-                                      height: 60,
-                                      child: Text(
-                                        " /",
-                                        style: TextStyle(fontSize: 24),
-                                      ),
-                                    ),
-                                  ); // Add a Text widget for each slash, with a leading space for separation
-                                }
-                                return widgets;
-                              }).toList(),
+                              children: bar.beats
+                                  .map((beat) {
+                                    List<Widget> widgets = [];
+
+                                    if (beat.chord != null) {
+                                      widgets.add(
+                                        ChordContainer(
+                                          chord: beat.chord!,
+                                          width: 35,
+                                          height: 50,
+                                        ),
+                                      );
+                                    } else {
+                                      widgets.add(
+                                        const SizedBox(
+                                          width: 35,
+                                          height: 30,
+                                          child: Text(
+                                            " /",
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                        ),
+                                      );
+                                    }
+
+                                    return widgets;
+                                  })
+                                  .expand((i) => i)
+                                  .toList(), // Flatten the list of lists into a single list
                             ),
                           ),
                         );
                       }).toList(),
                       GestureDetector(
-                        onTap: () {
-                          showDialog(
+                        onTap: () async {
+                          final Bar result = await showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return BarDialog(
@@ -169,6 +188,21 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                                   dialogTitle: 'Add Bar');
                             },
                           );
+                          logger.d("Returned new bar: $result");
+                          final section = widget.song.sections[currentSection!];
+                          if (section.bars != null) {
+                            setState(() {
+                              section.bars!.add(result);
+                              songProvider.saveSong(widget.song);
+
+                              logger.d( result.getDebugOutput("Saving song with new bar") );
+                              widget.song.save();
+                            });
+                          } else {
+                            // Handle the case where bars is null or result is null
+                            logger.d(
+                                "Bars is null or no result returned from dialog");
+                          }
                         },
                         child: Container(
                           margin: const EdgeInsets.only(top: 16.0),

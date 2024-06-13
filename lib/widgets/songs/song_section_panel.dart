@@ -1,7 +1,5 @@
 import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/utils/logging_util.dart';
-import 'package:bandbridge/widgets/chord-chart/bar_container.dart';
-import 'package:bandbridge/widgets/chord_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 

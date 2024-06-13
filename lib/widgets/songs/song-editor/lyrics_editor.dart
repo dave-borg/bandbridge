@@ -1,4 +1,4 @@
-import 'package:bandbridge/models/mbl_beat.dart';
+import 'package:bandbridge/models/mdl_beat.dart';
 import 'package:bandbridge/models/mdl_bar.dart';
 import 'package:bandbridge/models/mdl_lyric.dart';
 import 'package:bandbridge/models/mdl_section.dart';

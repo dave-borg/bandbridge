@@ -1,9 +1,9 @@
-import 'package:bandbridge/models/mbl_beat.dart';
+import 'package:bandbridge/models/mdl_beat.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class BeatAdapter extends TypeAdapter<Beat> {
   @override
-  final typeId = 1;
+  final typeId = 7;
 
   @override
   Beat read(BinaryReader reader) {

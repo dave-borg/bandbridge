@@ -1,3 +1,4 @@
+import 'package:bandbridge/models/mdl_bar.dart';
 import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
@@ -75,10 +76,9 @@ class SongArrangementDialog extends StatelessWidget {
                           // newSection.lyrics =
                         },
                         onSaved: (value) {
-                          // if (value != null) {
-                          //   newSection.lyrics = value.lyrics;
-                          //   newSection.chords = value.chords;
-                          // }
+                          if (value != null) {
+                            newSection.bars = value.bars!.map((bar) => bar.copy()).cast<Bar>().toList();
+                          }
                         },
                       )
                     : Container(), // return an empty Container when sectionIndex is not null

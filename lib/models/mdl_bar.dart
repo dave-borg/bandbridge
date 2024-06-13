@@ -1,4 +1,4 @@
-import 'package:bandbridge/models/mbl_beat.dart';
+import 'package:bandbridge/models/mdl_beat.dart';
 import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/models/mdl_lyric.dart';
 import 'package:flutter/material.dart';
@@ -12,33 +12,31 @@ class Bar {
   String timeSignature = "4/4";
 
   Bar({List<Beat>? beats, String? timeSignature = "4/4"}) {
-    initBeats();
+    if (beats != null) {
+      this.beats = beats;
+    } else {
+      initBeats();
+    }
   }
 
   factory Bar.fromJson(Map<String, dynamic> json) {
-    Bar bar = Bar();
-    bar.beats = (json['beats'] as List<dynamic>).map((beatJson) {
-      Chord? chord =
-          beatJson['chord'] != null ? Chord.fromJson(beatJson['chord']) : null;
-      Lyric? lyric =
-          beatJson['lyric'] != null ? Lyric.fromJson(beatJson['lyric']) : null;
-      return Beat(chord: chord, lyric: lyric);
-    }).toList();
-    bar.timeSignature = json['timeSignature'];
-    return bar;
+    List<Beat> beats = [];
+    if (json['beats'] != null) {
+      json['beats'].forEach((beatJson) {
+        beats.add(Beat.fromJson(beatJson));
+      });
+    }
+    return Bar(
+      beats: beats,
+      timeSignature: json['timeSignature'] ?? "4/4",
+    );
   }
 
   Map<String, dynamic> toJson() {
-    List<dynamic> beatsJson = beats.map((beat) {
-      Map<String, dynamic> beatJson = {};
-      if (beat.chord != null) {
-        beatJson['chord'] = beat.chord!.toJson();
-      }
-      if (beat.lyric != null) {
-        beatJson['lyric'] = beat.lyric!.toJson();
-      }
-      return beatJson;
-    }).toList();
+    List<Map<String, dynamic>> beatsJson = [];
+    beats.forEach((beat) {
+      beatsJson.add(beat.toJson());
+    });
     return {
       'beats': beatsJson,
       'timeSignature': timeSignature,
@@ -82,5 +80,28 @@ class Bar {
 
   expand(List<Widget> Function(dynamic beats) param0) {
     return beats;
+  }
+
+  String getDebugOutput(String debugHeader) {
+    String debugOutput = "$debugHeader\n\n";
+    for (int i = 0; i < beats.length; i++) {
+      debugOutput += "Beat $i: ";
+      if (beats[i].chord != null) {
+        debugOutput += "Chord: ${beats[i].chord!.renderFullChord()} ";
+      }
+      if (beats[i].lyric != null) {
+        debugOutput += "Lyric: ${beats[i].lyric!.text} ";
+      }
+      debugOutput += "\n";
+    }
+    return debugOutput;
+  }
+
+  copy() {
+    List<Beat> copiedBeats = [];
+    beats.forEach((beat) {
+      copiedBeats.add(beat.copy());
+    });
+    return Bar(beats: copiedBeats, timeSignature: timeSignature);
   }
 }

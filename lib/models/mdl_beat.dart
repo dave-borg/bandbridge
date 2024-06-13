@@ -24,4 +24,11 @@ class Beat {
       lyric: json['lyric'] != null ? Lyric.fromJson(json['lyric']) : null,
     );
   }
+
+  Beat copy() {
+    return Beat(
+      chord: chord?.copy(),
+      lyric: lyric?.copy(),
+    );
+  }
 }

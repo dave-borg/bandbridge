@@ -59,14 +59,16 @@ class DiatonicChords {
     final ChordType degreeChordType = pattern[scaleDegree];
 
     // Construct the chord name based on the base note and the chord type
-    final String chordName = chordBaseNote +
-        (degreeChordType == ChordType.minor
-            ? 'm'
-            : degreeChordType == ChordType.major
-                ? ''
-                : 'dim');
+    Chord rValue = Chord(rootNote: chordBaseNote, beats: '1');
+    if (degreeChordType == ChordType.minor) {
+      rValue.chordQuality = ChordType.minor.index;
+    } else if (degreeChordType == ChordType.major) {
+      rValue.chordQuality = ChordType.major.index;
+    } else if (degreeChordType == ChordType.diminished) {
+      rValue.chordQuality = ChordType.diminished.index;
+    }
 
-    return Chord(name: chordName, beats: '1');
+    return rValue;
   }
 }
 

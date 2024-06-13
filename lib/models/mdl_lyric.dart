@@ -26,4 +26,11 @@ class Lyric {
       'beats': beats,
     };
   }
+
+  copy() {
+    return Lyric(
+      text: text,
+      beats: beats,
+    );
+  }
 }

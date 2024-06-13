@@ -16,154 +16,154 @@ class SongGenerator {
 
     Section intro = Section();
     intro.section = 'Intro';
-    intro.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
-    intro.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
-    intro.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
+    intro.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    intro.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    intro.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
     intro.bars?.add(buildBar(chords: {
-      0: Chord(name: "A", beats: "2"),
-      2: Chord(name: "G", beats: "1"),
-      3: Chord(name: "D", bass: "F#", beats: "1")
+      0: Chord(rootNote: "A", beats: "2"),
+      2: Chord(rootNote: "G", beats: "1"),
+      3: Chord(rootNote: "D", bass: "F#", beats: "1")
     }));
     song.sections.add(intro);
 
     Section verse = Section();
     verse.section = 'Verse';
     verse.bars?.add(buildBar(chords: {
-      0: Chord(name: "A", beats: "4")
+      0: Chord(rootNote: "A", beats: "4")
     }, lyrics: {
       0: Lyric(text: "Jojo was a man who thought he was a loner", beats: "8")
     }));
-    verse.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
+    verse.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
     verse.bars?.add(buildBar(
-        chords: {0: Chord(name: "D", beats: "4")},
+        chords: {0: Chord(rootNote: "D", beats: "4")},
         lyrics: {0: Lyric(text: "But he knew it couldn't last", beats: "8")}));
-    verse.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
+    verse.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
     verse.bars?.add(buildBar(chords: {
-      0: Chord(name: "A", beats: "4")
+      0: Chord(rootNote: "A", beats: "4")
     }, lyrics: {
       0: Lyric(text: "Jojo left his home in Tuscon, Arizona", beats: "8")
     }));
-    verse.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
+    verse.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
     verse.bars?.add(buildBar(
-        chords: {0: Chord(name: "D", beats: "4")},
+        chords: {0: Chord(rootNote: "D", beats: "4")},
         lyrics: {0: Lyric(text: "For some Californian grass", beats: "8")}));
-    verse.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
+    verse.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
     song.sections.add(verse);
 
     Section chorus = Section();
     chorus.section = 'Chorus';
     chorus.bars?.add(buildBar(
-        chords: {0: Chord(name: "A", beats: "4")},
+        chords: {0: Chord(rootNote: "A", beats: "4")},
         lyrics: {0: Lyric(text: "Get back", beats: "4")}));
     chorus.bars?.add(buildBar(
-        chords: {0: Chord(name: "A", beats: "4")},
+        chords: {0: Chord(rootNote: "A", beats: "4")},
         lyrics: {0: Lyric(text: "Get back", beats: "4")}));
     chorus.bars?.add(buildBar(chords: {
-      0: Chord(name: "D", beats: "4")
+      0: Chord(rootNote: "D", beats: "4")
     }, lyrics: {
       0: Lyric(text: "Get back to where you once belong", beats: "8")
     }));
     chorus.bars?.add(buildBar(chords: {
-      0: Chord(name: "A", beats: "2"),
-      2: Chord(name: "G", beats: "1"),
-      3: Chord(name: "D", bass: "F#", beats: "1")
+      0: Chord(rootNote: "A", beats: "2"),
+      2: Chord(rootNote: "G", beats: "1"),
+      3: Chord(rootNote: "D", bass: "F#", beats: "1")
     }));
     chorus.bars?.add(buildBar(
-        chords: {0: Chord(name: "A", beats: "4")},
+        chords: {0: Chord(rootNote: "A", beats: "4")},
         lyrics: {0: Lyric(text: "Get back", beats: "4")}));
     chorus.bars?.add(buildBar(
-        chords: {0: Chord(name: "A", beats: "4")},
+        chords: {0: Chord(rootNote: "A", beats: "4")},
         lyrics: {0: Lyric(text: "Get back", beats: "4")}));
     chorus.bars?.add(buildBar(chords: {
-      0: Chord(name: "D", beats: "4")
+      0: Chord(rootNote: "D", beats: "4")
     }, lyrics: {
       0: Lyric(text: "Get back to where you once belong", beats: "8")
     }));
     chorus.bars?.add(buildBar(chords: {
-      0: Chord(name: "A", beats: "2"),
-      2: Chord(name: "G", beats: "1"),
-      3: Chord(name: "D", bass: "F#", beats: "1")
+      0: Chord(rootNote: "A", beats: "2"),
+      2: Chord(rootNote: "G", beats: "1"),
+      3: Chord(rootNote: "D", bass: "F#", beats: "1")
     }));
     song.sections.add(chorus);
 
     Section solo = Section();
     solo.section = 'Keyboard Solo (Verse)';
-    solo.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
-    solo.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
-    solo.bars?.add(buildBar(chords: {0: Chord(name: "D", beats: "4")}));
+    solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "D", beats: "4")}));
     solo.bars?.add(buildBar(chords: {
-      0: Chord(name: "A", beats: "2"),
-      2: Chord(name: "G", beats: "1"),
-      3: Chord(name: "D", bass: "F#", beats: "1")
+      0: Chord(rootNote: "A", beats: "2"),
+      2: Chord(rootNote: "G", beats: "1"),
+      3: Chord(rootNote: "D", bass: "F#", beats: "1")
     }));
-    solo.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
-    solo.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
-    solo.bars?.add(buildBar(chords: {0: Chord(name: "D", beats: "4")}));
+    solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
+    solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "D", beats: "4")}));
     solo.bars?.add(buildBar(chords: {
-      0: Chord(name: "A", beats: "2"),
-      2: Chord(name: "G", beats: "1"),
-      3: Chord(name: "D", bass: "F#", beats: "1")
+      0: Chord(rootNote: "A", beats: "2"),
+      2: Chord(rootNote: "G", beats: "1"),
+      3: Chord(rootNote: "D", bass: "F#", beats: "1")
     }));
     song.sections.add(solo);
 
     Section verse2 = Section();
     verse2.section = 'Verse';
     verse2.bars?.add(buildBar(chords: {
-      0: Chord(name: "A", beats: "4")
+      0: Chord(rootNote: "A", beats: "4")
     }, lyrics: {
       0: Lyric(text: "Sweet Loretta Martin thought she was a woman", beats: "8")
     }));
-    verse2.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
+    verse2.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
     verse2.bars?.add(buildBar(
-        chords: {0: Chord(name: "D", beats: "4")},
+        chords: {0: Chord(rootNote: "D", beats: "4")},
         lyrics: {0: Lyric(text: "But she was another man", beats: "8")}));
-    verse2.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
+    verse2.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
     verse2.bars?.add(buildBar(chords: {
-      0: Chord(name: "A", beats: "4")
+      0: Chord(rootNote: "A", beats: "4")
     }, lyrics: {
       0: Lyric(
           text: "All the girls around her say she's got it coming", beats: "8")
     }));
-    verse2.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
+    verse2.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
     verse2.bars?.add(buildBar(
-        chords: {0: Chord(name: "D", beats: "4")},
+        chords: {0: Chord(rootNote: "D", beats: "4")},
         lyrics: {0: Lyric(text: "But she gets it while she can", beats: "8")}));
-    verse2.bars?.add(buildBar(chords: {0: Chord(name: "A", beats: "4")}));
+    verse2.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
     song.sections.add(verse2);
 
     Section chorus2 = Section();
     chorus2.section = 'Chorus';
     chorus2.bars?.add(buildBar(
-        chords: {0: Chord(name: "A", beats: "4")},
+        chords: {0: Chord(rootNote: "A", beats: "4")},
         lyrics: {0: Lyric(text: "Get back", beats: "4")}));
     chorus2.bars?.add(buildBar(
-        chords: {0: Chord(name: "A", beats: "4")},
+        chords: {0: Chord(rootNote: "A", beats: "4")},
         lyrics: {0: Lyric(text: "Get back", beats: "4")}));
     chorus2.bars?.add(buildBar(chords: {
-      0: Chord(name: "D", beats: "4")
+      0: Chord(rootNote: "D", beats: "4")
     }, lyrics: {
       0: Lyric(text: "Get back to where you once belong", beats: "8")
     }));
     chorus2.bars?.add(buildBar(chords: {
-      0: Chord(name: "A", beats: "2"),
-      2: Chord(name: "G", beats: "1"),
-      3: Chord(name: "D", bass: "F#", beats: "1")
+      0: Chord(rootNote: "A", beats: "2"),
+      2: Chord(rootNote: "G", beats: "1"),
+      3: Chord(rootNote: "D", bass: "F#", beats: "1")
     }));
     chorus2.bars?.add(buildBar(
-        chords: {0: Chord(name: "A", beats: "4")},
+        chords: {0: Chord(rootNote: "A", beats: "4")},
         lyrics: {0: Lyric(text: "Get back", beats: "4")}));
     chorus2.bars?.add(buildBar(
-        chords: {0: Chord(name: "A", beats: "4")},
+        chords: {0: Chord(rootNote: "A", beats: "4")},
         lyrics: {0: Lyric(text: "Get back", beats: "4")}));
     chorus2.bars?.add(buildBar(chords: {
-      0: Chord(name: "D", beats: "4")
+      0: Chord(rootNote: "D", beats: "4")
     }, lyrics: {
       0: Lyric(text: "Get back to where you once belong", beats: "8")
     }));
     chorus2.bars?.add(buildBar(chords: {
-      0: Chord(name: "A", beats: "2"),
-      2: Chord(name: "G", beats: "1"),
-      3: Chord(name: "D", bass: "F#", beats: "1")
+      0: Chord(rootNote: "A", beats: "2"),
+      2: Chord(rootNote: "G", beats: "1"),
+      3: Chord(rootNote: "D", bass: "F#", beats: "1")
     }));
     song.sections.add(chorus2);
 

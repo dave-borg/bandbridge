@@ -36,13 +36,13 @@ class Song extends HiveObject {
     this.initialKey = "",
     this.tempo = "",
     this.timeSignature = "",
-    List<Section>? structure,
+    List<Section>? sections,
     this.versions = const [],
   })  : id = songId == null || songId == "-2" ? const Uuid().v4() : songId,
         initialKeyType =
             initialKey.endsWith('m') ? ChordType.minor : ChordType.major,
         sections =
-            structure ?? []; // Initialize structure in the constructor body
+            sections ?? []; // Initialize structure in the constructor body
 
   factory Song.fromJson(Map<String, dynamic> json) {
     return Song(
@@ -53,7 +53,7 @@ class Song extends HiveObject {
       initialKey: json['initialKey'],
       tempo: json['tempo'],
       timeSignature: json['timeSignature'],
-      structure: List<Section>.from(
+      sections: List<Section>.from(
         json['structure']
             .map((x) => Section.fromJson(Map<String, dynamic>.from(x))),
       ),
@@ -73,7 +73,7 @@ class Song extends HiveObject {
       'initialKey': initialKey,
       'tempo': tempo,
       'timeSignature': timeSignature,
-      'structure': List<dynamic>.from(sections.map((x) => x.toJson())),
+      'sections': List<dynamic>.from(sections.map((x) => x.toJson())),
       'versions': List<dynamic>.from(versions.map((x) => x.toJson())),
     };
   }
@@ -89,7 +89,7 @@ class Song extends HiveObject {
     rValue += "Initial Key Type: $initialKeyType\n";
     rValue += "Tempo: $tempo\n";
     rValue += "Time Signature: $timeSignature\n";
-    rValue += "Structure: ${sections.length}\n";
+    rValue += "Sections: ${sections.length}\n";
     rValue += "Versions: ${versions.length}\n";
 
     return rValue;

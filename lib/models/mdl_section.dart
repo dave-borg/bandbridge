@@ -1,9 +1,6 @@
 import 'package:bandbridge/models/mdl_bar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'mdl_chord.dart';
-import 'mdl_lyric.dart';
-
 @HiveType(typeId: 1)
 class Section {
   @HiveField(0)
@@ -40,5 +37,11 @@ class Section {
       'duration': duration,
       'bars': bars?.map((bar) => bar.toJson()).toList(),
     };
+  }
+
+  void addBar(Bar newBar) {
+    bars ??= [];
+    
+    bars?.add(newBar);
   }
 }

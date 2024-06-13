@@ -17,7 +17,7 @@ class SongAdapter extends TypeAdapter<Song> {
       initialKey: reader.read(),
       tempo: reader.read(),
       timeSignature: reader.read(),
-      structure: reader.readList().cast<Section>(),
+      sections: reader.readList().cast<Section>(),
       versions: reader.readList().cast<Version>(),
     );
   }
