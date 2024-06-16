@@ -11,6 +11,7 @@ class BarAdapter extends TypeAdapter<Bar> {
     return Bar(
       beats: reader.readList().cast<Beat>(),
       timeSignature: reader.read(),
+      songId: reader.read(),
     );
   }
 
@@ -18,5 +19,6 @@ class BarAdapter extends TypeAdapter<Bar> {
   void write(BinaryWriter writer, Bar obj) {
     writer.writeList(obj.beats);
     writer.write(obj.timeSignature);
+    writer.write(obj.id);
   }
 }

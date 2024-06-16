@@ -131,130 +131,158 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                               widget.song.save();
                             });
                           },
-                          child: Draggable(
-                            data: bar,
-                            feedback: Container(
-                              width: 200.0,
-                              height: 60.0,
-                              padding: const EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.blueAccent),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Wrap(
-                                spacing: 6.0, // Adjust spacing as needed
-                                children: bar.beats
-                                    .map((beat) {
-                                      List<Widget> widgets = [];
+                          child: Dismissible(
+                            key: Key(bar
+                                .id), // Ensure you have a unique identifier for each bar
+                            direction: DismissDirection
+                                .horizontal, // Allows swiping in both directions
+                            onDismissed: (direction) {
+                              // Remove the bar from the list
+                              setState(() {
+                                //int currentSectionIndex = // Determine the current section index
+                                int index = widget
+                                    .song.sections[currentSection].bars!
+                                    .indexOf(bar);
+                                if (index != -1) {
+                                  widget.song.sections[currentSection].bars!
+                                      .removeAt(index);
+                                  songProvider
+                                      .saveSong(widget.song); // Save changes
+                                }
+                              });
 
-                                      if (beat.chord != null) {
-                                        widgets.add(
-                                          ChordContainer(
-                                            chord: beat.chord!,
-                                            width: 35,
-                                            height: 50,
-                                          ),
-                                        );
-                                      } else {
-                                        widgets.add(
-                                          const SizedBox(
-                                            width: 35,
-                                            height: 30,
-                                            child: Text(
-                                              " /",
-                                              style: TextStyle(fontSize: 18),
+                              // Optionally, show a snackbar or some feedback
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Bar removed')),
+                              );
+                            },
+                            background: Container(
+                                color: Colors.red), // Background when swiping
+                            child: LongPressDraggable(
+                              data: bar,
+                              feedback: Container(
+                                width: 200.0,
+                                height: 60.0,
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.blueAccent),
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Wrap(
+                                  spacing: 6.0, // Adjust spacing as needed
+                                  children: bar.beats
+                                      .map((beat) {
+                                        List<Widget> widgets = [];
+
+                                        if (beat.chord != null) {
+                                          widgets.add(
+                                            ChordContainer(
+                                              chord: beat.chord!,
+                                              width: 35,
+                                              height: 50,
                                             ),
-                                          ),
-                                        );
-                                      }
-
-                                      return widgets;
-                                    })
-                                    .expand((i) => i)
-                                    .toList(), // Flatten the list of lists into a single list
-                              ),
-                            ),
-                            childWhenDragging: Container(
-                              width: 200.0,
-                              height: 60.0,
-                              padding: const EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.blueAccent),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Wrap(
-                                spacing: 6.0, // Adjust spacing as needed
-                                children: bar.beats
-                                    .map((beat) {
-                                      List<Widget> widgets = [];
-
-                                      if (beat.chord != null) {
-                                        widgets.add(
-                                          ChordContainer(
-                                            chord: beat.chord!,
-                                            width: 35,
-                                            height: 50,
-                                          ),
-                                        );
-                                      } else {
-                                        widgets.add(
-                                          const SizedBox(
-                                            width: 35,
-                                            height: 30,
-                                            child: Text(
-                                              " /",
-                                              style: TextStyle(fontSize: 18),
+                                          );
+                                        } else {
+                                          widgets.add(
+                                            const SizedBox(
+                                              width: 35,
+                                              height: 30,
+                                              child: Text(
+                                                " /",
+                                                style: TextStyle(fontSize: 18),
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      }
+                                          );
+                                        }
 
-                                      return widgets;
-                                    })
-                                    .expand((i) => i)
-                                    .toList(), // Flatten the list of lists into a single list
+                                        return widgets;
+                                      })
+                                      .expand((i) => i)
+                                      .toList(), // Flatten the list of lists into a single list
+                                ),
                               ),
-                            ),
-                            child: Container(
-                              width: 200.0,
-                              height: 60.0,
-                              key: keys[bars.indexOf(bar)],
-                              padding: const EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.blueAccent),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Wrap(
-                                spacing: 6.0, // Adjust spacing as needed
-                                children: bar.beats
-                                    .map((beat) {
-                                      List<Widget> widgets = [];
+                              childWhenDragging: Container(
+                                width: 200.0,
+                                height: 60.0,
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.blueAccent),
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Wrap(
+                                  spacing: 6.0, // Adjust spacing as needed
+                                  children: bar.beats
+                                      .map((beat) {
+                                        List<Widget> widgets = [];
 
-                                      if (beat.chord != null) {
-                                        widgets.add(
-                                          ChordContainer(
-                                            chord: beat.chord!,
-                                            width: 35,
-                                            height: 50,
-                                          ),
-                                        );
-                                      } else {
-                                        widgets.add(
-                                          const SizedBox(
-                                            width: 35,
-                                            height: 30,
-                                            child: Text(
-                                              " /",
-                                              style: TextStyle(fontSize: 18),
+                                        if (beat.chord != null) {
+                                          widgets.add(
+                                            ChordContainer(
+                                              chord: beat.chord!,
+                                              width: 35,
+                                              height: 50,
                                             ),
-                                          ),
-                                        );
-                                      }
+                                          );
+                                        } else {
+                                          widgets.add(
+                                            const SizedBox(
+                                              width: 35,
+                                              height: 30,
+                                              child: Text(
+                                                " /",
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                            ),
+                                          );
+                                        }
 
-                                      return widgets;
-                                    })
-                                    .expand((i) => i)
-                                    .toList(), // Flatten the list of lists into a single list
+                                        return widgets;
+                                      })
+                                      .expand((i) => i)
+                                      .toList(), // Flatten the list of lists into a single list
+                                ),
+                              ),
+                              child: Container(
+                                width: 200.0,
+                                height: 60.0,
+                                key: keys[bars.indexOf(bar)],
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.blueAccent),
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Wrap(
+                                  spacing: 6.0, // Adjust spacing as needed
+                                  children: bar.beats
+                                      .map((beat) {
+                                        List<Widget> widgets = [];
+
+                                        if (beat.chord != null) {
+                                          widgets.add(
+                                            ChordContainer(
+                                              chord: beat.chord!,
+                                              width: 35,
+                                              height: 50,
+                                            ),
+                                          );
+                                        } else {
+                                          widgets.add(
+                                            const SizedBox(
+                                              width: 35,
+                                              height: 30,
+                                              child: Text(
+                                                " /",
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                            ),
+                                          );
+                                        }
+
+                                        return widgets;
+                                      })
+                                      .expand((i) => i)
+                                      .toList(), // Flatten the list of lists into a single list
+                                ),
                               ),
                             ),
                           ),

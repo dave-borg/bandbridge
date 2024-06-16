@@ -3,6 +3,7 @@ import 'package:bandbridge/models/mdl_chord.dart';
 import 'package:bandbridge/models/mdl_lyric.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 @HiveType(typeId: 6)
 class Bar {
@@ -10,8 +11,11 @@ class Bar {
   List<Beat> beats = [];
   @HiveField(1)
   String timeSignature = "4/4";
+  @HiveField(2)
+  String id = "-1";
 
-  Bar({List<Beat>? beats, String? timeSignature = "4/4"}) {
+
+  Bar({List<Beat>? beats, String? timeSignature = "4/4", String? songId}): id = songId == null || songId == "-2" ? const Uuid().v4() : songId {
     if (beats != null) {
       this.beats = beats;
     } else {
