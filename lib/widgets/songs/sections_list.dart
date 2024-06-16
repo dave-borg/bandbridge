@@ -88,40 +88,7 @@ class _SectionsListState extends State<SectionsList> {
                       },
                     ),
                   ),
-                  SizedBox(
-                    width: 30.0, // Your desired width
-                    child: IconButton(
-                      padding: EdgeInsets.zero, // Remove padding
-                      icon: const Icon(Icons.edit, size: 20.0), // Set icon size
-                      onPressed: selectedSectionIndex != null
-                          ? () async {
-                              // Only enable button if an item is selected
-                              final Section result = await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  // Assuming currentSong is your current song
-                                  // and SongSectionDialog takes a song and an index
-                                  return SongArrangementDialog(
-                                    dialogTitle: 'Edit Section',
-                                    song: widget.song,
-                                    sectionIndex: selectedSectionIndex!,
-                                    onSectionCreated: (updatedSection) {
-                                      setState(() {});
-                                    },
-                                  );
-                                },
-                              );
-
-                              // Update the section
-                              setState(() {
-                                // Assuming sections is your list of sections
-                                widget.song.sections[selectedSectionIndex!] =
-                                    result;
-                              });
-                            }
-                          : null, // Disable button if no item is selected
-                    ),
-                  ),
+                  
                   SizedBox(
                     width: 30.0, // Your desired width
                     child: IconButton(
