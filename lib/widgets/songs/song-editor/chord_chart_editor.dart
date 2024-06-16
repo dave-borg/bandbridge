@@ -9,7 +9,7 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 ///
-///  * Ah, he ChordChartEditor class, a true masterpiece of the Dart language. 
+///  * Ah, he ChordChartEditor class, a true masterpiece of the Dart language.
 ///
 ///As we dive into the build method, we are greeted with a Column widget, the backbone of this code symphony. It orchestrates a harmonious arrangement of widgets, creating a visually stunning user interface. And what's a great UI without an AppBar? Here, we find a row of IconButtons, each waiting to be pressed and unleash its own unique action.
 ///
@@ -131,46 +131,131 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                               widget.song.save();
                             });
                           },
-                          child: Container(
-                            width: 200.0,
-                            height: 60.0,
-                            key: keys[bars.indexOf(bar)],
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.blueAccent),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            child: Wrap(
-                              spacing: 6.0, // Adjust spacing as needed
-                              children: bar.beats
-                                  .map((beat) {
-                                    List<Widget> widgets = [];
+                          child: Draggable(
+                            data: bar,
+                            feedback: Container(
+                              width: 200.0,
+                              height: 60.0,
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.blueAccent),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Wrap(
+                                spacing: 6.0, // Adjust spacing as needed
+                                children: bar.beats
+                                    .map((beat) {
+                                      List<Widget> widgets = [];
 
-                                    if (beat.chord != null) {
-                                      widgets.add(
-                                        ChordContainer(
-                                          chord: beat.chord!,
-                                          width: 35,
-                                          height: 50,
-                                        ),
-                                      );
-                                    } else {
-                                      widgets.add(
-                                        const SizedBox(
-                                          width: 35,
-                                          height: 30,
-                                          child: Text(
-                                            " /",
-                                            style: TextStyle(fontSize: 18),
+                                      if (beat.chord != null) {
+                                        widgets.add(
+                                          ChordContainer(
+                                            chord: beat.chord!,
+                                            width: 35,
+                                            height: 50,
                                           ),
-                                        ),
-                                      );
-                                    }
+                                        );
+                                      } else {
+                                        widgets.add(
+                                          const SizedBox(
+                                            width: 35,
+                                            height: 30,
+                                            child: Text(
+                                              " /",
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                          ),
+                                        );
+                                      }
 
-                                    return widgets;
-                                  })
-                                  .expand((i) => i)
-                                  .toList(), // Flatten the list of lists into a single list
+                                      return widgets;
+                                    })
+                                    .expand((i) => i)
+                                    .toList(), // Flatten the list of lists into a single list
+                              ),
+                            ),
+                            childWhenDragging: Container(
+                              width: 200.0,
+                              height: 60.0,
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.blueAccent),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Wrap(
+                                spacing: 6.0, // Adjust spacing as needed
+                                children: bar.beats
+                                    .map((beat) {
+                                      List<Widget> widgets = [];
+
+                                      if (beat.chord != null) {
+                                        widgets.add(
+                                          ChordContainer(
+                                            chord: beat.chord!,
+                                            width: 35,
+                                            height: 50,
+                                          ),
+                                        );
+                                      } else {
+                                        widgets.add(
+                                          const SizedBox(
+                                            width: 35,
+                                            height: 30,
+                                            child: Text(
+                                              " /",
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                          ),
+                                        );
+                                      }
+
+                                      return widgets;
+                                    })
+                                    .expand((i) => i)
+                                    .toList(), // Flatten the list of lists into a single list
+                              ),
+                            ),
+                            child: Container(
+                              width: 200.0,
+                              height: 60.0,
+                              key: keys[bars.indexOf(bar)],
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.blueAccent),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Wrap(
+                                spacing: 6.0, // Adjust spacing as needed
+                                children: bar.beats
+                                    .map((beat) {
+                                      List<Widget> widgets = [];
+
+                                      if (beat.chord != null) {
+                                        widgets.add(
+                                          ChordContainer(
+                                            chord: beat.chord!,
+                                            width: 35,
+                                            height: 50,
+                                          ),
+                                        );
+                                      } else {
+                                        widgets.add(
+                                          const SizedBox(
+                                            width: 35,
+                                            height: 30,
+                                            child: Text(
+                                              " /",
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                          ),
+                                        );
+                                      }
+
+                                      return widgets;
+                                    })
+                                    .expand((i) => i)
+                                    .toList(), // Flatten the list of lists into a single list
+                              ),
                             ),
                           ),
                         );
@@ -203,17 +288,45 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                                 "Bars is null or no result returned from dialog");
                           }
                         },
-                        child: Container(
-                          margin: const EdgeInsets.only(top: 16.0),
-                          decoration: const BoxDecoration(
-                            color: Colors.blue, // Button color
-                            shape: BoxShape.circle, // Circular shape
-                          ),
-                          child: const Icon(
-                            Icons.add, // '+' icon
-                            color: Colors.white, // Icon color
-                          ),
+                        child: DragTarget(
+                          onAcceptWithDetails: (receivedBar) {
+                            Bar droppedBar = receivedBar.data as Bar;
+
+                            setState(() {
+                              logger.d("Received bar: $droppedBar");
+                              final section =
+                                  widget.song.sections[currentSection];
+                              section.bars!.add(droppedBar.copy());
+                              songProvider.saveSong(widget.song);
+
+                              widget.song.save();
+                            });
+                          },
+                          builder: (context, candidateData, rejectedData) {
+                            return Container(
+                              width: 200.0,
+                              height: 60.0,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: const Color.fromARGB(
+                                        255, 216, 216, 216)),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Container(
+                                margin: const EdgeInsets.only(top: 16.0),
+                                decoration: const BoxDecoration(
+                                  color: Colors.blue, // Button color
+                                  shape: BoxShape.circle, // Circular shape
+                                ),
+                                child: const Icon(
+                                  Icons.add, // '+' icon
+                                  color: Colors.white, // Icon color
+                                ),
+                              ),
+                            );
+                          },
                         ),
+                        // child:
                       ),
                     ],
                   ),
