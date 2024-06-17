@@ -4,17 +4,26 @@ import 'package:hive_flutter/hive_flutter.dart';
 class VersionAdapter extends TypeAdapter<Version> {
   @override
   final typeId = 4;
+  static const int currentVersion = 1;
 
   @override
   Version read(BinaryReader reader) {
-    return Version(
-      hash: reader.read(),
-      epoch: reader.read(),
-    );
+    final int version = reader.readByte();
+
+    switch (version) {
+      case 1:
+        return Version(
+          hash: reader.read(),
+          epoch: reader.read(),
+        );
+      default:
+        throw Exception('Unknown version');
+    }
   }
 
   @override
   void write(BinaryWriter writer, Version obj) {
+    writer.writeByte(currentVersion);
     writer.write(obj.hash);
     writer.write(obj.epoch);
   }

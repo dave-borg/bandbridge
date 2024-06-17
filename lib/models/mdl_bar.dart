@@ -14,7 +14,6 @@ class Bar {
   @HiveField(2)
   String id = "-1";
 
-
   Bar({List<Beat>? beats, String? timeSignature = "4/4", String? songId}): id = songId == null || songId == "-2" ? const Uuid().v4() : songId {
     if (beats != null) {
       this.beats = beats;
@@ -44,6 +43,7 @@ class Bar {
     return {
       'beats': beatsJson,
       'timeSignature': timeSignature,
+      'id': id,
     };
   }
 
@@ -106,6 +106,6 @@ class Bar {
     beats.forEach((beat) {
       copiedBeats.add(beat.copy());
     });
-    return Bar(beats: copiedBeats, timeSignature: timeSignature);
+    return Bar(beats: copiedBeats, timeSignature: timeSignature, songId: id);
   }
 }
