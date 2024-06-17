@@ -2,6 +2,7 @@ import 'package:bandbridge/models/mdl_beat.dart';
 import 'package:bandbridge/models/mdl_bar.dart';
 import 'package:bandbridge/models/mdl_lyric.dart';
 import 'package:bandbridge/models/mdl_section.dart';
+import 'package:bandbridge/widgets/lyrics/lyrics_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 
@@ -21,8 +22,20 @@ class LyricsEditor extends StatelessWidget {
           children: <Widget>[
             IconButton(
               icon: const Icon(Icons.add),
-              onPressed: () {
-                // Add your onPressed code here.
+              onPressed: () async {
+                final List<Lyric>? lyrics = await showDialog<List<Lyric>>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const LyricsDialog(); // Your custom dialog widget
+                  },
+                );
+
+                // Check if the dialog was dismissed with a result
+                if (lyrics != null) {
+                  // Process the list of Lyric objects
+                  // For example, print the lyrics or update the state
+                  print("Received lyrics: $lyrics");
+                }
               },
             ),
             IconButton(

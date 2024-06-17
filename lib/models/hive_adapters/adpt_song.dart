@@ -1,6 +1,5 @@
 import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/models/mdl_song.dart';
-import 'package:bandbridge/models/mdl_version.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class SongAdapter extends TypeAdapter<Song> {
@@ -10,10 +9,16 @@ class SongAdapter extends TypeAdapter<Song> {
 
   @override
   Song read(BinaryReader reader) {
-    final int version = reader.readByte();
+    int currentVersion = reader.readByte() ?? 1;
 
-    switch (version) {
+    print(currentVersion);
+
+    currentVersion = 1;
+
+    switch (currentVersion) {
       case 1:
+        //var _ = reader.readList();
+
         return Song(
           songId: reader.read(),
           title: reader.read(),
@@ -23,7 +28,7 @@ class SongAdapter extends TypeAdapter<Song> {
           tempo: reader.read(),
           timeSignature: reader.read(),
           sections: reader.readList().cast<Section>(),
-          versions: reader.readList().cast<Version>(),
+          // versions: reader.readList().cast<Version>(),
         );
       default:
         throw Exception('Unknown version');
@@ -41,6 +46,6 @@ class SongAdapter extends TypeAdapter<Song> {
     writer.write(obj.tempo);
     writer.write(obj.timeSignature);
     writer.writeList(obj.sections);
-    writer.writeList(obj.versions);
+    // writer.writeList(obj.versions);
   }
 }

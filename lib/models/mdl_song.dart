@@ -24,8 +24,8 @@ class Song extends HiveObject {
   @HiveField(7)
   List<Section> sections;
   @HiveField(8)
-  List<Version> versions;
-  @HiveField(4)
+  List<Version>? versions;
+  @HiveField(9)
   ChordType initialKeyType;
 
   Song({
@@ -37,7 +37,7 @@ class Song extends HiveObject {
     this.tempo = "",
     this.timeSignature = "",
     List<Section>? sections,
-    this.versions = const [],
+    // this.versions = const [],
   })  : id = songId == null || songId == "-2" ? const Uuid().v4() : songId,
         initialKeyType =
             initialKey.endsWith('m') ? ChordType.minor : ChordType.major,
@@ -57,10 +57,10 @@ class Song extends HiveObject {
         json['structure']
             .map((x) => Section.fromJson(Map<String, dynamic>.from(x))),
       ),
-      versions: List<Version>.from(
-        json['versions']
-            .map((x) => Version.fromJson(Map<String, dynamic>.from(x))),
-      ),
+      // versions: List<Version>.from(
+      //   json['versions']
+      //       .map((x) => Version.fromJson(Map<String, dynamic>.from(x))),
+      // ),
     );
   }
 
@@ -74,7 +74,7 @@ class Song extends HiveObject {
       'tempo': tempo,
       'timeSignature': timeSignature,
       'sections': List<dynamic>.from(sections.map((x) => x.toJson())),
-      'versions': List<dynamic>.from(versions.map((x) => x.toJson())),
+      // 'versions': List<dynamic>.from(versions.map((x) => x.toJson())),
     };
   }
 
@@ -90,7 +90,7 @@ class Song extends HiveObject {
     rValue += "Tempo: $tempo\n";
     rValue += "Time Signature: $timeSignature\n";
     rValue += "Sections: ${sections.length}\n";
-    rValue += "Versions: ${versions.length}\n";
+    // rValue += "Versions: ${versions.length}\n";
 
     return rValue;
   }

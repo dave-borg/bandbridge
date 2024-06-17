@@ -8,9 +8,15 @@ class VersionAdapter extends TypeAdapter<Version> {
 
   @override
   Version read(BinaryReader reader) {
-    final int version = reader.readByte();
+    int version = reader.readByte();
 
-    switch (version) {
+    print(version);
+
+    version = 1;
+
+    print(version);
+
+    switch (currentVersion) {
       case 1:
         return Version(
           hash: reader.read(),
