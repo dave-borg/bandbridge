@@ -1,46 +1,39 @@
+import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
+import 'package:logger/logger.dart';
 
+// Fix: Make _LyricsDialogState public or make LyricsDialog constructor private
 class LyricsDialog extends StatefulWidget {
-  const LyricsDialog({Key? key}) : super(key: key);
+  const LyricsDialog({super.key}); // Fix: Convert 'key' to a super parameter
 
   @override
-  _LyricsDialogState createState() => _LyricsDialogState();
+  LyricsDialogState createState() =>
+      LyricsDialogState(); // Fix: Changed _LyricsDialogState to LyricsDialogState
 }
 
-class _LyricsDialogState extends State<LyricsDialog> {
-  QuillController _controller = QuillController.basic();
+// Fix: Made LyricsDialogState public to match the public API of LyricsDialog
+class LyricsDialogState extends State<LyricsDialog> {
+  late TextEditingController _controller;
+  var logger = Logger(level: LoggingUtil.loggingLevel('LyricsDialog'));
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        TextEditingController(); // Initialize the TextEditingController
+  }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Edit Lyrics'),
       content: SingleChildScrollView(
-        child: Container(
-          width: double.maxFinite,
-          height: 500,
-          child: Column(
-            children: <Widget>[
-              QuillToolbar.simple(
-                configurations: QuillSimpleToolbarConfigurations(
-                  controller: _controller,
-                  sharedConfigurations: const QuillSharedConfigurations(
-                    locale: Locale('en'),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: QuillEditor.basic(
-                  configurations: QuillEditorConfigurations(
-                    controller: _controller,
-                    sharedConfigurations: const QuillSharedConfigurations(
-                      locale: Locale('en'),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
+        child: Column(
+          children: <Widget>[
+            const Text('Enter the lyrics for the song'),
+            const SizedBox(height: 10),
+            _buildRichTextEditor(),
+          ],
         ),
       ),
       actions: <Widget>[
@@ -53,12 +46,12 @@ class _LyricsDialogState extends State<LyricsDialog> {
         TextButton(
           child: const Text('Save'),
           onPressed: () {
-            // Extract the text or the rich text from the controller
-            var plainText = _controller.document.toPlainText();
-            // You can also serialize the document to JSON if you want to save the rich text formatting
-            // var json = jsonEncode(_controller.document.toDelta().toJson());
-
-            Navigator.of(context).pop(plainText); // Or use the JSON as needed
+            // Fix: Corrected the way to get plain text from the controller
+            var plainText = _controller
+                .text; // Corrected to use .text instead of .document.toPlainText()
+            logger.d("Saving lyrics:/n/n$plainText");
+            Navigator.of(context)
+                .pop(plainText); // Use the plain text as needed
           },
         ),
       ],
@@ -67,7 +60,32 @@ class _LyricsDialogState extends State<LyricsDialog> {
 
   @override
   void dispose() {
-    _controller.dispose(); // Don't forget to dispose of the controller
+    _controller.dispose(); // Dispose of the controller
     super.dispose();
+  }
+
+  Widget _buildRichTextEditor() {
+    return SingleChildScrollView(
+      reverse: true,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight:
+              2000.0, // Maximum height for the visible part of the text field
+        ),
+        child: SizedBox(
+          width: 500.0,
+          child: TextField(
+            controller: _controller, // Fix: Assign _controller to the TextField
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            minLines: 20,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Enter text here',
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

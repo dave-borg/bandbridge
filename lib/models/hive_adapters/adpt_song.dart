@@ -1,3 +1,4 @@
+import 'package:bandbridge/models/mdl_lyric.dart';
 import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -5,15 +6,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 class SongAdapter extends TypeAdapter<Song> {
   @override
   final typeId = 0;
-  static const int currentVersion = 1;
+  static const int currentVersion = 2;
 
   @override
   Song read(BinaryReader reader) {
-    int currentVersion = reader.readByte() ?? 1;
+    int currentVersion = reader.readByte();
 
-    print(currentVersion);
-
-    currentVersion = 1;
+    // currentVersion = 1;
 
     switch (currentVersion) {
       case 1:
@@ -28,6 +27,21 @@ class SongAdapter extends TypeAdapter<Song> {
           tempo: reader.read(),
           timeSignature: reader.read(),
           sections: reader.readList().cast<Section>(),
+          unsynchronisedLyrics: reader.readList().cast<Lyric>(),
+          // versions: reader.readList().cast<Version>(),
+        );
+
+      case 2:
+      return Song(
+          songId: reader.read(),
+          title: reader.read(),
+          artist: reader.read(),
+          duration: reader.read(),
+          initialKey: reader.read(),
+          tempo: reader.read(),
+          timeSignature: reader.read(),
+          sections: reader.readList().cast<Section>(),
+          unsynchronisedLyrics: [],
           // versions: reader.readList().cast<Version>(),
         );
       default:
@@ -46,6 +60,7 @@ class SongAdapter extends TypeAdapter<Song> {
     writer.write(obj.tempo);
     writer.write(obj.timeSignature);
     writer.writeList(obj.sections);
+    writer.writeList(obj.unsynchronisedLyrics);
     // writer.writeList(obj.versions);
   }
 }

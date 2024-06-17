@@ -1,3 +1,4 @@
+import 'package:bandbridge/models/mdl_lyric.dart';
 import 'package:bandbridge/models/mdl_version.dart';
 import 'package:bandbridge/music_theory/diatonic_chords.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -27,6 +28,8 @@ class Song extends HiveObject {
   List<Version>? versions;
   @HiveField(9)
   ChordType initialKeyType;
+  @HiveField(10)
+  List<Lyric> unsynchronisedLyrics;
 
   Song({
     String? songId,
@@ -37,12 +40,14 @@ class Song extends HiveObject {
     this.tempo = "",
     this.timeSignature = "",
     List<Section>? sections,
+    List<Lyric>? unsynchronisedLyrics,
     // this.versions = const [],
   })  : id = songId == null || songId == "-2" ? const Uuid().v4() : songId,
         initialKeyType =
             initialKey.endsWith('m') ? ChordType.minor : ChordType.major,
         sections =
-            sections ?? []; // Initialize structure in the constructor body
+            sections ?? [],
+            unsynchronisedLyrics = unsynchronisedLyrics ?? []; // Initialize structure in the constructor body
 
   factory Song.fromJson(Map<String, dynamic> json) {
     return Song(
@@ -56,6 +61,10 @@ class Song extends HiveObject {
       sections: List<Section>.from(
         json['structure']
             .map((x) => Section.fromJson(Map<String, dynamic>.from(x))),
+      ),
+unsynchronisedLyrics: List<Lyric>.from(
+        json['unsynchronisedLyrics']
+            .map((x) => Lyric.fromJson(Map<String, dynamic>.from(x))),
       ),
       // versions: List<Version>.from(
       //   json['versions']
@@ -74,6 +83,7 @@ class Song extends HiveObject {
       'tempo': tempo,
       'timeSignature': timeSignature,
       'sections': List<dynamic>.from(sections.map((x) => x.toJson())),
+      'unsynchronisedLyrics': List<dynamic>.from(unsynchronisedLyrics!.map((x) => x.toJson())),
       // 'versions': List<dynamic>.from(versions.map((x) => x.toJson())),
     };
   }
@@ -90,6 +100,7 @@ class Song extends HiveObject {
     rValue += "Tempo: $tempo\n";
     rValue += "Time Signature: $timeSignature\n";
     rValue += "Sections: ${sections.length}\n";
+    rValue += "Unsynchronised Lyrics: ${unsynchronisedLyrics!.length}\n";
     // rValue += "Versions: ${versions.length}\n";
 
     return rValue;
