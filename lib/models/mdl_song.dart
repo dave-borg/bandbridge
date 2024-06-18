@@ -45,9 +45,9 @@ class Song extends HiveObject {
   })  : id = songId == null || songId == "-2" ? const Uuid().v4() : songId,
         initialKeyType =
             initialKey.endsWith('m') ? ChordType.minor : ChordType.major,
-        sections =
-            sections ?? [],
-            unsynchronisedLyrics = unsynchronisedLyrics ?? []; // Initialize structure in the constructor body
+        sections = sections ?? [],
+        unsynchronisedLyrics = unsynchronisedLyrics ??
+            []; // Initialize structure in the constructor body
 
   factory Song.fromJson(Map<String, dynamic> json) {
     return Song(
@@ -62,7 +62,7 @@ class Song extends HiveObject {
         json['structure']
             .map((x) => Section.fromJson(Map<String, dynamic>.from(x))),
       ),
-unsynchronisedLyrics: List<Lyric>.from(
+      unsynchronisedLyrics: List<Lyric>.from(
         json['unsynchronisedLyrics']
             .map((x) => Lyric.fromJson(Map<String, dynamic>.from(x))),
       ),
@@ -83,7 +83,8 @@ unsynchronisedLyrics: List<Lyric>.from(
       'tempo': tempo,
       'timeSignature': timeSignature,
       'sections': List<dynamic>.from(sections.map((x) => x.toJson())),
-      'unsynchronisedLyrics': List<dynamic>.from(unsynchronisedLyrics!.map((x) => x.toJson())),
+      'unsynchronisedLyrics':
+          List<dynamic>.from(unsynchronisedLyrics!.map((x) => x.toJson())),
       // 'versions': List<dynamic>.from(versions.map((x) => x.toJson())),
     };
   }
@@ -108,5 +109,16 @@ unsynchronisedLyrics: List<Lyric>.from(
 
   addStructure(Section section) {
     sections.add(section);
+  }
+
+  void deleteAllLyrics() {
+    for (var i = 0; i < sections.length; i++) {
+      for (var j = 0; j < sections[i].bars!.length; j++) {
+        for (var k = 0; k < sections[i].bars![j].beats.length; k++) {
+          sections[i].bars![j].beats[k].lyric = null;
+        }
+      }
+    }
+    unsynchronisedLyrics = [];
   }
 }

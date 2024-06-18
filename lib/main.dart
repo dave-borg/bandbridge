@@ -18,6 +18,10 @@ import 'login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+//Load the logging configuration from the YAML file
+  await LoggingUtil.preloadYamlContent();
+
   final document = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(document.path);
   Hive.registerAdapter(SectionAdapter());
@@ -29,9 +33,6 @@ Future<void> main() async {
   Hive.registerAdapter(VersionAdapter());
 
   await Hive.openBox<Song>('songs');
-
-  //Load the logging configuration from the YAML file
-  await LoggingUtil.preloadYamlContent();
 
   runApp(const BandBridge());
 }

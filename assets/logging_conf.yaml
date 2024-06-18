@@ -3,7 +3,7 @@ loggers:
     level: DEBUG
   LyricsEditor:
     level: DEBUG
-  CurrentSongProvider:
+  Section:
     level: DEBUG
   DEFAULT:
     level: INFO
