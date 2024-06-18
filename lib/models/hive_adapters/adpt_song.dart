@@ -41,7 +41,7 @@ class SongAdapter extends TypeAdapter<Song> {
           tempo: reader.read(),
           timeSignature: reader.read(),
           sections: reader.readList().cast<Section>(),
-          unsynchronisedLyrics: [],
+          unsynchronisedLyrics: reader.readList().cast<Lyric>(),
           // versions: reader.readList().cast<Version>(),
         );
       default:

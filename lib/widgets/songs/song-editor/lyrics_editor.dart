@@ -174,13 +174,13 @@ class _LyricsEditorState extends State<LyricsEditor> {
                                           return Container(
                                             // Optional: Add padding, decoration, etc. if needed
                                             padding: const EdgeInsets.all(4.0),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: Colors
-                                                      .grey), // Add border with desired color
-                                              borderRadius: BorderRadius.circular(
-                                                  4.0), // Optional: if you want rounded corners
-                                            ),
+                                            // decoration: BoxDecoration(
+                                            //   border: Border.all(
+                                            //       color: Colors
+                                            //           .grey), // Add border with desired color
+                                            //   borderRadius: BorderRadius.circular(
+                                            //       4.0), // Optional: if you want rounded corners
+                                            // ),
                                             child: Align(
                                               alignment: Alignment.centerLeft,
                                               child: Text(lyric.text,
