@@ -1,9 +1,9 @@
 loggers:
-  BarDialog:
+  LyricsDialog:
     level: DEBUG
-  ChordChartEditor:
+  LyricsEditor:
     level: DEBUG
-  CurrentSongProvider:
+  Section:
     level: DEBUG
   DEFAULT:
     level: INFO

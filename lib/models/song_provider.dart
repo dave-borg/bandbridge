@@ -1,6 +1,6 @@
 import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/models/mdl_song.dart';
-import 'package:bandbridge/models/mdl_version.dart';
+// import 'package:bandbridge/models/mdl_version.dart';
 import 'package:bandbridge/services/svc_songs.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/foundation.dart';
@@ -76,7 +76,7 @@ class SongProvider extends ChangeNotifier {
   String get initialKey => _currentSong.initialKey;
   String get timeSignature => _currentSong.timeSignature;
   List<Section> get structure => _currentSong.sections;
-  List<Version> get versions => _currentSong.versions;
+  // List<Version> get versions => _currentSong.versions;
 
   void clearSelectedSong() {
     _currentSong = Song();

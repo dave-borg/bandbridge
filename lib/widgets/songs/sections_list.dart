@@ -88,7 +88,6 @@ class _SectionsListState extends State<SectionsList> {
                       },
                     ),
                   ),
-                  
                   SizedBox(
                     width: 30.0, // Your desired width
                     child: IconButton(

@@ -14,7 +14,8 @@ class Bar {
   @HiveField(2)
   String id = "-1";
 
-  Bar({List<Beat>? beats, String? timeSignature = "4/4", String? songId}): id = songId == null || songId == "-2" ? const Uuid().v4() : songId {
+  Bar({List<Beat>? beats, String? timeSignature = "4/4", String? songId})
+      : id = songId == null || songId == "-2" ? const Uuid().v4() : songId {
     if (beats != null) {
       this.beats = beats;
     } else {
@@ -37,9 +38,9 @@ class Bar {
 
   Map<String, dynamic> toJson() {
     List<Map<String, dynamic>> beatsJson = [];
-    beats.forEach((beat) {
+    for (var beat in beats) {
       beatsJson.add(beat.toJson());
-    });
+    }
     return {
       'beats': beatsJson,
       'timeSignature': timeSignature,

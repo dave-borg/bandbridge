@@ -1,12 +1,11 @@
-
 import 'package:hive_flutter/hive_flutter.dart';
 
 @HiveType(typeId: 5)
 class Version {
   @HiveField(0)
-  String hash;
+  String? hash;
   @HiveField(1)
-  String epoch;
+  String? epoch;
 
   Version({
     required this.hash,
