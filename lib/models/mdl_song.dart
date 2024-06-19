@@ -84,8 +84,7 @@ class Song extends HiveObject {
       'timeSignature': timeSignature,
       'sections': List<dynamic>.from(sections.map((x) => x.toJson())),
       'unsynchronisedLyrics':
-          List<dynamic>.from(unsynchronisedLyrics!.map((x) => x.toJson())),
-      // 'versions': List<dynamic>.from(versions.map((x) => x.toJson())),
+          List<dynamic>.from(unsynchronisedLyrics.map((x) => x.toJson())),
     };
   }
 
@@ -101,7 +100,7 @@ class Song extends HiveObject {
     rValue += "Tempo: $tempo\n";
     rValue += "Time Signature: $timeSignature\n";
     rValue += "Sections: ${sections.length}\n";
-    rValue += "Unsynchronised Lyrics: ${unsynchronisedLyrics!.length}\n";
+    rValue += "Unsynchronised Lyrics: ${unsynchronisedLyrics.length}\n";
     // rValue += "Versions: ${versions.length}\n";
 
     return rValue;
@@ -112,10 +111,11 @@ class Song extends HiveObject {
   }
 
   void deleteAllLyrics() {
-    for (var i = 0; i < sections.length; i++) {
-      for (var j = 0; j < sections[i].bars!.length; j++) {
-        for (var k = 0; k < sections[i].bars![j].beats.length; k++) {
-          sections[i].bars![j].beats[k].lyric = null;
+    for (var thisSection in sections) {
+      thisSection.unsynchronisedLyrics = [];
+      for (var thisBar in thisSection.bars!) {
+        for (var thisBeat in thisBar.beats) {
+          thisBeat.lyric = null;
         }
       }
     }

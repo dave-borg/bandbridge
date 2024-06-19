@@ -144,14 +144,17 @@ class _LyricsEditorState extends State<LyricsEditor> {
                           itemBuilder: (context, index) {
                             final structure = structures[index];
 
-                            if (structure.lyrics.isEmpty) {
-                              // Skip this section by rendering an empty widget
-                              return const SizedBox.shrink();
-                            }
+                            // if (structure.thisSection == null) {
+                            //   // Skip this section by rendering an empty widget
+                            //   widget.logger.d(
+                            //       "Skipping section ${structure.thisSection?.section}");
+                            //   return const SizedBox.shrink();
+                            // }
 
                             return Column(children: <Widget>[
                               Text(structure.thisSection?.section ?? ''),
-                              ...structure.lyrics
+                              ...structure
+                                  .getLyrics()
                                   .map((lyric) => DragTarget<Section>(
                                         onWillAcceptWithDetails: (data) =>
                                             true, // Decide whether to accept the data
@@ -159,9 +162,11 @@ class _LyricsEditorState extends State<LyricsEditor> {
                                           widget.logger.d(
                                               "Dropped data: ${droppedObject.data.section}\n\nDropped data: ${lyric.text}");
                                           setState(() {
-                                            widget.previewSections.setSection(
-                                                section: droppedObject.data,
-                                                lyric: lyric);
+                                            widget.previewSections
+                                                .setSectionLyrics(
+                                                    destinationSection:
+                                                        droppedObject.data,
+                                                    lyric: lyric);
                                             widget.song.save();
                                           });
                                         },
@@ -174,13 +179,6 @@ class _LyricsEditorState extends State<LyricsEditor> {
                                           return Container(
                                             // Optional: Add padding, decoration, etc. if needed
                                             padding: const EdgeInsets.all(4.0),
-                                            // decoration: BoxDecoration(
-                                            //   border: Border.all(
-                                            //       color: Colors
-                                            //           .grey), // Add border with desired color
-                                            //   borderRadius: BorderRadius.circular(
-                                            //       4.0), // Optional: if you want rounded corners
-                                            // ),
                                             child: Align(
                                               alignment: Alignment.centerLeft,
                                               child: Text(lyric.text,

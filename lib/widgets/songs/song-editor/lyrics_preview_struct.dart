@@ -21,18 +21,10 @@ class LyricsStruct {
     }
 
     if (song.sections.isNotEmpty) {
-      for (var i = 0; i < song.sections.length; i++) {
+      for (var currentSection in song.sections) {
         var sectionPreview = PreviewSection(lyrics: []);
-        sectionPreview.thisSection = song.sections[i];
+        sectionPreview.thisSection = currentSection;
 
-        for (var j = 0; j < song.sections[i].bars!.length; j++) {
-          for (var k = 0; k < song.sections[i].bars![j].beats.length; k++) {
-            var lyric = song.sections[i].bars![j].beats[k].lyric;
-            if (lyric != null) {
-              sectionPreview.lyrics.add(lyric);
-            }
-          }
-        }
         previewSections.add(sectionPreview);
       }
     }
@@ -40,37 +32,60 @@ class LyricsStruct {
     return previewSections;
   }
 
-  void setSection({required Section section, required Lyric lyric}) {
-    List<Lyric> droppedAndTrailingLyrics = [];
+  ///Moves the Lyric and all following Lyrics (up to the next section with Lyrics) into the provided Section.
+  ///This does not assign Lyrics to Bars and Beats. It only places the lyrics into the Sections' unsynchronisedLyrics list.
+  ///
+  ///This also checks the validity of the Section and Lyric positions, moving lyrics between sections must not
+  ///change the order of either.
+  void setSectionLyrics(
+      {required Section destinationSection, required Lyric lyric}) {
+    bool lyricFoundInSong = false;
+    List<Lyric> lyricsToMove = [];
+    int lyricIndex = -1;
+    Section? sourceSection = null;
 
-    //check the validity of the section - ensure this doesn't change the order of sections or lyrics
+    for (var searchLyric in song.unsynchronisedLyrics) {
+      //find the lyric
+      if (searchLyric.hashCode == lyric.hashCode) {
+        //skip other searches if the lyric is found
+        lyricFoundInSong = true;
+        lyricIndex = song.unsynchronisedLyrics.indexOf(lyric);
 
-    for (var i = 0; i < song.sections.length; i++) {
-      //find the lyrics
-      //either in unsynchronisedLyrics or in a section
-      //remove the lyric from the source
-
-      if (song.sections[i].hashCode == section.hashCode) {
-        //add lyrics to the section
+        lyricsToMove = song.unsynchronisedLyrics.sublist(lyricIndex);
       }
     }
 
-    // for (var i = 0; i < previewSections.length; i++) {
-    //   for (var j = 0; j < previewSections[i].lyrics.length; j++) {
-    //     if (previewSections[i].lyrics[j].hashCode == lyric.hashCode) {
-    //       droppedAndTrailingLyrics = previewSections[i].lyrics.sublist(j);
-    //       previewSections[i]
-    //           .lyrics
-    //           .removeRange(j, previewSections[i].lyrics.length);
-    //       previewSections.insert(
-    //           i,
-    //           PreviewSection(
-    //               thisSection: section, lyrics: droppedAndTrailingLyrics));
-    //       section.setLyrics(droppedAndTrailingLyrics);
-    //       break;
-    //     }
-    //   }
-    // }
+    if (!lyricFoundInSong) {
+      for (var section in song.sections) {
+        //Don't search the section that the lyric is being moved to
+        lyricIndex = section.unsynchronisedLyrics!.indexOf(lyric);
+
+        //found it!!!
+        if (lyricIndex != -1) {
+          sourceSection = section;
+
+          lyricsToMove =
+              sourceSection.unsynchronisedLyrics!.sublist(lyricIndex);
+          break;
+        }
+      }
+
+      //Move the lyrics from a Section.
+      //
+      //Move the lyrics outside the loop to avoid modifying the list while iterating
+      if (lyricIndex != -1) {
+        destinationSection.addLyrics(lyricsToMove);
+        sourceSection!.unsynchronisedLyrics!.removeRange(
+            lyricIndex, sourceSection.unsynchronisedLyrics!.length);
+      }
+    } else {
+      //Move the lyrics from the Song.
+      //
+      //Move the lyrics outside the loop to avoid modifying the list while iterating
+      destinationSection.addLyrics(lyricsToMove);
+      song.unsynchronisedLyrics
+          .removeRange(lyricIndex, song.unsynchronisedLyrics.length);
+    }
   }
 }
 
@@ -79,4 +94,11 @@ class PreviewSection {
   List<Lyric> lyrics = [];
 
   PreviewSection({this.thisSection, required lyrics});
+
+  List<Lyric> getLyrics() {
+    if (lyrics.isEmpty) {
+      lyrics = thisSection!.unsynchronisedLyrics!;
+    }
+    return lyrics;
+  }
 }

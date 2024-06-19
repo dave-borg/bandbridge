@@ -13,6 +13,7 @@ class SongArrangementDialog extends StatelessWidget {
   String dialogTitle;
   int sectionIndex;
 
+  ///Show the dialog to add or edit a song section. The dialog will allow the user to select a section to duplicate from.
   SongArrangementDialog({
     super.key,
     required this.onSectionCreated,
@@ -77,7 +78,10 @@ class SongArrangementDialog extends StatelessWidget {
                         },
                         onSaved: (value) {
                           if (value != null) {
-                            newSection.bars = value.bars!.map((bar) => bar.copy()).cast<Bar>().toList();
+                            newSection.bars = value.bars!
+                                .map((bar) => bar.copy())
+                                .cast<Bar>()
+                                .toList();
                           }
                         },
                       )

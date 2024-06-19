@@ -5,6 +5,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 
 @HiveType(typeId: 1)
+
+///A Section is a part of a song such as Verse, Chorus, Bridge, etc.
+///
+///A Section is made up of Bars. Each Bar is made up of Beats.
 class Section {
   var logger = Logger(level: LoggingUtil.loggingLevel('Section'));
   @HiveField(0)
@@ -15,13 +19,17 @@ class Section {
   String duration;
   @HiveField(3)
   List<Bar>? bars;
+  @HiveField(4)
+  List<Lyric>? unsynchronisedLyrics;
 
   Section({
     this.section = '',
     this.timestamp = '',
     this.duration = '',
     List<Bar>? bars,
-  }) : bars = bars ?? [];
+    List<Lyric>? unsynchronisedLyrics,
+  })  : bars = bars ?? [],
+        unsynchronisedLyrics = unsynchronisedLyrics ?? [];
 
   factory Section.fromJson(Map<String, dynamic> json) {
     return Section(
@@ -31,6 +39,8 @@ class Section {
       bars: (json['bars'] as List<dynamic>?)
           ?.map((barJson) => Bar.fromJson(barJson))
           .toList(),
+      unsynchronisedLyrics: List<Lyric>.from(json['unsynchronisedLyrics']
+          .map((x) => Lyric.fromJson(Map<String, dynamic>.from(x)))),
     );
   }
 
@@ -49,17 +59,21 @@ class Section {
     bars?.add(newBar);
   }
 
-  void setLyrics(List<Lyric> droppedAndTrailingLyrics) {
-    int linesOfLyrics = droppedAndTrailingLyrics.length;
-    int barsInThisSection = bars!.length;
+  ///Adds a lyric to the unsynchronisedLyrics list. This is used when moving lyrics between sections.
+  ///
+  ///This does not assign the lyric to a beat or bar. It only places the lyric into the sections' unsynchronisedLyrics list.
+  void addLyric(Lyric lyric) {
+    unsynchronisedLyrics ??= [];
 
-    //Naive way to set lyrics to bars. Distribute evenly across the bars.
-    int barsPerLyric = barsInThisSection ~/ linesOfLyrics;
+    unsynchronisedLyrics?.add(lyric);
+  }
 
-    for (var i = 0; i < droppedAndTrailingLyrics.length; i++) {
-      logger.d(
-          "bars[$barsPerLyric * $i] = droppedAndTrailingLyrics[i]: ${droppedAndTrailingLyrics[i].text}");
-      bars![barsPerLyric * i].beats[0].lyric = droppedAndTrailingLyrics[i];
-    }
+  ///Adds a list of lyrics to the unsynchronisedLyrics list. This is used when moving lyrics between sections.
+  ///
+  ///This replaces all lyrics currently in the unsynchronisedLyrics list
+  void addLyrics(List<Lyric> lyricsToMove) {
+    unsynchronisedLyrics ??= [];
+
+    unsynchronisedLyrics = lyricsToMove;
   }
 }
