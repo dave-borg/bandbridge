@@ -4,7 +4,7 @@ import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/music_theory/chord_modifiers.dart';
 import 'package:bandbridge/music_theory/diatonic_chords.dart';
 import 'package:bandbridge/utils/logging_util.dart';
-import 'package:bandbridge/widgets/chord-chart/chord_container.dart';
+import 'package:bandbridge/widgets/songs/chord-chart/chord_container.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 

@@ -7,7 +7,7 @@ import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/utils/song_generator.dart';
 import 'package:flutter/material.dart';
-import 'package:bandbridge/widgets/songs/song-editor/song_editor.dart';
+import 'package:bandbridge/widgets/songs/song-editor/song_editor_tabs.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart'; // Replace with your actual import path
 
@@ -46,7 +46,7 @@ Widget build(BuildContext context) {
         // Ensure data is not null before accessing it
         if (snapshot.hasData) {
           // Use the data to build your widget
-          return SongEditor(song: snapshot.data!, sectionIndex: null);
+          return SongEditorTabs(song: snapshot.data!, sectionIndex: null);
         } else {
           // Handle the case where snapshot.data is null
           return const Center(child: Text('Error loading song'));
