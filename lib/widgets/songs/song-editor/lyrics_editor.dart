@@ -3,7 +3,7 @@ import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/lyrics/lyrics_dialog.dart';
-import 'package:bandbridge/widgets/songs/song-editor/lyrics_preview_struct.dart';
+import 'package:bandbridge/widgets/songs/song-editor/lyrics_struct.dart';
 import 'package:flutter/material.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:logger/logger.dart';
@@ -93,12 +93,6 @@ class _LyricsEditorState extends State<LyricsEditor> {
                             },
                           ),
                           IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () {
-                              // Add your onPressed code here.
-                            },
-                          ),
-                          IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () {
                               showDialog(
@@ -144,53 +138,69 @@ class _LyricsEditorState extends State<LyricsEditor> {
                           itemBuilder: (context, index) {
                             final structure = structures[index];
 
-                            // if (structure.thisSection == null) {
-                            //   // Skip this section by rendering an empty widget
-                            //   widget.logger.d(
-                            //       "Skipping section ${structure.thisSection?.section}");
-                            //   return const SizedBox.shrink();
-                            // }
-
                             return Column(children: <Widget>[
-                              Text(structure.thisSection?.section ?? ''),
-                              ...structure
-                                  .getLyrics()
-                                  .map((lyric) => DragTarget<Section>(
-                                        onWillAcceptWithDetails: (data) =>
-                                            true, // Decide whether to accept the data
-                                        onAcceptWithDetails: (droppedObject) {
-                                          widget.logger.d(
-                                              "Dropped data: ${droppedObject.data.section}\n\nDropped data: ${lyric.text}");
-                                          setState(() {
-                                            widget.previewSections
-                                                .setSectionLyrics(
-                                                    destinationSection:
-                                                        droppedObject.data,
-                                                    lyric: lyric);
-                                            widget.song.save();
-                                          });
-                                        },
-                                        builder: (context, candidateData,
-                                            rejectedData) {
-                                          Color textColor =
-                                              candidateData.isNotEmpty
-                                                  ? Colors.blue
-                                                  : Colors.black;
-                                          return Container(
-                                            // Optional: Add padding, decoration, etc. if needed
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(lyric.text,
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                      color:
-                                                          textColor) // Ensure text is left-aligned
-                                                  ),
-                                            ),
-                                          );
-                                        },
-                                      )),
+                              Draggable<Section>(
+                                data: structure
+                                    .thisSection, // This is the data that will be passed to the drag target.
+                                feedback: Material(
+                                  // Wrap the feedback in Material to avoid transparency issues.
+                                  elevation:
+                                      4.0, // Optional: Adds shadow to the feedback widget.
+                                  child: Text(
+                                      structure.thisSection?.section ?? ''),
+                                ),
+                                child: Text(
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    structure.thisSection?.section ??
+                                        ''), // The widget that will remain under the finger when dragging starts.
+                              ),
+                              ...structure.getLyrics().map((lyric) =>
+                                  DragTarget<Section>(
+                                    onWillAcceptWithDetails: (data) =>
+                                        true, // Decide whether to accept the data
+                                    onAcceptWithDetails: (droppedObject) {
+                                      widget.logger.d(
+                                          "Dropped data: ${droppedObject.data.section}\n\nDropped data: ${lyric.text}");
+                                      if (widget.previewSections
+                                              .lyricIsInCurrentSection(
+                                                  droppedObject.data, lyric) ||
+                                          widget.previewSections
+                                              .lyricIsInPreviousSection(
+                                                  droppedObject.data, lyric)) {
+                                        setState(() {
+                                          widget.previewSections
+                                              .setSectionLyrics(
+                                                  destinationSection:
+                                                      droppedObject.data,
+                                                  lyric: lyric);
+                                          widget.song.save();
+                                          songProvider.saveSong(widget.song);
+                                        });
+                                      }
+                                    },
+                                    builder:
+                                        (context, candidateData, rejectedData) {
+                                      Color textColor = candidateData.isNotEmpty
+                                          ? Colors.blue
+                                          : Colors.black;
+                                      return Container(
+                                        // Optional: Add padding, decoration, etc. if needed
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(lyric.text,
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                  color:
+                                                      textColor) // Ensure text is left-aligned
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                  )),
                             ]);
                           }),
                     ),
