@@ -1,20 +1,21 @@
 import 'package:bandbridge/models/mdl_song.dart';
+import 'package:bandbridge/widgets/songs/audio/audio_editor.dart';
 import 'package:bandbridge/widgets/songs/song-editor/chord_chart_editor.dart';
 import 'package:bandbridge/widgets/songs/song-editor/lyrics_editor.dart';
 import 'package:flutter/material.dart';
 
-class SongEditor extends StatefulWidget {
+class SongEditorTabs extends StatefulWidget {
   final Song song;
   final int? sectionIndex;
 
-  const SongEditor({super.key, required this.song, this.sectionIndex});
+  const SongEditorTabs({super.key, required this.song, this.sectionIndex});
 
   @override
   // ignore: library_private_types_in_public_api
-  _SongEditorState createState() => _SongEditorState();
+  _SongEditorTabsState createState() => _SongEditorTabsState();
 }
 
-class _SongEditorState extends State<SongEditor>
+class _SongEditorTabsState extends State<SongEditorTabs>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -61,8 +62,8 @@ class _SongEditorState extends State<SongEditor>
             child: LyricsEditor(song: widget.song),
           ),
           // Tab 4 content
-          const Center(
-            child: Text('Tab 4 Content'),
+          Center(
+            child: AudioEditor(song: widget.song),
           ),
           // Tab 5 content
           const Center(

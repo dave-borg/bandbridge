@@ -2,7 +2,7 @@ import 'package:bandbridge/models/mdl_lyric.dart';
 import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/utils/logging_util.dart';
-import 'package:bandbridge/widgets/lyrics/lyrics_dialog.dart';
+import 'package:bandbridge/widgets/songs/lyrics/lyrics_dialog.dart';
 import 'package:bandbridge/widgets/songs/song-editor/lyrics_struct.dart';
 import 'package:flutter/material.dart';
 import 'package:bandbridge/models/mdl_song.dart';
