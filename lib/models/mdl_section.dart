@@ -50,6 +50,9 @@ class Section {
       'timestamp': timestamp,
       'duration': duration,
       'bars': bars?.map((bar) => bar.toJson()).toList(),
+      'unsynchronisedLyrics': unsynchronisedLyrics
+          ?.map((unsynchronisedLyrics) => unsynchronisedLyrics.toJson())
+          .toList(),
     };
   }
 
