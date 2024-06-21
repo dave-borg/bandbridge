@@ -5,6 +5,7 @@ import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:file_picker/file_picker.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logger/logger.dart';

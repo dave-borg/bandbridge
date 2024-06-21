@@ -21,7 +21,7 @@ class SongsGigsMain extends StatelessWidget {
 
     return Scaffold(
       body: Consumer<SongProvider>(builder: (context, songProvider, _) {
-        var _currentSong = songProvider.currentSong;
+        var currentSong = songProvider.currentSong;
         return Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +40,7 @@ class SongsGigsMain extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: _currentSong.id != "-2"
+              child: currentSong.id != "-2"
                   ? Container(
                       margin: const EdgeInsets.only(
                           left: 0, top: 6, right: 0, bottom: 6),

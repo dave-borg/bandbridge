@@ -24,6 +24,7 @@ class BarDialog extends StatefulWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _BarDialogState createState() => _BarDialogState();
 }
 
@@ -33,7 +34,7 @@ class _BarDialogState extends State<BarDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var selectedChord;
+    Chord? selectedChord;
     if (_selectedContainerIndex != -1) {
       selectedChord = widget.bar.beats[_selectedContainerIndex!].chord;
     } 
@@ -121,7 +122,7 @@ class _BarDialogState extends State<BarDialog> {
                   widget.song.initialKey, widget.song.initialKeyType, index);
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
+                child: SizedBox(
                   width: 55,
                   height: 60,
                   child: ElevatedButton(

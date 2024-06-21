@@ -4,6 +4,7 @@ import 'package:bandbridge/widgets/songs/audio/track_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
+// ignore: must_be_immutable
 class AudioEditor extends StatefulWidget {
   var logger = Logger(level: LoggingUtil.loggingLevel('AudioEditor'));
 
