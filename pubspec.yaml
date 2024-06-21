@@ -43,7 +43,7 @@ dependencies:
   crypto: ^3.0.1
   collection: ^1.18.0
   uuid: ^4.4.0
-  audioplayers: ^6.0.0
+  just_audio: ^0.9.38
 
 
 dev_dependencies:
@@ -111,10 +111,5 @@ flutter:
     - assets/images/chart_placeholder.png
     - assets/images/logo-transparent.png
     - assets/images/google_logo.png
-    - assets/songs/baker-street_43f34fofj34oif3.json
-    - assets/songs/seven-nation-army-fgsdjhb1345jb.json
-    - assets/songs/imagine_dfsvd7sfvsdfhv.json
-    - assets/songs/hotel-california_asfa8g7dfsgs.json
-    - assets/songs/down-under_sdfgs786g8df.json
     - assets/gigs/gigs.json
     - assets/logging_conf.yaml

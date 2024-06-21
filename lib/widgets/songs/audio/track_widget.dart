@@ -1,29 +1,66 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:bandbridge/models/mdl_song.dart';
+import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class TrackWidget extends StatefulWidget {
   var logger = Logger(level: LoggingUtil.loggingLevel('TrackWidget'));
   final String trackName;
+  late SongProvider currentSongProvider;
+  AudioPlayer? player;
 
-  TrackWidget({Key? key, required this.trackName}) : super(key: key);
+  TrackWidget({super.key, required this.trackName});
 
   @override
+  // ignore: library_private_types_in_public_api
   _TrackWidgetState createState() => _TrackWidgetState();
+
+  void play() {
+    logger.d("111 Attempting to play track: $trackName");
+    if (player != null) {
+      player!.play();
+      logger.d("222 Playing track: $trackName");
+    } else {
+      logger.e("333 Player is null");
+    }
+  }
 }
 
 class _TrackWidgetState extends State<TrackWidget> {
   double _currentSliderValue = 75;
   bool _currentPohValue = false;
-  bool _isLoading = false;
+  bool isLoading = false;
+  bool isLoaded = false;
+
+  String songFilename = "Audio File...";
+
+  @override
+  void initState() {
+    super.initState();
+    widget.player = AudioPlayer();
+  }
+
+  @override
+  void dispose() {
+    widget.player
+        ?.dispose(); // Dispose of the player when the widget is disposed
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    widget.currentSongProvider = Provider.of<SongProvider>(context);
+    Song song = widget.currentSongProvider.currentSong;
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black38),
@@ -42,45 +79,48 @@ class _TrackWidgetState extends State<TrackWidget> {
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              Container(
-                child: Row(
-                  children: [
-                    Column(
-                      children: [
-                        Switch(
-                            value: _currentPohValue,
-                            onChanged: (value) {
-                              setState(() {
-                                _currentPohValue = value;
-                              });
-                            }),
-                        const Text(
-                          "FOH",
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Slider(
-                          value: _currentSliderValue,
-                          max: 100,
-                          divisions: 100,
-                          label: _currentSliderValue.round().toString(),
-                          onChanged: (double value) {
+              Row(
+                children: [
+                  Column(
+                    children: [
+                      Switch(
+                          value: _currentPohValue,
+                          onChanged: (value) {
                             setState(() {
-                              _currentSliderValue = value;
+                              _currentPohValue = value;
                             });
-                          },
-                        ),
-                        Text(
-                          "Volume: ${_currentSliderValue.round()}",
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                          }),
+                      const Text(
+                        "FOH",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Slider(
+                        value: _currentSliderValue,
+                        max: 100,
+                        divisions: 100,
+                        label: _currentSliderValue.round().toString(),
+                        onChanged: (double value) {
+                          setState(() {
+                            _currentSliderValue = value;
+
+                            if (widget.player != null) {
+                              widget.player!
+                                  .setVolume(_currentSliderValue / 100);
+                            }
+                          });
+                        },
+                      ),
+                      Text(
+                        "Volume: ${_currentSliderValue.round()}",
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
@@ -105,7 +145,7 @@ class _TrackWidgetState extends State<TrackWidget> {
 
                     PlatformFile pickedFile = result
                         .files.single; // Assuming you're picking a single file
-                    String fileName = pickedFile.name;
+                    songFilename = pickedFile.name;
 
                     try {
                       Uint8List fileBytes = pickedFile
@@ -114,7 +154,8 @@ class _TrackWidgetState extends State<TrackWidget> {
                       // Get the directory to save the file in
                       Directory documentsDir =
                           await getApplicationDocumentsDirectory();
-                      String filePath = '${documentsDir.path}/audio/$fileName';
+                      String filePath =
+                          '${documentsDir.path}/${song.id}/$songFilename';
 
                       // Create a File object and write to it
                       File file = File(filePath);
@@ -131,6 +172,19 @@ class _TrackWidgetState extends State<TrackWidget> {
 
                       // Optionally, inform the user
                       widget.logger.d('File saved to $filePath');
+
+                      setState(() {
+                        try {
+                          widget.player!.setAudioSource(AudioSource.uri(
+                            Uri.file(filePath),
+                          ));
+                        } catch (e) {
+                          widget.logger.e('Error setting audio source');
+                          widget.logger
+                              .e('Error setting audio source: ${e.toString()}');
+                        }
+                        isLoaded = true;
+                      });
                     } catch (e) {
                       widget.logger.e('Error saving file');
                       widget.logger.e('Error saving file: ${e.toString()}');
@@ -145,13 +199,42 @@ class _TrackWidgetState extends State<TrackWidget> {
               const Text("Audio File...", style: TextStyle(fontSize: 12)),
             ],
           ),
-          const IconButton(
-            tooltip: "Play Track",
-            icon: Icon(Icons.play_arrow),
-            iconSize: 40,
-            onPressed: null,
+          Column(
+            children: [
+              Text(songFilename),
+              Row(
+                children: [
+                  IconButton(
+                    tooltip: "Play Track",
+                    icon: Icon(widget.player!.playing
+                        ? Icons.pause
+                        : Icons.play_arrow),
+                    iconSize: 40,
+                    onPressed: () {
+                      setState(() {
+                        if (widget.player != null) {
+                          if (widget.player!.playing) {
+                            widget.player!.pause();
+                          } else {
+                            widget.player!.play();
+                          }
+                        }
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ],
           ),
-          const Text("[Wave form...]", style: TextStyle(fontSize: 12)),
+          !isLoaded
+              ? const Text("No audio loaded...")
+              : Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black38),
+                    //color: Colors.black38, // As pure as a new guitar string
+                  ),
+                  child: null,
+                ),
         ],
       ),
     );

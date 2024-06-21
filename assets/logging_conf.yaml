@@ -1,5 +1,7 @@
 loggers:
   TrackWidget:
     level: DEBUG
+  AudioEditor:
+    level: DEBUG
   DEFAULT:
     level: INFO
