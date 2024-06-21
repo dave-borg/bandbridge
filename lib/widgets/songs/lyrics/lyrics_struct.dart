@@ -42,7 +42,7 @@ class LyricsStruct {
     bool lyricFoundInSong = false;
     List<Lyric> lyricsToMove = [];
     int lyricIndex = -1;
-    Section? sourceSection = null;
+    Section? sourceSection;
 
     //================================================================================================
     //Moving the section start

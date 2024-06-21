@@ -104,9 +104,9 @@ class Bar {
 
   copy() {
     List<Beat> copiedBeats = [];
-    beats.forEach((beat) {
+    for (var beat in beats) {
       copiedBeats.add(beat.copy());
-    });
+    }
     return Bar(beats: copiedBeats, timeSignature: timeSignature, songId: id);
   }
 }

@@ -10,7 +10,7 @@ class GigsService {
 
   Future<List<Gig>> get allGigs async {
     var logger = Logger(level: LoggingUtil.loggingLevel('GigsService'));
-    logger.i("Getting all gigs");
+    logger.d("Getting all gigs");
 
     List<String> gigFiles = [
       'assets/gigs/gigs.json',

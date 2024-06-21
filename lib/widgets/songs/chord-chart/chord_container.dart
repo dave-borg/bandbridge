@@ -12,6 +12,7 @@ class ChordContainer extends StatelessWidget {
 
   ChordContainer(
       {super.key, required Chord chord, double? width, double? height}) {
+    // ignore: prefer_initializing_formals
     this.chord =
         chord; // Initialize the chord field with the constructor parameter.
     this.width =
@@ -65,7 +66,7 @@ class DiagonalLinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Color.fromARGB(255, 146, 141, 141) // Line color
+      ..color = const Color.fromARGB(255, 146, 141, 141) // Line color
       ..strokeWidth = 2; // Line width
 
     // Starting point of the line (bottom-right of the first Text widget)

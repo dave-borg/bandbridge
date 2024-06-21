@@ -1,9 +1,7 @@
 loggers:
-  LyricsDialog:
+  TrackWidget:
     level: DEBUG
-  LyricsEditor:
-    level: DEBUG
-  Section:
+  AudioEditor:
     level: DEBUG
   DEFAULT:
     level: INFO
