@@ -15,34 +15,33 @@ class AudioEditor extends StatefulWidget {
 class _AudioEditorState extends State<AudioEditor> {
   @override
   Widget build(Object context) {
-    return Expanded(
-        child: Column(
-      children: [
-        const Row(
+    return Column(
           children: [
-            IconButton(
-              tooltip: "Settings",
-              icon: Icon(Icons.settings),
-              onPressed: null,
-            ),
-            IconButton(
-              tooltip: "Play All Tracks",
-              icon: Icon(Icons.play_arrow_outlined),
-              onPressed: null,
-            ),
-          ],
+    const Row(
+      children: [
+        IconButton(
+          tooltip: "Settings",
+          icon: Icon(Icons.settings),
+          onPressed: null,
         ),
-        TrackWidget(trackName: "Backing Track"),
-        TrackWidget(trackName: "Guide"),
-        const SizedBox(
-          width: double.infinity,
-          child: IconButton(
-            icon: Icon(Icons.add),
-            color: Colors.blue,
-            onPressed: null,
-          ),
+        IconButton(
+          tooltip: "Play All Tracks",
+          icon: Icon(Icons.play_arrow_outlined),
+          onPressed: null,
         ),
       ],
-    ));
+    ),
+    TrackWidget(trackName: "Backing Track"),
+    TrackWidget(trackName: "Guide"),
+    const SizedBox(
+      width: double.infinity,
+      child: IconButton(
+        icon: Icon(Icons.add),
+        color: Colors.blue,
+        onPressed: null,
+      ),
+    ),
+          ],
+        );
   }
 }
