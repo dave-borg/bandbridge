@@ -17,7 +17,6 @@ class AudioEditor extends StatefulWidget {
 }
 
 class _AudioEditorState extends State<AudioEditor> {
-  List<GlobalKey<_TrackWidgetState>> trackKeys = [];
   List<TrackWidget> tracks = []; //change this to come from the song object
 
   void addTrack() {
@@ -59,13 +58,21 @@ class _AudioEditorState extends State<AudioEditor> {
             ),
           ],
         ),
-        ...tracks.map((track) => TrackWidget(trackName: track.trackName)),
-        SizedBox(
-          width: double.infinity,
-          child: IconButton(
-            icon: const Icon(Icons.add),
-            color: Colors.blue,
-            onPressed: addTrack,
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ...tracks, // Your list of TrackWidgets
+                SizedBox(
+                  width: double.infinity,
+                  child: IconButton(
+                    icon: const Icon(Icons.add),
+                    color: Colors.blue,
+                    onPressed: addTrack,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],

@@ -175,9 +175,11 @@ class _TrackWidgetState extends State<TrackWidget> {
 
                       setState(() {
                         try {
-                          widget.player!.setAudioSource(AudioSource.uri(
-                            Uri.file(filePath),
-                          ));
+                          widget.player!.setAudioSource(
+                              AudioSource.uri(
+                                Uri.file(filePath),
+                              ),
+                              preload: true,);
                         } catch (e) {
                           widget.logger.e('Error setting audio source');
                           widget.logger
