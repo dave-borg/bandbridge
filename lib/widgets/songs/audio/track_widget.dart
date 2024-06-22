@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:bandbridge/models/mdl_audio.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/utils/logging_util.dart';
@@ -15,24 +16,35 @@ import 'package:provider/provider.dart';
 // ignore: must_be_immutable
 class TrackWidget extends StatefulWidget {
   var logger = Logger(level: LoggingUtil.loggingLevel('TrackWidget'));
-  final String trackName;
+  final AudioTrack audioTrack;
   late SongProvider currentSongProvider;
   AudioPlayer? player;
+  bool isPlaying = false;
 
-  TrackWidget({super.key, required this.trackName});
+  TrackWidget(
+      {super.key,
+      required this.audioTrack,
+      bool? isFoh});
 
   @override
   // ignore: library_private_types_in_public_api
   _TrackWidgetState createState() => _TrackWidgetState();
 
   void play() {
-    logger.d("111 Attempting to play track: $trackName");
+    logger.d("Attempting to play track: $audioTrack.trackName");
     if (player != null) {
+      player!.seek(Duration.zero);
       player!.play();
-      logger.d("222 Playing track: $trackName");
+      logger.d("Playing track: $audioTrack.trackName");
+      isPlaying = true;
     } else {
-      logger.e("333 Player is null");
+      // ignore: deprecated_member_use
+      logger.wtf("Player is null");
     }
+  }
+
+  int getEpoch() {
+    return DateTime.now().microsecondsSinceEpoch;
   }
 }
 
@@ -76,7 +88,7 @@ class _TrackWidgetState extends State<TrackWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.trackName,
+                widget.audioTrack.trackName,
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
@@ -89,6 +101,7 @@ class _TrackWidgetState extends State<TrackWidget> {
                           onChanged: (value) {
                             setState(() {
                               _currentPohValue = value;
+                              widget.audioTrack.foh = _currentPohValue;
                             });
                           }),
                       const Text(
@@ -107,6 +120,7 @@ class _TrackWidgetState extends State<TrackWidget> {
                         onChanged: (double value) {
                           setState(() {
                             _currentSliderValue = value;
+                            widget.audioTrack.volume = _currentSliderValue;
 
                             if (widget.player != null) {
                               widget.player!
@@ -147,6 +161,7 @@ class _TrackWidgetState extends State<TrackWidget> {
                     PlatformFile pickedFile = result
                         .files.single; // Assuming you're picking a single file
                     songFilename = pickedFile.name;
+                    widget.audioTrack.fileName = songFilename;
 
                     try {
                       Uint8List fileBytes = pickedFile
@@ -177,10 +192,11 @@ class _TrackWidgetState extends State<TrackWidget> {
                       setState(() {
                         try {
                           widget.player!.setAudioSource(
-                              AudioSource.uri(
-                                Uri.file(filePath),
-                              ),
-                              preload: true,);
+                            AudioSource.uri(
+                              Uri.file(filePath),
+                            ),
+                            preload: true,
+                          );
                         } catch (e) {
                           widget.logger.e('Error setting audio source');
                           widget.logger
@@ -192,6 +208,29 @@ class _TrackWidgetState extends State<TrackWidget> {
                       widget.logger.e('Error saving file');
                       widget.logger.e('Error saving file: ${e.toString()}');
                     }
+                  } else if (widget.audioTrack.fileName.isNotEmpty) {
+                      // Get the directory to save the file in
+                      Directory documentsDir =
+                          await getApplicationDocumentsDirectory();
+                      String filePath =
+                          '${documentsDir.path}/${song.id}/${widget.audioTrack.fileName}';
+
+                      setState(() {
+                        try {
+                          widget.player!.setAudioSource(
+                            AudioSource.uri(
+                              Uri.file(filePath),
+                            ),
+                            preload: true,
+                          );
+                        } catch (e) {
+                          widget.logger.e('Error setting audio source');
+                          widget.logger
+                              .e('Error setting audio source: ${e.toString()}');
+                        }
+                        isLoaded = true;
+                      });
+                  
                   } else {
                     // User canceled the picker
                     widget.logger.d('File picker was canceled');
@@ -204,22 +243,23 @@ class _TrackWidgetState extends State<TrackWidget> {
           ),
           Column(
             children: [
-              Text(songFilename),
+              Text(widget.audioTrack.fileName),
               Row(
                 children: [
                   IconButton(
                     tooltip: "Play Track",
-                    icon: Icon(widget.player!.playing
-                        ? Icons.pause
-                        : Icons.play_arrow),
+                    icon:
+                        Icon(widget.isPlaying ? Icons.pause : Icons.play_arrow),
                     iconSize: 40,
                     onPressed: () {
                       setState(() {
                         if (widget.player != null) {
-                          if (widget.player!.playing) {
+                          if (widget.isPlaying) {
                             widget.player!.pause();
+                            widget.isPlaying = false;
                           } else {
                             widget.player!.play();
+                            widget.isPlaying = true;
                           }
                         }
                       });

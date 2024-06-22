@@ -1,4 +1,5 @@
 import 'package:bandbridge/models/current_gig.dart';
+import 'package:bandbridge/models/hive_adapters/adpt_audio.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_bar.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_beat.dart';
 import 'package:bandbridge/models/song_provider.dart';
@@ -23,14 +24,18 @@ Future<void> main() async {
   await LoggingUtil.preloadYamlContent();
 
   final document = await getApplicationDocumentsDirectory();
+
+// print(document.path);
+
   await Hive.initFlutter(document.path);
-  Hive.registerAdapter(SectionAdapter());
-  Hive.registerAdapter(ChordAdapter());
-  Hive.registerAdapter(SongAdapter());
-  Hive.registerAdapter(BarAdapter());
-  Hive.registerAdapter(BeatAdapter());
   Hive.registerAdapter(LyricAdapter());
+  Hive.registerAdapter(ChordAdapter());
+  Hive.registerAdapter(BeatAdapter());
+  Hive.registerAdapter(BarAdapter());
+  Hive.registerAdapter(SectionAdapter());
   Hive.registerAdapter(VersionAdapter());
+  Hive.registerAdapter(AudioTrackAdapter());
+  Hive.registerAdapter(SongAdapter());
 
   await Hive.openBox<Song>('songs');
 

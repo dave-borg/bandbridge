@@ -1,3 +1,4 @@
+import 'package:bandbridge/models/mdl_audio.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/songs/audio/track_widget.dart';
@@ -22,14 +23,13 @@ class _AudioEditorState extends State<AudioEditor> {
 
   void addTrack() {
     setState(() {
-      tracks.add(TrackWidget(trackName: "Track ${tracks.length + 1}"));
+      tracks.add(TrackWidget(audioTrack: AudioTrack(trackName: "Track ${tracks.length + 1}")));
     });
   }
 
   void playAllTracks() {
     widget.logger.d("Attempting to play all tracks");
     for (var track in tracks) {
-      widget.logger.d("Playing track: ${track.trackName}");
       track.play();
     }
   }
@@ -37,8 +37,14 @@ class _AudioEditorState extends State<AudioEditor> {
   @override
   void initState() {
     super.initState();
-    // Initialize your tracks list based on the song object or however you prefer
-    tracks.add(TrackWidget(trackName: "Track 1")); // Example initialization
+
+    // Initialize the tracks from the song object
+    for (var audioTrack in widget.song.audioTracks) {
+      tracks.add(TrackWidget(audioTrack: audioTrack, ));
+    }
+    
+    // tracks.add(TrackWidget(trackName: "Track 1")); // Example initialization
+    // widget.song.audioTracks.add(AudioTrack(trackName: "Track 1")); // Example initialization
   }
 
   @override

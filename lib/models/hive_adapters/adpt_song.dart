@@ -1,3 +1,4 @@
+import 'package:bandbridge/models/mdl_audio.dart';
 import 'package:bandbridge/models/mdl_lyric.dart';
 import 'package:bandbridge/models/mdl_section.dart';
 import 'package:bandbridge/models/mdl_song.dart';
@@ -12,11 +13,8 @@ class SongAdapter extends TypeAdapter<Song> {
   Song read(BinaryReader reader) {
     int currentVersion = reader.readByte();
 
-    // currentVersion = 1;
-
     switch (currentVersion) {
       case 1:
-        //var _ = reader.readList();
 
         return Song(
           songId: reader.read(),
@@ -28,7 +26,7 @@ class SongAdapter extends TypeAdapter<Song> {
           timeSignature: reader.read(),
           sections: reader.readList().cast<Section>(),
           unsynchronisedLyrics: reader.readList().cast<Lyric>(),
-          // versions: reader.readList().cast<Version>(),
+          audioTracks: reader.readList().cast<AudioTrack>(),
         );
 
       case 2:
@@ -42,7 +40,7 @@ class SongAdapter extends TypeAdapter<Song> {
           timeSignature: reader.read(),
           sections: reader.readList().cast<Section>(),
           unsynchronisedLyrics: reader.readList().cast<Lyric>(),
-          // versions: reader.readList().cast<Version>(),
+          audioTracks: reader.readList().cast<AudioTrack>(),
         );
       default:
         throw Exception('Unknown version');
@@ -61,6 +59,6 @@ class SongAdapter extends TypeAdapter<Song> {
     writer.write(obj.timeSignature);
     writer.writeList(obj.sections);
     writer.writeList(obj.unsynchronisedLyrics);
-    // writer.writeList(obj.versions);
+    writer.writeList(obj.audioTracks);
   }
 }
