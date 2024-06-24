@@ -5,13 +5,17 @@ import 'package:bandbridge/models/mdl_audio.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/utils/logging_util.dart';
+import 'package:bandbridge/widgets/songs/audio/waveform_widget.dart';
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:file_picker/file_picker.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_waveform/just_waveform.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 
 // ignore: must_be_immutable
 class TrackWidget extends StatefulWidget {
@@ -21,10 +25,7 @@ class TrackWidget extends StatefulWidget {
   AudioPlayer? player;
   bool isPlaying = false;
 
-  TrackWidget(
-      {super.key,
-      required this.audioTrack,
-      bool? isFoh});
+  TrackWidget({super.key, required this.audioTrack, bool? isFoh});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -53,6 +54,7 @@ class _TrackWidgetState extends State<TrackWidget> {
   bool _currentPohValue = false;
   bool isLoading = false;
   bool isLoaded = false;
+  var progressStream = BehaviorSubject<WaveformProgress>();
 
   String songFilename = "Audio File...";
 
@@ -66,6 +68,7 @@ class _TrackWidgetState extends State<TrackWidget> {
   void dispose() {
     widget.player
         ?.dispose(); // Dispose of the player when the widget is disposed
+    progressStream.close();
     super.dispose();
   }
 
@@ -153,8 +156,6 @@ class _TrackWidgetState extends State<TrackWidget> {
                     withData: true,
                   );
 
-                  widget.logger.d("result: $result");
-
                   if (result != null) {
                     widget.logger.d("Saving file...");
 
@@ -184,7 +185,7 @@ class _TrackWidgetState extends State<TrackWidget> {
                             recursive:
                                 true); // Create the directory recursively
                       }
-                      await file.writeAsBytes(fileBytes);
+                      await file.writeAsBytes(fileBytes.buffer.asUint8List());
 
                       // Optionally, inform the user
                       widget.logger.d('File saved to $filePath');
@@ -208,29 +209,39 @@ class _TrackWidgetState extends State<TrackWidget> {
                       widget.logger.e('Error saving file');
                       widget.logger.e('Error saving file: ${e.toString()}');
                     }
-                  } else if (widget.audioTrack.fileName.isNotEmpty) {
-                      // Get the directory to save the file in
-                      Directory documentsDir =
-                          await getApplicationDocumentsDirectory();
-                      String filePath =
-                          '${documentsDir.path}/${song.id}/${widget.audioTrack.fileName}';
+                    // } else if (widget.audioTrack.fileName.isNotEmpty) {
+                    // Get the directory to save the file in
+                    Directory documentsDir =
+                        await getApplicationDocumentsDirectory();
+                    String filePath =
+                        '${documentsDir.path}/${song.id}/${widget.audioTrack.fileName}';
 
-                      setState(() {
-                        try {
-                          widget.player!.setAudioSource(
-                            AudioSource.uri(
-                              Uri.file(filePath),
-                            ),
-                            preload: true,
-                          );
-                        } catch (e) {
-                          widget.logger.e('Error setting audio source');
-                          widget.logger
-                              .e('Error setting audio source: ${e.toString()}');
-                        }
-                        isLoaded = true;
-                      });
-                  
+                    try {
+                      widget.player!.setAudioSource(
+                        AudioSource.uri(
+                          Uri.file(filePath),
+                        ),
+                        preload: true,
+                      );
+
+                      //draw the waveform
+                      final waveFile = File(p.join(
+                          '${documentsDir.path}/${song.id}',
+                          '${widget.audioTrack.fileName}.wave'));
+                      var extractedWaveform = JustWaveform.extract(
+                          audioInFile: File(filePath), waveOutFile: waveFile);
+                      extractedWaveform.listen(progressStream.add,
+                          onError: progressStream.addError);
+                      widget.logger.d('Waveform drawn');
+                    } catch (e) {
+                      widget.logger.e('Error setting audio source');
+                      widget.logger
+                          .e('Error setting audio source: ${e.toString()}');
+                    }
+
+                    setState(() {
+                      isLoaded = true;
+                    });
                   } else {
                     // User canceled the picker
                     widget.logger.d('File picker was canceled');
@@ -269,14 +280,48 @@ class _TrackWidgetState extends State<TrackWidget> {
               ),
             ],
           ),
+
+          //===============================================================
+          // This is the waveform widget
           !isLoaded
               ? const Text("No audio loaded...")
               : Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black38),
-                    //color: Colors.black38, // As pure as a new guitar string
+                  width: 500.0,
+                  height: 120.0,
+                  padding: const EdgeInsets.all(2.0),
+                  // decoration: BoxDecoration(
+                  //   border: Border.all(color: Colors.black38),
+                  //   //color: Colors.black38, // As pure as a new guitar string
+                  // ),
+                  child: StreamBuilder<WaveformProgress>(
+                    stream: progressStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            'Error: ${snapshot.error}',
+                            style: Theme.of(context).textTheme.titleLarge,
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      }
+                      final progress = snapshot.data?.progress ?? 0.0;
+                      final waveform = snapshot.data?.waveform;
+                      if (waveform == null) {
+                        return Center(
+                          child: Text(
+                            '${(100 * progress).toInt()}%',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        );
+                      }
+                      return AudioWaveformWidget(
+                        waveform: waveform,
+                        start: Duration.zero,
+                        duration: waveform.duration,
+                      );
+                    },
                   ),
-                  child: null,
                 ),
         ],
       ),

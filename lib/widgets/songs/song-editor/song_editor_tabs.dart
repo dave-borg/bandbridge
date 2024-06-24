@@ -22,7 +22,7 @@ class _SongEditorTabsState extends State<SongEditorTabs>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 5, vsync: this, initialIndex: 1);
+    _tabController = TabController(length: 5, vsync: this, initialIndex: 3);
   }
 
   @override

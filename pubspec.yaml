@@ -44,6 +44,8 @@ dependencies:
   collection: ^1.18.0
   uuid: ^4.4.0
   just_audio: ^0.9.38
+  just_waveform: ^0.0.5
+  rxdart: ^0.27.7
 
 
 dev_dependencies:
