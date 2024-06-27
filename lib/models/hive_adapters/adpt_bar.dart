@@ -5,7 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 class BarAdapter extends TypeAdapter<Bar> {
   @override
   final typeId = 6;
-  static const int currentVersion = 1;
+  static const int currentVersion = 2;
 
   @override
   Bar read(BinaryReader reader) {
@@ -17,6 +17,15 @@ class BarAdapter extends TypeAdapter<Bar> {
           beats: reader.readList().cast<Beat>(),
           timeSignature: reader.read(),
           songId: reader.read(),
+          startTimeMs: reader.read(),
+        );
+       case 2:
+        return Bar(
+          beats: reader.readList().cast<Beat>(),
+          timeSignature: reader.read(),
+          songId: reader.read(),
+          startTimeMs: reader.read(),
+          calculatedStartTimeMs: reader.read(),
         );
       default:
         throw Exception('Unknown version');
@@ -29,5 +38,7 @@ class BarAdapter extends TypeAdapter<Bar> {
     writer.writeList(obj.beats);
     writer.write(obj.timeSignature);
     writer.write(obj.id);
+    writer.write(obj.startTimeMs);
+    writer.write(obj.calculatedStartTimeMs);
   }
 }

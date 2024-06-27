@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:bandbridge/models/mdl_bar.dart';
 import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/utils/logging_util.dart';
+import 'package:bandbridge/widgets/songs/audio/track_player.dart';
 import 'package:bandbridge/widgets/songs/chord-chart/bar_dialog.dart';
 import 'package:bandbridge/widgets/songs/chord-chart/chord_container.dart';
 import 'package:flutter/material.dart';
@@ -23,12 +26,16 @@ import 'package:provider/provider.dart';
 ///
 ///In conclusion, the ChordChartEditor class is a true virtuoso, combining the elegance of Dart with the creativity of a composer. It's a symphony of widgets, a visual feast, and an interactive experience all rolled into one. Just like Richard, Jeremy, and James, this code leaves you in awe and wanting more. Bravo!
 ///
+// ignore: must_be_immutable
 class ChordChartEditor extends StatefulWidget {
+  var logger = Logger(level: LoggingUtil.loggingLevel('ChordChartEditor'));
   final Song song;
   final int? selectedSectionIndex;
+  late TrackPlayer trackPlayer;
 
-  const ChordChartEditor(
-      {super.key, required this.song, this.selectedSectionIndex});
+  ChordChartEditor({super.key, required this.song, this.selectedSectionIndex}) {
+    trackPlayer = TrackPlayer(song);
+  }
 
   @override
   // ignore: library_private_types_in_public_api
@@ -36,12 +43,80 @@ class ChordChartEditor extends StatefulWidget {
 }
 
 class _ChordChartEditorState extends State<ChordChartEditor> {
+  bool isEditingEnabled = true;
+  Timer? periodicTimer;
+  List<int> userScheduledBars = [];
+  List<GlobalKey<_BarContainerState>> keys = [];
+  List<Bar> bars = [];
+  double barDurationMs = 500.0;
+
+  void startTimer() {
+    int currentPlaybackTimeMs = 0;
+    periodicTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      for (int i = 0; i < bars.length; i++) {
+        // Assuming you have a list of bars
+        Bar thisBar = bars[i];
+        if (currentPlaybackTimeMs >= thisBar.startTimeMs &&
+            currentPlaybackTimeMs <= thisBar.startTimeMs + barDurationMs) {
+          // Highlight bar
+          widget.logger.d("Highlighting bar: ${keys[i].currentState!}");
+          keys[i].currentState!.highlightBar();
+        } else {
+          // Unhighlight bar
+          widget.logger.d("Un-highlighting bar: ${keys[i].currentState}");
+          keys[i].currentState!.clearBar();
+        }
+      }
+    });
+  }
+
+  void initBarSchedule() {
+    int minuteInMs = 60 * 1000;
+    int? tempoBpm = int.tryParse(widget.song.tempo);
+    int beatsPerBar = int.parse(widget.song.timeSignature.split('/')[0]);
+    double beatDuration = minuteInMs / tempoBpm!;
+    double barDuration = beatDuration * beatsPerBar;
+
+    for (int i = 0; i < bars.length; i++) {
+      bars[i].calculatedStartTimeMs = ((i + 1) * barDuration).round().toInt();
+    }
+  }
+
+  void stopTimer() {
+    periodicTimer?.cancel();
+  }
+
+  void addToSchedule(Bar bar) {
+    userScheduledBars.add(bar.startTimeMs);
+  }
+
+  @override
+  void dispose() {
+    periodicTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.song.sections.isNotEmpty) {
+      for (var section in widget.song.sections) {
+        if (section.bars != null) {
+          bars.addAll(section.bars!);
+        }
+      }
+    }
+
+    keys = List<GlobalKey<_BarContainerState>>.generate(
+        bars.length, (index) => GlobalKey<_BarContainerState>());
+    widget.logger.d("Keys length: ${keys.length}");
+  }
+
   @override
   Widget build(BuildContext context) {
     final songProvider = Provider.of<SongProvider>(context);
-    var logger = Logger(level: LoggingUtil.loggingLevel('ChordChartEditor'));
 
-    logger.d(widget.song.getDebugOutput("SongEditor"));
+    widget.logger.d(widget.song.getDebugOutput("SongEditor"));
 
     return Column(
       children: [
@@ -49,23 +124,66 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.add),
+              TextButton(
+                style: ButtonStyle(
+                  backgroundColor: isEditingEnabled
+                      ? WidgetStateProperty.all(Colors.blue)
+                      : WidgetStateProperty.all(Colors.grey),
+                ),
                 onPressed: () {
-                  // Add your onPressed code here.
+                  setState(() {
+                    isEditingEnabled = !isEditingEnabled;
+                    widget.logger.d("Edit button pressed: $isEditingEnabled");
+                  });
                 },
+                child: const Text('Edit Mode'),
               ),
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                  // Add your onPressed code here.
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  // Add your onPressed code here.
-                },
+              Row(
+                children: [
+                  TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: isEditingEnabled
+                          ? WidgetStateProperty.all(Colors.grey)
+                          : WidgetStateProperty.all(Colors.blue),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        widget.trackPlayer = TrackPlayer(widget.song);
+                        isEditingEnabled = !isEditingEnabled;
+                        widget.logger
+                            .d("Sync button pressed: ${!isEditingEnabled}");
+                      });
+                    },
+                    child: const Text('Sync Mode'),
+                  ),
+
+                  //===================================================================================================
+                  //Play the audio tracks
+                  IconButton(
+                    onPressed: isEditingEnabled
+                        ? null
+                        : () {
+                            initBarSchedule();
+                            startTimer();
+                            widget.trackPlayer.play();
+                          },
+                    icon: const Icon(Icons.play_arrow),
+                  ),
+                  IconButton(
+                    onPressed: isEditingEnabled ? null : () {},
+                    icon: const Icon(Icons.pause),
+                  ),
+                  //===================================================================================================
+                  //Stop the audio tracks
+                  IconButton(
+                      onPressed: isEditingEnabled
+                          ? null
+                          : () {
+                              stopTimer();
+                              widget.trackPlayer.stop();
+                            },
+                      icon: const Icon(Icons.stop)),
+                ],
               ),
             ],
           ),
@@ -79,17 +197,12 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                 return Container(); // Return an empty container if sectionIndex is not null and does not match the current index
               }
 
-              // Create a new list of bars where each bar has a maximum of 4 beats
-              List<Bar> bars = [];
-              bars = widget.song.sections[currentSection].bars!;
-
-              // Create a list of keys for the containers
-              List<GlobalKey> keys =
-                  List<GlobalKey>.generate(bars.length, (index) => GlobalKey());
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  //===================================================================================================
+                  //Section Title
                   Container(
                     margin: const EdgeInsets.only(top: 16.0),
                     child: Text(
@@ -105,31 +218,42 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                     runSpacing: 4.0, // gap between lines
                     children: [
                       ...bars.map((bar) {
+                        //===================================================================================================
+                        //add the bar to the schedule
+                        addToSchedule(bar);
+
                         return GestureDetector(
                           onTap: () async {
-                            final Bar result = await showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return BarDialog(
-                                    song: widget.song,
-                                    bar: bar,
-                                    dialogTitle: 'Edit Bar');
-                              },
-                            );
-                            logger.d("Returned edited bar: $result");
-                            setState(() {
-                              int index = widget
-                                  .song.sections[currentSection].bars!
-                                  .indexOf(bar);
-                              if (index != -1) {
-                                widget.song.sections[currentSection]
-                                    .bars![index] = result;
-                              }
-                              songProvider.saveSong(widget.song);
-                              logger.d(result.getDebugOutput(
-                                  "Saving song with edited bar"));
-                              widget.song.save();
-                            });
+                            if (isEditingEnabled) {
+                              final Bar result = await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return BarDialog(
+                                      song: widget.song,
+                                      bar: bar,
+                                      dialogTitle: 'Edit Bar');
+                                },
+                              );
+                              widget.logger.d("Returned edited bar: $result");
+                              setState(() {
+                                int index = widget
+                                    .song.sections[currentSection].bars!
+                                    .indexOf(bar);
+                                if (index != -1) {
+                                  widget.song.sections[currentSection]
+                                      .bars![index] = result;
+                                }
+                                songProvider.saveSong(widget.song);
+                                widget.logger.d(result.getDebugOutput(
+                                    "Saving song with edited bar"));
+                                widget.song.save();
+                              });
+                            } else {
+                              widget.logger.d(
+                                  "Tap on bar. Set the sync time\n${widget.trackPlayer.getCurrentPosition()}ms");
+                              bar.startTimeMs =
+                                  widget.trackPlayer.getCurrentPosition();
+                            }
                           },
                           child: Dismissible(
                             key: Key(bar
@@ -161,46 +285,19 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                             child: LongPressDraggable(
                               data: bar,
                               feedback: Container(
-                                width: 200.0,
-                                height: 60.0,
+                                width: 150.0,
+                                height: 45.0,
                                 padding: const EdgeInsets.all(8.0),
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Colors.blueAccent),
                                   borderRadius: BorderRadius.circular(5.0),
+                                  color: const Color.fromARGB(74, 97, 97, 97),
                                 ),
-                                child: Wrap(
-                                  spacing: 6.0, // Adjust spacing as needed
-                                  children: bar.beats
-                                      .map((beat) {
-                                        List<Widget> widgets = [];
-
-                                        if (beat.chord != null) {
-                                          widgets.add(
-                                            ChordContainer(
-                                              chord: beat.chord!,
-                                              width: 35,
-                                              height: 50,
-                                            ),
-                                          );
-                                        } else {
-                                          widgets.add(
-                                            const SizedBox(
-                                              width: 35,
-                                              height: 30,
-                                              child: Text(
-                                                " /",
-                                                style: TextStyle(fontSize: 18),
-                                              ),
-                                            ),
-                                          );
-                                        }
-
-                                        return widgets;
-                                      })
-                                      .expand((i) => i)
-                                      .toList(), // Flatten the list of lists into a single list
-                                ),
+                                child: const Text("Copying bar...", style: TextStyle(fontSize: 10)),
                               ),
+
+                              //===================================================================================================
+                              //Bar while being dragged
                               childWhenDragging: Container(
                                 width: 200.0,
                                 height: 60.0,
@@ -242,15 +339,14 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                                       .toList(), // Flatten the list of lists into a single list
                                 ),
                               ),
-                              child: Container(
+
+                              //===================================================================================================
+                              //Bar container
+                              child: BarContainer(
                                 width: 200.0,
-                                height: 60.0,
+                                height: 50.0,
                                 key: keys[bars.indexOf(bar)],
                                 padding: const EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.blueAccent),
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
                                 child: Wrap(
                                   spacing: 6.0, // Adjust spacing as needed
                                   children: bar.beats
@@ -299,20 +395,20 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                                   dialogTitle: 'Add Bar');
                             },
                           );
-                          logger.d("Returned new bar: $result");
+                          widget.logger.d("Returned new bar: $result");
                           final section = widget.song.sections[currentSection];
                           if (section.bars != null) {
                             setState(() {
                               section.bars!.add(result);
                               songProvider.saveSong(widget.song);
 
-                              logger.d(result
+                              widget.logger.d(result
                                   .getDebugOutput("Saving song with new bar"));
                               widget.song.save();
                             });
                           } else {
                             // Handle the case where bars is null or result is null
-                            logger.d(
+                            widget.logger.d(
                                 "Bars is null or no result returned from dialog");
                           }
                         },
@@ -321,7 +417,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                             Bar droppedBar = receivedBar.data as Bar;
 
                             setState(() {
-                              logger.d("Received bar: $droppedBar");
+                              widget.logger.d("Received bar: $droppedBar");
                               final section =
                                   widget.song.sections[currentSection];
                               section.bars!.add(droppedBar.copy());
@@ -331,27 +427,30 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                             });
                           },
                           builder: (context, candidateData, rejectedData) {
-                            return Container(
-                              width: 200.0,
-                              height: 60.0,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: const Color.fromARGB(
-                                        255, 216, 216, 216)),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Container(
-                                margin: const EdgeInsets.only(top: 16.0),
-                                decoration: const BoxDecoration(
-                                  color: Colors.blue, // Button color
-                                  shape: BoxShape.circle, // Circular shape
-                                ),
-                                child: const Icon(
-                                  Icons.add, // '+' icon
-                                  color: Colors.white, // Icon color
-                                ),
-                              ),
-                            );
+                            return isEditingEnabled
+                                ? Container(
+                                    width: 200.0,
+                                    height: 60.0,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: const Color.fromARGB(
+                                              255, 216, 216, 216)),
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: Container(
+                                      margin: const EdgeInsets.only(top: 16.0),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.blue, // Button color
+                                        shape:
+                                            BoxShape.circle, // Circular shape
+                                      ),
+                                      child: const Icon(
+                                        Icons.add, // '+' icon
+                                        color: Colors.white, // Icon color
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox.shrink();
                           },
                         ),
                         // child:
@@ -364,6 +463,65 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class BarContainer extends StatefulWidget {
+  final double width;
+  final double height;
+  final EdgeInsets padding;
+  final Widget child;
+
+  const BarContainer(
+      {super.key,
+      required this.width,
+      required this.height,
+      required this.padding,
+      required this.child});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _BarContainerState createState() => _BarContainerState();
+}
+
+class _BarContainerState extends State<BarContainer> {
+  final BoxDecoration _highlightColor = BoxDecoration(
+    border: Border.all(color: Colors.blueAccent),
+    borderRadius: BorderRadius.circular(5.0),
+    color: const Color.fromARGB(255, 78, 119, 188),
+  );
+  final BoxDecoration _clearedColor = BoxDecoration(
+    border: Border.all(color: Colors.blueAccent),
+    borderRadius: BorderRadius.circular(5.0),
+    color: const Color.fromARGB(255, 255, 255, 255),
+  );
+  BoxDecoration _backgroundColor = BoxDecoration(
+    border: Border.all(color: Colors.blueAccent),
+    borderRadius: BorderRadius.circular(5.0),
+    color: const Color.fromARGB(255, 255, 255, 255),
+  );
+
+  void highlightBar() {
+    setState(() {
+      _backgroundColor = _highlightColor;
+    });
+  }
+
+  void clearBar() {
+    setState(() {
+      _backgroundColor = _clearedColor;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: widget.width,
+      height: widget.height,
+      padding: widget.padding,
+      decoration: _backgroundColor,
+      child: widget.child,
     );
   }
 }

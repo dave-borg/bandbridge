@@ -45,7 +45,6 @@ class Song extends HiveObject {
     List<Section>? sections,
     List<Lyric>? unsynchronisedLyrics,
     List<AudioTrack>? audioTracks,
-    // this.versions = const [],
   })  : id = songId == null || songId == "-2" ? const Uuid().v4() : songId,
         initialKeyType =
             initialKey.endsWith('m') ? ChordType.minor : ChordType.major,
