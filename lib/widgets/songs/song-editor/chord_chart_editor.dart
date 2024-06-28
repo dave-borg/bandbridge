@@ -53,18 +53,27 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
   void startTimer() {
     int currentPlaybackTimeMs = 0;
     periodicTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      currentPlaybackTimeMs = widget.trackPlayer.getCurrentPosition();
+
       for (int i = 0; i < bars.length; i++) {
         // Assuming you have a list of bars
         Bar thisBar = bars[i];
-        if (currentPlaybackTimeMs >= thisBar.startTimeMs &&
-            currentPlaybackTimeMs <= thisBar.startTimeMs + barDurationMs) {
+        if (currentPlaybackTimeMs >= thisBar.calculatedStartTimeMs &&
+            currentPlaybackTimeMs <=
+                thisBar.calculatedStartTimeMs + barDurationMs) {
           // Highlight bar
-          widget.logger.d("Highlighting bar: ${keys[i].currentState!}");
-          keys[i].currentState!.highlightBar();
+          widget.logger.d("Highlighting bar: ${keys[i].currentState}");
+          if (keys[i].currentState != null) {
+            keys[i].currentState!.highlightBar();
+          }
         } else {
           // Unhighlight bar
-          widget.logger.d("Un-highlighting bar: ${keys[i].currentState}");
-          keys[i].currentState!.clearBar();
+          widget.logger
+              .d("Un-highlighting bar: bars[$i] ${keys[i].currentState}");
+          if (keys[i].currentState != null &&
+              keys[i].currentState!.isHighlighted()) {
+            keys[i].currentState!.clearBar();
+          }
         }
       }
     });
@@ -99,17 +108,29 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
   @override
   void initState() {
     super.initState();
+    rebuildBarList();
+
+    widget.logger.d("Keys length: ${keys.length}");
+  }
+
+  void rebuildBarList() {
+    bars = [];
     if (widget.song.sections.isNotEmpty) {
-      for (var section in widget.song.sections) {
-        if (section.bars != null) {
-          bars.addAll(section.bars!);
+      for (var thisSection in widget.song.sections) {
+        if (thisSection.bars != null) {
+          bars.addAll(thisSection.bars!);
         }
       }
     }
 
     keys = List<GlobalKey<_BarContainerState>>.generate(
         bars.length, (index) => GlobalKey<_BarContainerState>());
-    widget.logger.d("Keys length: ${keys.length}");
+
+    initBarSchedule();
+  }
+
+  getKey(thisBar) {
+    return keys[bars.indexOf(thisBar)];
   }
 
   @override
@@ -163,7 +184,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                     onPressed: isEditingEnabled
                         ? null
                         : () {
-                            initBarSchedule();
+                            rebuildBarList();
                             startTimer();
                             widget.trackPlayer.play();
                           },
@@ -197,6 +218,12 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                 return Container(); // Return an empty container if sectionIndex is not null and does not match the current index
               }
 
+              List<Bar> sectionBars = [];
+
+              if (widget.song.sections[currentSection].bars!.isNotEmpty) {
+                sectionBars.addAll(
+                    widget.song.sections[currentSection].bars as Iterable<Bar>);
+              }
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,7 +244,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                     spacing: 8.0, // gap between adjacent chips
                     runSpacing: 4.0, // gap between lines
                     children: [
-                      ...bars.map((bar) {
+                      ...sectionBars.map((bar) {
                         //===================================================================================================
                         //add the bar to the schedule
                         addToSchedule(bar);
@@ -293,7 +320,8 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                                   borderRadius: BorderRadius.circular(5.0),
                                   color: const Color.fromARGB(74, 97, 97, 97),
                                 ),
-                                child: const Text("Copying bar...", style: TextStyle(fontSize: 10)),
+                                child: const Text("Copying bar...",
+                                    style: TextStyle(fontSize: 10)),
                               ),
 
                               //===================================================================================================
@@ -345,7 +373,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                               child: BarContainer(
                                 width: 200.0,
                                 height: 50.0,
-                                key: keys[bars.indexOf(bar)],
+                                key: getKey(bar),
                                 padding: const EdgeInsets.all(8.0),
                                 child: Wrap(
                                   spacing: 6.0, // Adjust spacing as needed
@@ -400,11 +428,13 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                           if (section.bars != null) {
                             setState(() {
                               section.bars!.add(result);
+
                               songProvider.saveSong(widget.song);
+                              widget.song.save();
+                              rebuildBarList();
 
                               widget.logger.d(result
                                   .getDebugOutput("Saving song with new bar"));
-                              widget.song.save();
                             });
                           } else {
                             // Handle the case where bars is null or result is null
@@ -422,6 +452,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                                   widget.song.sections[currentSection];
                               section.bars!.add(droppedBar.copy());
                               songProvider.saveSong(widget.song);
+                              rebuildBarList();
 
                               widget.song.save();
                             });
@@ -472,8 +503,9 @@ class BarContainer extends StatefulWidget {
   final double height;
   final EdgeInsets padding;
   final Widget child;
+  bool highlighted = false;
 
-  const BarContainer(
+  BarContainer(
       {super.key,
       required this.width,
       required this.height,
@@ -496,22 +528,21 @@ class _BarContainerState extends State<BarContainer> {
     borderRadius: BorderRadius.circular(5.0),
     color: const Color.fromARGB(255, 255, 255, 255),
   );
-  BoxDecoration _backgroundColor = BoxDecoration(
-    border: Border.all(color: Colors.blueAccent),
-    borderRadius: BorderRadius.circular(5.0),
-    color: const Color.fromARGB(255, 255, 255, 255),
-  );
 
   void highlightBar() {
     setState(() {
-      _backgroundColor = _highlightColor;
+      widget.highlighted = true;
     });
   }
 
   void clearBar() {
     setState(() {
-      _backgroundColor = _clearedColor;
+      widget.highlighted = false;
     });
+  }
+
+  bool isHighlighted() {
+    return widget.highlighted;
   }
 
   @override
@@ -520,7 +551,7 @@ class _BarContainerState extends State<BarContainer> {
       width: widget.width,
       height: widget.height,
       padding: widget.padding,
-      decoration: _backgroundColor,
+      decoration: widget.highlighted ? _highlightColor : _clearedColor,
       child: widget.child,
     );
   }
