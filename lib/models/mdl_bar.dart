@@ -18,7 +18,12 @@ class Bar {
   @HiveField(4)
   int calculatedStartTimeMs = -1;
 
-  Bar({List<Beat>? beats, String? timeSignature = "4/4", String? songId, int? startTimeMs, int? calculatedStartTimeMs})
+  Bar(
+      {List<Beat>? beats,
+      String? timeSignature = "4/4",
+      String? songId,
+      int? startTimeMs,
+      int? calculatedStartTimeMs})
       : id = songId == null || songId == "-2" ? const Uuid().v4() : songId {
     if (beats != null) {
       this.beats = beats;
@@ -117,6 +122,11 @@ class Bar {
     for (var beat in beats) {
       copiedBeats.add(beat.copy());
     }
-    return Bar(beats: copiedBeats, timeSignature: timeSignature, songId: id, startTimeMs: startTimeMs, calculatedStartTimeMs: calculatedStartTimeMs);
+    return Bar(
+        beats: copiedBeats,
+        timeSignature: timeSignature,
+        songId: const Uuid().v4(), // Generate a new ID
+        startTimeMs: startTimeMs,
+        calculatedStartTimeMs: calculatedStartTimeMs);
   }
 }
