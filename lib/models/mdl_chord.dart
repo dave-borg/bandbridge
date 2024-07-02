@@ -3,7 +3,7 @@ import 'package:bandbridge/music_theory/chord_modifiers.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 @HiveType(typeId: 2)
-class Chord {
+class Chord extends HiveObject {
   @HiveField(0)
   String rootNote;
   @HiveField(1)

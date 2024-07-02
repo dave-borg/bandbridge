@@ -6,7 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 @HiveType(typeId: 6)
-class Bar {
+class Bar extends HiveObject {
   @HiveField(0)
   List<Beat> beats = [];
   @HiveField(1)
@@ -17,6 +17,9 @@ class Bar {
   int startTimeMs = -1;
   @HiveField(4)
   int calculatedStartTimeMs = -1;
+  @HiveField(5)
+  bool isHighlighted = false;
+  
 
   Bar(
       {List<Beat>? beats,
@@ -112,8 +115,8 @@ class Bar {
       }
       debugOutput += "\n";
     }
-    debugOutput += "StartTimeMs: ${startTimeMs}\n";
-    debugOutput += "CalculatedStartTimeMs: ${calculatedStartTimeMs}\n";
+    debugOutput += "StartTimeMs: $startTimeMs\n";
+    debugOutput += "CalculatedStartTimeMs: $calculatedStartTimeMs\n";
     return debugOutput;
   }
 
@@ -126,7 +129,7 @@ class Bar {
         beats: copiedBeats,
         timeSignature: timeSignature,
         songId: const Uuid().v4(), // Generate a new ID
-        startTimeMs: startTimeMs,
-        calculatedStartTimeMs: calculatedStartTimeMs);
+        startTimeMs: -1,
+        calculatedStartTimeMs: -1);
   }
 }

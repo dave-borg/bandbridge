@@ -2,7 +2,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
 @HiveType(typeId: 3)
-class Lyric {
+class Lyric extends HiveObject {
   @HiveField(0)
   String text;
   @HiveField(2)

@@ -2,7 +2,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
 @HiveType(typeId: 8)
-class AudioTrack {
+class AudioTrack extends HiveObject  {
   @HiveField(0)
   String trackName;
   @HiveField(1)

@@ -46,33 +46,37 @@ class ChordChartEditor extends StatefulWidget {
 class _ChordChartEditorState extends State<ChordChartEditor> {
   bool isEditingEnabled = true;
   Timer? periodicTimer;
-  List<int> userScheduledBars = [];
-  //List<ScheduledBar> bars = [];
   double barDurationMs = 500.0;
-  Map<Section, List<ScheduledBar>> sectionBars = {};
+  Map<Section, List<Bar>> sectionBars = {};
+  List<TempoBarList> tempoBarLists =
+      []; //need this to keep track of the tempo changes
 
   void startTimer() {
     int currentPlaybackTimeMs = 0;
-    periodicTimer =
-        Timer.periodic(Duration(milliseconds: barDurationMs.round()), (timer) {
+    periodicTimer = Timer.periodic(const Duration(milliseconds: 150), (timer) {
       currentPlaybackTimeMs = widget.trackPlayer.getCurrentPosition();
 
       //for (int i = 0; i < sectionBars.length; i++) {
       for (var sectionBarLists in sectionBars.values) {
         for (var thisBar in sectionBarLists) {
-          if (currentPlaybackTimeMs >= thisBar.bar.calculatedStartTimeMs &&
+          if (currentPlaybackTimeMs >= thisBar.calculatedStartTimeMs &&
               currentPlaybackTimeMs <=
-                  thisBar.bar.calculatedStartTimeMs + barDurationMs) {
+                  thisBar.calculatedStartTimeMs + barDurationMs) {
             // Highlight bar
-            widget.logger.d("Highlighting bar: $thisBar");
-            setState(() {
-              thisBar.isHighlighted = true;
-            });
+            if (!thisBar.isHighlighted) {
+              setState(() {
+                thisBar.isHighlighted = true;
+                // widget.logger.d(
+                //     "Highlighting bar: ${thisBar.id}\nCurrent playback time: $currentPlaybackTimeMs\nCalculated start time: ${thisBar.calculatedStartTimeMs}\nUser Start Time: ${thisBar.startTimeMs}");
+              });
+            }
           } else {
             // Unhighlight bar
-            setState(() {
-              thisBar.isHighlighted = false;
-            });
+            if (thisBar.isHighlighted) {
+              setState(() {
+                thisBar.isHighlighted = false;
+              });
+            }
           }
         }
       }
@@ -85,29 +89,48 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
     int beatsPerBar = int.parse(widget.song.timeSignature.split('/')[0]);
     double beatDuration = minuteInMs / tempoBpm!;
     barDurationMs = beatDuration * beatsPerBar;
+    tempoBarLists = [];
 
-    int barCount = 0;
+    var thisTempoList = TempoBarList();
+    tempoBarLists.add(thisTempoList);
+    thisTempoList.startMs = 0;
 
-    for (var thisSection in widget.song.sections) {
-      for (int i = 0; i < thisSection.bars!.length; i++) {
-        int calculatedStartTime =
-            ((barCount + i + 1) * barDurationMs).round().toInt();
-        thisSection.bars![i].calculatedStartTimeMs = calculatedStartTime;
-        widget.logger
-            .d("Calculated start time for bar $i: $calculatedStartTime");
+    for (int i = 0; i < widget.song.sections.length; i++) {
+      var thisSection = sectionBars.keys.elementAt(i);
+      if (thisSection.bars != null) {
+        for (var j = 0; j < thisSection.bars!.length; j++) {
+          var thisBar = thisSection.bars![j];
+          //this bar has a start time set by the user
+          if (thisBar.startTimeMs != -1) {
+            thisTempoList.endMs = thisBar.startTimeMs;
+            thisTempoList.calculateSchedule();
+            thisTempoList = TempoBarList();
+            tempoBarLists.add(thisTempoList);
+          } else {
+            thisTempoList.endMs += barDurationMs.round();
+          }
+          thisTempoList.addBar(thisBar);
+
+          //last bar in the song
+          if (i == widget.song.sections.length - 1 &&
+              j == thisSection.bars!.length - 1) {
+            // thisTempoList.endMs =
+            //     thisBar.calculatedStartTimeMs.round() + barDurationMs.round();
+            thisTempoList.calculateSchedule(isLastTempo: true, defaultDuration: barDurationMs.round());
+          }
+        }
       }
-      barCount += thisSection.bars!.length;
     }
+    var logData = "=====================\n";
+    for (var tl in tempoBarLists) {
+      logData += tl.debugInfo();
+    }
+    widget.logger.d(logData);
   }
 
   void stopTimer() {
     periodicTimer?.cancel();
   }
-
-  // void addToSchedule(ScheduledBar scheduledBar) {
-  //   userScheduledBars.add(scheduledBar.bar.startTimeMs);
-  //   bars.add(scheduledBar);
-  // }
 
   @override
   void dispose() {
@@ -124,9 +147,9 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
   void rebuildBarList() {
     sectionBars = {};
     for (var thisSection in widget.song.sections) {
-      List<ScheduledBar> newBars = [];
+      List<Bar> newBars = [];
       for (var thisBar in thisSection.bars!) {
-        newBars.add(ScheduledBar(thisBar));
+        newBars.add(thisBar);
       }
       sectionBars.addEntries([MapEntry(thisSection, newBars)]);
     }
@@ -134,15 +157,26 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
     initBarSchedule();
   }
 
-  List<ScheduledBar>? getSectionBars(Section thisSection) {
+  List<Bar>? getSectionBars(Section thisSection) {
     return sectionBars[thisSection];
+  }
+
+  clearHighlightedBars() {
+    for (var sectionBarLists in sectionBars.values) {
+      for (var thisBar in sectionBarLists) {
+        if (thisBar.isHighlighted) {
+          setState(() {
+            thisBar.isHighlighted = false;
+            return;
+          });
+        }
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final songProvider = Provider.of<SongProvider>(context);
-
-    widget.logger.d(widget.song.getDebugOutput("SongEditor"));
 
     return Column(
       children: [
@@ -207,6 +241,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                           : () {
                               stopTimer();
                               widget.trackPlayer.stop();
+                              clearHighlightedBars();
                             },
                       icon: const Icon(Icons.stop)),
                 ],
@@ -223,7 +258,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                 return Container(); // Return an empty container if sectionIndex is not null and does not match the current index
               }
 
-              List<ScheduledBar> sectionBars = [];
+              List<Bar> sectionBars = [];
 
               if (widget.song.sections[currentSection].bars != null) {
                 sectionBars.addAll(
@@ -249,11 +284,9 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                     spacing: 8.0, // gap between adjacent chips
                     runSpacing: 4.0, // gap between lines
                     children: [
-                      ...sectionBars.map((scheduledBar) {
+                      ...sectionBars.map((bar) {
                         //===================================================================================================
                         //add the bar to the schedule
-                        //addToSchedule(scheduledBar);
-                        //initBarSchedule();
 
                         return GestureDetector(
                           onTap: () async {
@@ -263,7 +296,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                                 builder: (BuildContext context) {
                                   return BarDialog(
                                       song: widget.song,
-                                      bar: scheduledBar.bar,
+                                      bar: bar,
                                       dialogTitle: 'Edit Bar');
                                 },
                               );
@@ -271,7 +304,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                               setState(() {
                                 int index = widget
                                     .song.sections[currentSection].bars!
-                                    .indexOf(scheduledBar.bar);
+                                    .indexOf(bar);
                                 if (index != -1) {
                                   widget.song.sections[currentSection]
                                       .bars![index] = result;
@@ -282,29 +315,31 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                                 widget.song.save();
                               });
                             } else {
-                              widget.logger.d(
-                                  "Tap on bar. Set the sync time\n${widget.trackPlayer.getCurrentPosition()}ms");
-                              scheduledBar.bar.startTimeMs =
+                              bar.startTimeMs =
                                   widget.trackPlayer.getCurrentPosition();
+                              widget.song.save();
+                              rebuildBarList();
+
+                              widget.logger.d(
+                                  "Tap on bar.\nCurrent Time: ${widget.trackPlayer.getCurrentPosition()}ms\n${bar.getDebugOutput("Bar")}");
                             }
                           },
                           child: Dismissible(
-                            key: Key(scheduledBar.bar
+                            key: Key(bar
                                 .id), // Ensure you have a unique identifier for each bar
                             direction: DismissDirection
                                 .horizontal, // Allows swiping in both directions
                             onDismissed: (direction) {
                               // Remove the bar from the list
+                              int index = widget
+                                  .song.sections[currentSection].bars!
+                                  .indexOf(bar);
                               setState(() {
-                                //int currentSectionIndex = // Determine the current section index
-                                int index = widget
-                                    .song.sections[currentSection].bars!
-                                    .indexOf(scheduledBar.bar);
                                 if (index != -1) {
                                   widget.song.sections[currentSection].bars!
                                       .removeAt(index);
-                                  songProvider
-                                      .saveSong(widget.song); // Save changes
+                                  songProvider.saveSong(widget.song);
+                                  rebuildBarList(); // Save changes
                                 }
                               });
 
@@ -316,7 +351,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                             background: Container(
                                 color: Colors.red), // Background when swiping
                             child: LongPressDraggable(
-                              data: scheduledBar,
+                              data: bar,
                               feedback: Container(
                                 width: 150.0,
                                 height: 45.0,
@@ -334,7 +369,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                               //Bar while being dragged
                               childWhenDragging: Container(
                                 width: 200.0,
-                                height: 60.0,
+                                height: 50.0,
                                 padding: const EdgeInsets.all(8.0),
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Colors.blueAccent),
@@ -342,7 +377,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                                 ),
                                 child: Wrap(
                                   spacing: 6.0, // Adjust spacing as needed
-                                  children: scheduledBar.bar.beats
+                                  children: bar.beats
                                       .map((beat) {
                                         List<Widget> widgets = [];
 
@@ -383,29 +418,46 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Colors.blueAccent),
                                   borderRadius: BorderRadius.circular(5.0),
-                                  color: scheduledBar.isHighlighted
+                                  color: bar.isHighlighted
                                       ? const Color.fromARGB(255, 78, 119, 188)
                                       : const Color.fromARGB(
                                           255, 255, 255, 255),
                                 ),
                                 child: Wrap(
                                   spacing: 6.0, // Adjust spacing as needed
-                                  children: scheduledBar.bar.beats
+                                  children: bar.beats
                                       .map((beat) {
                                         List<Widget> widgets = [];
+
+//First widget - debug output for the bar
+                                        if (bar.beats.indexOf(beat) == 0) {
+                                          widgets.add(
+                                            SizedBox(
+                                              width: 35,
+                                              height: 30,
+                                              child: Text(
+                                                "${bar.startTimeMs}ms\n${bar.calculatedStartTimeMs}ms",
+                                                style: const TextStyle(
+                                                    fontSize: 6),
+                                              ),
+                                            ),
+                                          );
+                                        }
 
                                         if (beat.chord != null) {
                                           widgets.add(
                                             ChordContainer(
                                               chord: beat.chord!,
-                                              width: 35,
+                                              //width: 35,
+                                              width: 15,
                                               height: 50,
                                             ),
                                           );
                                         } else {
                                           widgets.add(
                                             const SizedBox(
-                                              width: 35,
+                                              //width: 35,
+                                              width: 15,
                                               height: 30,
                                               child: Text(
                                                 " /",
@@ -511,11 +563,54 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
   }
 }
 
-//Wrap the Bar class with an isHighlighted property. I don't want to include this
-//in the Bar class as it's purely related to how the Bar is being displayed.
-class ScheduledBar {
-  Bar bar;
-  bool isHighlighted = false;
+class TempoBarList {
+  var logger = Logger(level: LoggingUtil.loggingLevel('TempoBarList'));
+  List<Bar> bars = [];
+  int startMs = 0;
+  int endMs = 0;
 
-  ScheduledBar(this.bar);
+  void addBar(Bar bar) {
+    bars.add(bar);
+  }
+
+  void calculateSchedule(
+      {bool isLastTempo = false, int defaultDuration = 100}) {
+    // If the first bar has a start time, use that as the start time for the list
+    // A bar with a user-set start time should only be the first bar in the list
+    if (bars.isNotEmpty && bars[0].startTimeMs != -1) {
+      startMs = bars[0].startTimeMs;
+    }
+
+    int diffMs = endMs - startMs;
+    double barDurationMs = diffMs / bars.length;
+
+    // logger.d(
+    //     "Start: $startMs\nEnd: $endMs\nDiff: $diffMs\nBar duration: $barDurationMs\nBars: ${bars.length}");
+
+    for (int i = 0; i < bars.length; i++) {
+      var thisBar = bars[i];
+
+      if (!isLastTempo) {
+        if (thisBar.startTimeMs != -1) {
+          thisBar.calculatedStartTimeMs = thisBar.startTimeMs;
+        } else {
+          thisBar.calculatedStartTimeMs = startMs + (barDurationMs * i).round();
+        }
+      } else {
+        thisBar.calculatedStartTimeMs = startMs + (defaultDuration * i).round();
+      }
+    }
+    // if (bars.isNotEmpty) {
+    //   logger.d("Bar length: ${bars.length}");
+    //   logger.d(
+    //       "Bar 1\nCalculated Start: ${bars[0].calculatedStartTimeMs}\nUser start: ${bars[0].startTimeMs}\n\nBar 2\nCalculated Start: ${bars[1].calculatedStartTimeMs}\nUser start: ${bars[1].startTimeMs}\n\nBar 3\nCalculated Start: ${bars[2].calculatedStartTimeMs}\nUser start: ${bars[2].startTimeMs}\n");
+    // }
+  }
+
+  String debugInfo() {
+    String output = "TempoBarList\n";
+    output +=
+        "====================\nStart: $startMs\nEnd: $endMs\nDuration: ${(endMs - startMs) / bars.length}\nBars: ${bars.length}\n\n";
+    return output;
+  }
 }
