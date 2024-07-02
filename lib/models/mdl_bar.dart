@@ -6,15 +6,27 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 @HiveType(typeId: 6)
-class Bar {
+class Bar extends HiveObject {
   @HiveField(0)
   List<Beat> beats = [];
   @HiveField(1)
   String timeSignature = "4/4";
   @HiveField(2)
   String id = "-1";
+  @HiveField(3)
+  int startTimeMs = -1;
+  @HiveField(4)
+  int calculatedStartTimeMs = -1;
+  @HiveField(5)
+  bool isHighlighted = false;
+  
 
-  Bar({List<Beat>? beats, String? timeSignature = "4/4", String? songId})
+  Bar(
+      {List<Beat>? beats,
+      String? timeSignature = "4/4",
+      String? songId,
+      int? startTimeMs,
+      int? calculatedStartTimeMs})
       : id = songId == null || songId == "-2" ? const Uuid().v4() : songId {
     if (beats != null) {
       this.beats = beats;
@@ -33,6 +45,8 @@ class Bar {
     return Bar(
       beats: beats,
       timeSignature: json['timeSignature'] ?? "4/4",
+      startTimeMs: json['startTimeMs'],
+      calculatedStartTimeMs: json['calculatedStartTimeMs'],
     );
   }
 
@@ -45,6 +59,8 @@ class Bar {
       'beats': beatsJson,
       'timeSignature': timeSignature,
       'id': id,
+      'startTimeMs': startTimeMs,
+      'calculatedStartTimeMs': calculatedStartTimeMs,
     };
   }
 
@@ -99,6 +115,8 @@ class Bar {
       }
       debugOutput += "\n";
     }
+    debugOutput += "StartTimeMs: $startTimeMs\n";
+    debugOutput += "CalculatedStartTimeMs: $calculatedStartTimeMs\n";
     return debugOutput;
   }
 
@@ -107,6 +125,11 @@ class Bar {
     for (var beat in beats) {
       copiedBeats.add(beat.copy());
     }
-    return Bar(beats: copiedBeats, timeSignature: timeSignature, songId: id);
+    return Bar(
+        beats: copiedBeats,
+        timeSignature: timeSignature,
+        songId: const Uuid().v4(), // Generate a new ID
+        startTimeMs: -1,
+        calculatedStartTimeMs: -1);
   }
 }

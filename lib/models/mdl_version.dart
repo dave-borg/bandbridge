@@ -1,7 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
 @HiveType(typeId: 5)
-class Version {
+class Version extends HiveObject {
   @HiveField(0)
   String? hash;
   @HiveField(1)

@@ -1,7 +1,7 @@
 loggers:
-  TrackWidget:
+  ChordChartEditor:
     level: DEBUG
-  AudioEditor:
+  TempoBarList:
     level: DEBUG
   DEFAULT:
     level: INFO

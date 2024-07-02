@@ -9,7 +9,7 @@ import 'package:logger/logger.dart';
 ///A Section is a part of a song such as Verse, Chorus, Bridge, etc.
 ///
 ///A Section is made up of Bars. Each Bar is made up of Beats.
-class Section {
+class Section extends HiveObject {
   var logger = Logger(level: LoggingUtil.loggingLevel('Section'));
   @HiveField(0)
   String section;

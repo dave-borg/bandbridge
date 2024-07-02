@@ -3,7 +3,7 @@ import 'package:bandbridge/models/mdl_lyric.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 @HiveType(typeId: 7)
-class Beat {
+class Beat extends HiveObject {
   @HiveField(0)
   Chord? chord;
   @HiveField(1)
