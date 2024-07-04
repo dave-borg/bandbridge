@@ -169,6 +169,19 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
     return sectionBars[thisSection];
   }
 
+  void removeUserTiming() {
+    for (var sectionBarLists in sectionBars.values) {
+      for (var thisBar in sectionBarLists) {
+        if (thisBar.startTimeMs != -1) {
+          setState(() {
+            thisBar.startTimeMs = -1;
+            return;
+          });
+        }
+      }
+    }
+  }
+
   clearHighlightedBars() {
     for (var sectionBarLists in sectionBars.values) {
       for (var thisBar in sectionBarLists) {
@@ -241,10 +254,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                           },
                     icon: const Icon(Icons.play_arrow),
                   ),
-                  IconButton(
-                    onPressed: isEditingEnabled ? null : () {},
-                    icon: const Icon(Icons.pause),
-                  ),
+
                   //===================================================================================================
                   //Stop the audio tracks
                   IconButton(
@@ -256,6 +266,22 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                               clearHighlightedBars();
                             },
                       icon: const Icon(Icons.stop)),
+                  //===================================================================================================
+                  //Clear timings
+                  IconButton(
+                    tooltip: "Clear user timings",
+                    onPressed: isEditingEnabled
+                        ? null
+                        : () {
+                            //clear user timing
+                            stopTimer();
+                            widget.trackPlayer.stop();
+                            removeUserTiming();
+                            clearHighlightedBars();
+                            rebuildBarList();
+                          },
+                    icon: const Icon(Icons.clear_all),
+                  ),
                 ],
               ),
             ],
