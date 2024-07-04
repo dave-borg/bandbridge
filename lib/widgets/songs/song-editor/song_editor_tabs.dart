@@ -35,15 +35,18 @@ class _SongEditorTabsState extends State<SongEditorTabs>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Song'),
-            Tab(text: 'Chords'),
-            Tab(text: 'Lyrics'),
-            Tab(text: 'Audio'),
-            Tab(text: 'MIDI'),
-          ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(00),
+          child: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Song'),
+              Tab(text: 'Chords'),
+              Tab(text: 'Lyrics'),
+              Tab(text: 'Audio'),
+              Tab(text: 'MIDI'),
+            ],
+          ),
         ),
       ),
       body: TabBarView(
