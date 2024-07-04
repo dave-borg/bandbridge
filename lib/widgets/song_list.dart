@@ -228,7 +228,9 @@ class _SongListState extends State<SongList> {
                     ),
                     onPressed: () {
                       logger.d('Song selected: ${thisSong.title}');
+                      logger.d('Current song: ${currentSongProvider.currentSong.toJson()}');
                       currentSongProvider.setCurrentSong(thisSong);
+                      logger.d('Current song: ${currentSongProvider.currentSong.toJson()}');
                     },
                     child: Align(
                         alignment: Alignment.centerLeft,

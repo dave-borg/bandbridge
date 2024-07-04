@@ -11,25 +11,13 @@ class BarAdapter extends TypeAdapter<Bar> {
   Bar read(BinaryReader reader) {
     final int version = reader.readByte();
 
-    switch (version) {
-      case 1:
-        return Bar(
-          beats: reader.readList().cast<Beat>(),
-          timeSignature: reader.read(),
-          songId: reader.read(),
-          startTimeMs: reader.read(),
-        );
-       case 2:
-        return Bar(
-          beats: reader.readList().cast<Beat>(),
-          timeSignature: reader.read(),
-          songId: reader.read(),
-          startTimeMs: reader.read(),
-          calculatedStartTimeMs: reader.read(),
-        );
-      default:
-        throw Exception('Unknown version');
-    }
+    return Bar(
+      beats: reader.readList().cast<Beat>(),
+      timeSignature: reader.read(),
+      id: reader.read(),
+      startTimeMs: reader.read(),
+      calculatedStartTimeMs: reader.read(),
+    );
   }
 
   @override

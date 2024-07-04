@@ -1,7 +1,9 @@
 loggers:
   ChordChartEditor:
     level: DEBUG
-  TempoBarList:
+  SongList:
+    level: DEBUG
+  CurrentSongProvider:
     level: DEBUG
   DEFAULT:
     level: INFO

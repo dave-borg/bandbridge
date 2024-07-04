@@ -25,7 +25,7 @@ Future<void> main() async {
 
   final document = await getApplicationDocumentsDirectory();
 
-// print(document.path);
+ print(document.path);
 
   await Hive.initFlutter(document.path);
   Hive.registerAdapter(LyricAdapter());

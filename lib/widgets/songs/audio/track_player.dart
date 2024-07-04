@@ -25,15 +25,12 @@ class TrackPlayer {
   }
 
   void play() {
-    print('Playing ${song.title}');
     for (int i = 0; i < song.audioTracks.length; i++) {
       playTrack(i);
     }
   }
 
   void playTrack(int trackIndex) {
-    print('Playing ${song.title} - Track $trackIndex');
-
     players[trackIndex].play();
   }
 
@@ -51,7 +48,7 @@ class TrackPlayer {
   void loadPlayers() {
     for (var thisTrack in song.audioTracks) {
       var thisPlayer = AudioPlayer();
-      var filePath = '${documentsDir!.path}/${song.id}/${thisTrack.fileName}';
+      var filePath = '${documentsDir.path}/${song.id}/${thisTrack.fileName}';
       thisPlayer.setAudioSource(
         AudioSource.uri(
           Uri.file(filePath),
