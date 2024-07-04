@@ -1,0 +1,164 @@
+{id: ff7fdf23-7f6b-494a-995b-2ceebcf7e5f3, title: Get Back, artist: The Age, duration: , initialKey: A, tempo: 123.7773, timeSignature: 4/4, sections: [
+        {section: Intro, timestamp: , duration: , bars: [
+                {beats: [
+                        {chord: {name: A, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        }
+                    ], timeSignature: 4/4, id: 142f8935-79b2-43df-8fd1-513e418edb57, startTimeMs: 4071, calculatedStartTimeMs: 0
+                },
+                {beats: [
+                        {chord: {name: A, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        }
+                    ], timeSignature: 4/4, id: 880865f1-df8c-4fcf-8d2b-3086c000a981, startTimeMs: -1, calculatedStartTimeMs: 1939
+                },
+                {beats: [
+                        {chord: {name: A, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        }
+                    ], timeSignature: 4/4, id: 95e01c91-27e8-4334-89f8-614ae28591d8, startTimeMs: -1, calculatedStartTimeMs: 3878
+                },
+                {beats: [
+                        {chord: {name: A, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: {name: G, beats: 1, bass: null, chordQuality: null, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: {name: D, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        }
+                    ], timeSignature: 4/4, id: bc1ba6bf-4a00-44ce-9c1f-7f1b12b4dd5a, startTimeMs: -1, calculatedStartTimeMs: 5817
+                }
+            ], unsynchronisedLyrics: []
+        },
+        {section: Verse, timestamp: , duration: , bars: [
+                {beats: [
+                        {chord: {name: A, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        }
+                    ], timeSignature: 4/4, id: 64aac5a0-9b5e-48ee-be69-561e4e808d99, startTimeMs: -1, calculatedStartTimeMs: 7756
+                },
+                {beats: [
+                        {chord: {name: A, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        }
+                    ], timeSignature: 4/4, id: 976ee84b-f4e6-44dc-a3ad-abe19af771e2, startTimeMs: -1, calculatedStartTimeMs: 9695
+                },
+                {beats: [
+                        {chord: {name: D, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        }
+                    ], timeSignature: 4/4, id: 138219c4-864d-4d66-88e1-613e73527c82, startTimeMs: -1, calculatedStartTimeMs: 11634
+                },
+                {beats: [
+                        {chord: {name: A, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: {name: G, beats: 1, bass: null, chordQuality: null, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: {name: D, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        }
+                    ], timeSignature: 4/4, id: 7003403b-b6ec-4a75-b1a7-70e78c1f066e, startTimeMs: -1, calculatedStartTimeMs: 13573
+                },
+                {beats: [
+                        {chord: {name: A, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        }
+                    ], timeSignature: 4/4, id: bab113af-dbca-4ad8-baf2-1d97d39f62a8, startTimeMs: -1, calculatedStartTimeMs: 15512
+                },
+                {beats: [
+                        {chord: {name: A, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        }
+                    ], timeSignature: 4/4, id: b819c3c0-ccf5-4dbc-b0d7-007ac973cbd6, startTimeMs: -1, calculatedStartTimeMs: 17451
+                },
+                {beats: [
+                        {chord: {name: D, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        }
+                    ], timeSignature: 4/4, id: ebcee7a9-43d9-49ce-9616-435a716d040d, startTimeMs: -1, calculatedStartTimeMs: 19390
+                },
+                {beats: [
+                        {chord: {name: A, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: null, lyric: null
+                        },
+                        {chord: {name: G, beats: 1, bass: null, chordQuality: null, chordExtension: null
+                            }, lyric: null
+                        },
+                        {chord: {name: D, beats: 1, bass: null, chordQuality: 0, chordExtension: null
+                            }, lyric: null
+                        }
+                    ], timeSignature: 4/4, id: e4bab1a0-eb63-4e8e-919d-e027a7e45f53, startTimeMs: -1, calculatedStartTimeMs: 21329
+                }
+            ], unsynchronisedLyrics: []
+        }
+    ], unsynchronisedLyrics: [], audioTracks: [
+        {trackName: Track 1, fileName: Get Back - Track.mp3, volume: 75.0, foh: true
+        },
+        {trackName: Track 2, fileName: Get Back - Click.mp3, volume: 75.0, foh: true
+        }
+    ]
+}

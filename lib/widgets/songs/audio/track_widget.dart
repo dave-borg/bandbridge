@@ -87,8 +87,8 @@ class _TrackWidgetState extends State<TrackWidget> {
     Song song = widget.currentSongProvider.currentSong;
     Directory? documentsDir;
     String? filePath;
-    double currentSliderValue = widget.audioTrack.volume ?? 75;
-    bool currentPohValue = widget.audioTrack.foh ?? false;
+    double currentSliderValue = widget.audioTrack.volume;
+    bool currentPohValue = widget.audioTrack.foh;
 
     return Container(
       decoration: BoxDecoration(

@@ -14,7 +14,7 @@ class Bar extends HiveObject {
   @HiveField(2)
   String id = "-1";
   @HiveField(3)
-  int startTimeMs = -1;
+  int startTimeMs;
   @HiveField(4)
   int calculatedStartTimeMs = -1;
   @HiveField(5)
@@ -24,10 +24,10 @@ class Bar extends HiveObject {
   Bar(
       {List<Beat>? beats,
       String? timeSignature = "4/4",
-      String? songId,
-      int? startTimeMs,
+      String? id,
+      this.startTimeMs = -1,
       int? calculatedStartTimeMs})
-      : id = songId == null || songId == "-2" ? const Uuid().v4() : songId {
+      : id = id == null || id == "-2" ? const Uuid().v4() : id {
     if (beats != null) {
       this.beats = beats;
     } else {
@@ -45,8 +45,9 @@ class Bar extends HiveObject {
     return Bar(
       beats: beats,
       timeSignature: json['timeSignature'] ?? "4/4",
-      startTimeMs: json['startTimeMs'],
-      calculatedStartTimeMs: json['calculatedStartTimeMs'],
+      id: json['id'],
+      startTimeMs: json['startTimeMs'] as int,
+      calculatedStartTimeMs: json['calculatedStartTimeMs'] as int,
     );
   }
 
@@ -128,7 +129,7 @@ class Bar extends HiveObject {
     return Bar(
         beats: copiedBeats,
         timeSignature: timeSignature,
-        songId: const Uuid().v4(), // Generate a new ID
+        id: const Uuid().v4(), // Generate a new ID
         startTimeMs: -1,
         calculatedStartTimeMs: -1);
   }

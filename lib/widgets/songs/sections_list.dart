@@ -82,7 +82,7 @@ class _SectionsListState extends State<SectionsList> {
                         if (result != null) {
                           setState(() {
                             widget.song.addStructure(result);
-                            widget.song.save();
+                            currentSongProvider.saveSong(widget.song);
                           });
                         }
                       },
@@ -124,10 +124,9 @@ class _SectionsListState extends State<SectionsList> {
                                 // Delete the section
                                 setState(() {
                                   // Assuming sections is your list of sections
-                                  widget.song.sections
-                                      .removeAt(selectedSectionIndex!);
-                                  selectedSectionIndex =
-                                      null; // Reset selection
+                                  widget.song.sections.removeAt(selectedSectionIndex!);
+                                  currentSongProvider.saveSong(widget.song);
+                                  selectedSectionIndex = null; 
                                 });
                               }
                             }
