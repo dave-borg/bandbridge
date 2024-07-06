@@ -1,9 +1,5 @@
 loggers:
-  ChordChartEditor:
-    level: DEBUG
-  SongList:
-    level: DEBUG
-  CurrentSongProvider:
+  LyricsEditor:
     level: DEBUG
   DEFAULT:
     level: INFO
