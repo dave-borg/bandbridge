@@ -79,4 +79,44 @@ class Section extends HiveObject {
 
     unsynchronisedLyrics = lyricsToMove;
   }
+
+  void scheduleLyrics() {
+    if (unsynchronisedLyrics!.length == 0) {
+      logger.d('No lyrics to schedule');
+      return;
+    }
+
+    if (bars == null) {
+      logger.d('No bars to schedule lyrics into');
+      return;
+    } else if (bars![0].calculatedStartTimeMs == -1) {
+      logger.d('Bars have not been scheduled');
+      return;
+    }
+
+    int numberOfBars = bars!.length;
+    int numberOfLyrics = unsynchronisedLyrics!.length;
+    int barsPerLyric = numberOfBars ~/ numberOfLyrics;
+
+    for (int i = 0; i < numberOfLyrics; i++) {
+      int barIndex = i * barsPerLyric;
+
+      if (barIndex >= numberOfBars) {
+        barIndex = numberOfBars - 1;
+      }
+
+      if (unsynchronisedLyrics![i].startTimeMs != -1) {
+        unsynchronisedLyrics![i].calculatedStartTimeMs =
+            unsynchronisedLyrics![i].startTimeMs;
+      } else {
+        unsynchronisedLyrics![i].calculatedStartTimeMs =
+            bars![barIndex].calculatedStartTimeMs;
+      }
+
+      logger.d(
+          "Lyric ${unsynchronisedLyrics![i].text} scheduled at bar $barIndex");
+    }
+
+    // unsynchronisedLyrics = [];
+  }
 }

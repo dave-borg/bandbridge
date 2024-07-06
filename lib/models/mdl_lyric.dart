@@ -7,16 +7,25 @@ class Lyric extends HiveObject {
   String text;
   @HiveField(2)
   String beats;
+  @HiveField(3)
+  int startTimeMs;
+  @HiveField(4)
+  int calculatedStartTimeMs;
+  @HiveField(5)
+  bool isHighlighted = false;
 
   Lyric({
     required this.text,
     required this.beats,
+    this.startTimeMs = -1,
+    this.calculatedStartTimeMs = -1,
   });
 
   factory Lyric.fromJson(Map<String, dynamic> json) {
     return Lyric(
       text: json['text'],
       beats: json['beats'],
+      startTimeMs: json['startTimeMs'],
     );
   }
 
@@ -24,6 +33,7 @@ class Lyric extends HiveObject {
     return {
       'text': text,
       'beats': beats,
+      'startTimeMs': startTimeMs,
     };
   }
 
@@ -31,6 +41,7 @@ class Lyric extends HiveObject {
     return Lyric(
       text: text,
       beats: beats,
+      startTimeMs: -1,
     );
   }
 }

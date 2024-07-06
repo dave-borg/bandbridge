@@ -15,6 +15,7 @@ class LyricAdapter extends TypeAdapter<Lyric> {
         return Lyric(
           text: reader.read(),
           beats: reader.read(),
+          startTimeMs: reader.read() as int,
         );
       default:
         throw Exception('Unknown version');
@@ -26,5 +27,6 @@ class LyricAdapter extends TypeAdapter<Lyric> {
     writer.writeByte(currentVersion);
     writer.write(obj.text);
     writer.write(obj.beats);
+    writer.write(obj.startTimeMs);
   }
 }
