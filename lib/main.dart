@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bandbridge/models/current_gig.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_audio.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_bar.dart';
@@ -15,13 +17,16 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:yaml/yaml.dart';
 import 'login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
 //Load the logging configuration from the YAML file
-  await LoggingUtil.preloadYamlContent();
+  var yamlContent = await File('assets/logging_conf.yaml').readAsString();
+	var doc = loadYaml(yamlContent);
+	LoggingUtil.preloadYamlContent(doc);
 
   final document = await getApplicationDocumentsDirectory();
 

@@ -6,7 +6,7 @@ import 'package:logger/logger.dart';
 class LoggingUtil {
   static YamlMap? _yamlCache;
   // Method to preload YAML content asynchronously
-  static Future<void> preloadYamlContent() async {
+  static Future<void> preloadYamlContent(doc) async {
     final yamlString = await rootBundle.loadString('assets/logging_conf.yaml');
     _yamlCache = loadYaml(yamlString);
   }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bandbridge/models/hive_adapters/adpt_chord.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_lyric.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_section.dart';
@@ -9,7 +11,8 @@ import 'package:bandbridge/utils/song_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:bandbridge/widgets/songs/song-editor/song_editor_tabs.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart'; // Replace with your actual import path
+import 'package:path_provider/path_provider.dart';
+import 'package:yaml/yaml.dart'; // Replace with your actual import path
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +24,9 @@ void main() async {
   Hive.registerAdapter(LyricAdapter());
   Hive.registerAdapter(VersionAdapter());
 
-  await LoggingUtil.preloadYamlContent();
+  var yamlContent = await File('assets/logging_conf.yaml').readAsString();
+	var doc = loadYaml(yamlContent);
+	LoggingUtil.preloadYamlContent(doc);
 
   runApp(const MaterialApp(home: SongEditorWrapper()));
 }
