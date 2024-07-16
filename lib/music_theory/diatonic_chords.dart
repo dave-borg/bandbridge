@@ -41,12 +41,14 @@ class DiatonicChords {
 
   static Chord getDiatonicChord(
       String key, ChordType chordType, int scaleDegree) {
-    
     RegExp regExp = RegExp(r'^[A-G]#?');
-  Match? match = regExp.firstMatch(key);
+    Match? match = regExp.firstMatch(key);
 
     // Find the starting index of the key in the chromatic scale
-    final int keyIndex = chromaticScale.indexOf( match?.group(0) ?? '' );
+    final int keyIndex = chromaticScale.indexOf(match?.group(0) ?? '');
+
+    print("key: $key");
+    print("keyIndex: $keyIndex");
 
     // Select the scale pattern based on the chord type
     final List<int> scalePattern =
@@ -55,7 +57,10 @@ class DiatonicChords {
     // Calculate the note index in the chromatic scale based on the scale degree
     final int noteIndex =
         (keyIndex + scalePattern[scaleDegree]) % chromaticScale.length;
+
+    print("noteIndex: $noteIndex");
     final String chordBaseNote = chromaticScale[noteIndex];
+    print("chordBaseNote: $chordBaseNote");
 
     // Determine the chord type for the scale degree
     final List<ChordType> pattern =

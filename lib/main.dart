@@ -14,6 +14,7 @@ import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/songs_gigs_main.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -24,13 +25,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
 //Load the logging configuration from the YAML file
-  var yamlContent = await File('assets/logging_conf.yaml').readAsString();
-	var doc = loadYaml(yamlContent);
-	LoggingUtil.preloadYamlContent(doc);
+  String yamlContent = await rootBundle.loadString('assets/logging_conf.yaml');
+  var doc = loadYaml(yamlContent);
+  LoggingUtil.preloadYamlContent(doc);
 
   final document = await getApplicationDocumentsDirectory();
 
- print(document.path);
+  print(document.path);
 
   await Hive.initFlutter(document.path);
   Hive.registerAdapter(LyricAdapter());

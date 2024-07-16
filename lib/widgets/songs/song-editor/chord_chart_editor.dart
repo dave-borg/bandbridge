@@ -506,16 +506,16 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                                           widgets.add(
                                             ChordContainer(
                                               chord: beat.chord!,
-                                              //width: 35,
-                                              width: 15,
+                                              width: 35,
+                                              // width: 15,
                                               height: 50,
                                             ),
                                           );
                                         } else {
                                           widgets.add(
                                             const SizedBox(
-                                              //width: 35,
-                                              width: 15,
+                                              width: 35,
+                                              //width: 15,
                                               height: 30,
                                               child: Text(
                                                 " /",
