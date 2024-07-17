@@ -56,7 +56,7 @@ class DiatonicChords {
 
     // Calculate the note index in the chromatic scale based on the scale degree
     final int noteIndex =
-        (keyIndex + scalePattern[scaleDegree]) % chromaticScale.length;
+        (keyIndex + scalePattern[scaleDegree - 1]) % chromaticScale.length;
 
     print("noteIndex: $noteIndex");
     final String chordBaseNote = chromaticScale[noteIndex];
@@ -65,7 +65,7 @@ class DiatonicChords {
     // Determine the chord type for the scale degree
     final List<ChordType> pattern =
         chordType == ChordType.major ? majorChordPattern : minorChordPattern;
-    final ChordType degreeChordType = pattern[scaleDegree];
+    final ChordType degreeChordType = pattern[scaleDegree - 1];
 
     // Construct the chord name based on the base note and the chord type
     Chord rValue = Chord(rootNote: chordBaseNote, beats: '1');
