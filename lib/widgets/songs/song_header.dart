@@ -48,6 +48,7 @@ class _SongHeaderState extends State<SongHeader> {
                         child: Row(
                           children: [
                             Text(
+                              key: const Key('songHeader_songTitle'),
                               currentSong.title,
                               style: Theme.of(context).textTheme.headlineLarge,
                             ),
@@ -134,6 +135,7 @@ class _SongHeaderState extends State<SongHeader> {
                         child: Row(
                           children: [
                             Text(
+                              key: const Key('songHeader_songArtist'),
                               currentSong.artist,
                               style: Theme.of(context).textTheme.headlineSmall,
                             ),

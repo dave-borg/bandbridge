@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:bandbridge/models/current_gig.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_audio.dart';
 import 'package:bandbridge/models/hive_adapters/adpt_bar.dart';
@@ -21,6 +19,8 @@ import 'package:provider/provider.dart';
 import 'package:yaml/yaml.dart';
 import 'login.dart';
 
+
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -31,7 +31,7 @@ Future<void> main() async {
 
   final document = await getApplicationDocumentsDirectory();
 
-  print(document.path);
+  debugPrint(document.path);
 
   await Hive.initFlutter(document.path);
   Hive.registerAdapter(LyricAdapter());
