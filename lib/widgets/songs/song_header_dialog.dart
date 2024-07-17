@@ -106,7 +106,10 @@ class SongHeaderDialog extends StatelessWidget {
                 validator: (value) {
                   if (value == null ||
                       value.isEmpty ||
-                      num.tryParse(value) == null) {
+                      num.tryParse(value) == null ||
+                      num.tryParse(value)! < 10 ||
+                      num.tryParse(value)! > 300
+                      ) {
                     return 'Please enter a tempo in BPM';
                   }
                   return null;

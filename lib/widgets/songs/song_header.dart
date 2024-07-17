@@ -192,6 +192,7 @@ class _SongHeaderState extends State<SongHeader> {
                                   right: 26.0,
                                   bottom: 8.0),
                               child: Text(
+                                key: const Key('songHeader_initialKey'),
                                 currentSong.initialKey,
                                 style:
                                     Theme.of(context).textTheme.headlineMedium,
