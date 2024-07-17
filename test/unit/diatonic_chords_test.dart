@@ -3,6 +3,12 @@ import 'package:test/test.dart';
 
 void main() {
   group('Diatonic Chords', () {
+    test('Major scale chords in F# - 3rd', () {
+      final chord = DiatonicChords.getDiatonicChord('F#', ChordType.major, 3);
+      expect(chord.rootNote, 'A#');
+      expect(chord.beats, '1');
+    });
+
     test('Major scale chords in C - 2nd', () {
       final chord = DiatonicChords.getDiatonicChord('C', ChordType.major, 2);
       expect(chord.rootNote, 'Dm');

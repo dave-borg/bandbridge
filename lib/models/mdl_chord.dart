@@ -1,4 +1,3 @@
-
 import 'package:bandbridge/music_theory/chord_modifiers.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -62,7 +61,12 @@ class Chord extends HiveObject {
 
   /// This returns the full chord name including the root note and modifiers. For example it will return G7 for a G minor 7 chord.
   renderFullChord() {
-    return rootNote + renderElements();
+    var rValue = rootNote;
+    if (rootNote == "N/C") {
+      rValue += renderElements();
+    }
+
+    return rValue;
   }
 
   copy() {
@@ -74,5 +78,4 @@ class Chord extends HiveObject {
       chordExtension: chordExtension,
     );
   }
-
 }

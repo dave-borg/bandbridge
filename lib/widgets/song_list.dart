@@ -83,6 +83,7 @@ class _SongListState extends State<SongList> {
               // Sort btn
               // Change the sort order of the song list
               IconButton(
+                key: const Key('btn_songList_sort'),
                 icon: const Icon(Icons.sort),
                 onPressed: () {
                   logger.d("Sort songs button pressed!!!");
@@ -93,7 +94,7 @@ class _SongListState extends State<SongList> {
               // Add a Song btn
               // This is the button that adds a new song to our list
               IconButton(
-                key: const Key('btn_songList_addSong'),
+                key: const Key('songList_btnAddSong'),
                 icon: const Icon(Icons.add),
                 onPressed: () {
                   showDialog(

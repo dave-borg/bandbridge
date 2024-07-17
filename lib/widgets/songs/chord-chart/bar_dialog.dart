@@ -37,7 +37,7 @@ class _BarDialogState extends State<BarDialog> {
     Chord? selectedChord;
     if (_selectedContainerIndex != -1) {
       selectedChord = widget.bar.beats[_selectedContainerIndex!].chord;
-    } 
+    }
     return AlertDialog(
       title: Text(widget.dialogTitle),
       content: Column(
@@ -55,13 +55,10 @@ class _BarDialogState extends State<BarDialog> {
                       setState(() {
                         _selectedContainerIndex = i;
                         if (_selectedContainerIndex != null) {
-                          selectedChord = widget
-                                  .bar
-                                  .beats[_selectedContainerIndex!]
-                                  .chord;
-                          _chordNameController.text = selectedChord
-                                  ?.renderFullChord() ??
-                              '';
+                          selectedChord =
+                              widget.bar.beats[_selectedContainerIndex!].chord;
+                          _chordNameController.text =
+                              selectedChord?.renderFullChord() ?? '';
                         }
                       });
                     },
@@ -132,7 +129,8 @@ class _BarDialogState extends State<BarDialog> {
                             setState(() {
                               widget.bar.beats[_selectedContainerIndex!].chord =
                                   thisChord;
-                              _chordNameController.text = '${thisChord.rootNote}${thisChord.renderElements()}';
+                              _chordNameController.text =
+                                  '${thisChord.rootNote}${thisChord.renderElements()}';
                             });
                           },
                     style: ElevatedButton.styleFrom(
@@ -142,7 +140,8 @@ class _BarDialogState extends State<BarDialog> {
                             BorderRadius.circular(8), // Reduce corner radius
                       ),
                     ),
-                    child: Text('${thisChord.rootNote}${thisChord.renderElements()}'),
+                    child: Text(
+                        '${thisChord.rootNote}${thisChord.renderElements()}'),
                   ),
                 ),
               );
@@ -151,28 +150,64 @@ class _BarDialogState extends State<BarDialog> {
 
           //====================================================================================
           //Form for entering chord name
-          Form(
-            key: widget._formKey,
-            child: TextFormField(
-              key: const Key('bar_dialog_chord_name'),
-              controller: _chordNameController,
-              decoration: const InputDecoration(
-                labelText: 'Chord Name',
+          Row(
+            children: [
+              Expanded(
+                child: Form(
+                  key: widget._formKey,
+                  child: TextFormField(
+                    key: const Key('bar_dialog_chord_name'),
+                    controller: _chordNameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Chord Name',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        widget.logger.d("Chord to be added: $value");
+                        widget.bar.beats[_selectedContainerIndex!].chord =
+                            Chord(rootNote: value, beats: '1');
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Chord';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
               ),
-              onChanged: (value) {
-                setState(() {
-                  widget.logger.d("Chord to be added: $value");
-                  widget.bar.beats[_selectedContainerIndex!].chord =
-                      Chord(rootNote: value, beats: '1');
-                });
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Chord';
-                }
-                return null;
-              },
-            ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: 55,
+                  height: 60,
+                  child: ElevatedButton(
+                    onPressed: _selectedContainerIndex == -1
+                        ? null
+                        : () {
+                            setState(() {
+                              _chordNameController.text = "N/C";
+                              selectedChord = Chord(
+                                rootNote: "N/C",
+                                beats: "1",
+                              );
+                              widget.bar.beats[_selectedContainerIndex!].chord =
+                                  selectedChord;
+                            });
+                          },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(8), // Reduce corner radius
+                      ),
+                    ),
+                    child: const Text("N/C"),
+                  ),
+                ),
+              ),
+            ],
           ),
 
           //====================================================================================
@@ -188,13 +223,16 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordQuality == ChordModifiers.major) {
+                            if (selectedChord?.chordQuality ==
+                                ChordModifiers.major) {
                               selectedChord?.chordQuality = null;
                             } else {
-                              selectedChord?.chordQuality = ChordModifiers.major;
+                              selectedChord?.chordQuality =
+                                  ChordModifiers.major;
                             }
-                            
-                            _chordNameController.text = selectedChord?.renderFullChord();
+
+                            _chordNameController.text =
+                                selectedChord?.renderFullChord();
                           });
                         },
                   style: ElevatedButton.styleFrom(
@@ -218,12 +256,15 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordQuality == ChordModifiers.minor) {
+                            if (selectedChord?.chordQuality ==
+                                ChordModifiers.minor) {
                               selectedChord?.chordQuality = null;
                             } else {
-                              selectedChord?.chordQuality = ChordModifiers.minor;
+                              selectedChord?.chordQuality =
+                                  ChordModifiers.minor;
                             }
-                            _chordNameController.text = selectedChord?.renderFullChord();
+                            _chordNameController.text =
+                                selectedChord?.renderFullChord();
                           });
                         },
                   style: ElevatedButton.styleFrom(
@@ -247,12 +288,15 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordExtension == ChordModifiers.minorSeventh) {
+                            if (selectedChord?.chordExtension ==
+                                ChordModifiers.minorSeventh) {
                               selectedChord?.chordExtension = null;
                             } else {
-                              selectedChord?.chordExtension = ChordModifiers.minorSeventh;
+                              selectedChord?.chordExtension =
+                                  ChordModifiers.minorSeventh;
                             }
-                            _chordNameController.text = selectedChord?.renderFullChord();
+                            _chordNameController.text =
+                                selectedChord?.renderFullChord();
                           });
                         },
                   style: ElevatedButton.styleFrom(
@@ -262,7 +306,8 @@ class _BarDialogState extends State<BarDialog> {
                           BorderRadius.circular(8), // Reduce corner radius
                     ),
                   ),
-                  child: Text(ChordModifiers.render(ChordModifiers.minorSeventh)),
+                  child:
+                      Text(ChordModifiers.render(ChordModifiers.minorSeventh)),
                 ),
               ),
             ),
@@ -276,12 +321,15 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordExtension == ChordModifiers.ninth) {
+                            if (selectedChord?.chordExtension ==
+                                ChordModifiers.ninth) {
                               selectedChord?.chordExtension = null;
                             } else {
-                              selectedChord?.chordExtension = ChordModifiers.ninth;
+                              selectedChord?.chordExtension =
+                                  ChordModifiers.ninth;
                             }
-                            _chordNameController.text = selectedChord?.renderFullChord();
+                            _chordNameController.text =
+                                selectedChord?.renderFullChord();
                           });
                         },
                   style: ElevatedButton.styleFrom(
@@ -305,12 +353,15 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordExtension == ChordModifiers.eleventh) {
+                            if (selectedChord?.chordExtension ==
+                                ChordModifiers.eleventh) {
                               selectedChord?.chordExtension = null;
                             } else {
-                              selectedChord?.chordExtension = ChordModifiers.eleventh;
+                              selectedChord?.chordExtension =
+                                  ChordModifiers.eleventh;
                             }
-                            _chordNameController.text = selectedChord?.renderFullChord();
+                            _chordNameController.text =
+                                selectedChord?.renderFullChord();
                           });
                         },
                   style: ElevatedButton.styleFrom(
@@ -334,12 +385,15 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordExtension == ChordModifiers.thirteenth) {
+                            if (selectedChord?.chordExtension ==
+                                ChordModifiers.thirteenth) {
                               selectedChord?.chordExtension = null;
                             } else {
-                              selectedChord?.chordExtension = ChordModifiers.thirteenth;
+                              selectedChord?.chordExtension =
+                                  ChordModifiers.thirteenth;
                             }
-                            _chordNameController.text = selectedChord?.renderFullChord();
+                            _chordNameController.text =
+                                selectedChord?.renderFullChord();
                           });
                         },
                   style: ElevatedButton.styleFrom(
@@ -365,12 +419,15 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordExtension == ChordModifiers.majorSeventh) {
+                            if (selectedChord?.chordExtension ==
+                                ChordModifiers.majorSeventh) {
                               selectedChord?.chordExtension = null;
                             } else {
-                              selectedChord?.chordExtension = ChordModifiers.majorSeventh;
+                              selectedChord?.chordExtension =
+                                  ChordModifiers.majorSeventh;
                             }
-                            _chordNameController.text = selectedChord?.renderFullChord();
+                            _chordNameController.text =
+                                selectedChord?.renderFullChord();
                           });
                         },
                   style: ElevatedButton.styleFrom(
@@ -380,7 +437,8 @@ class _BarDialogState extends State<BarDialog> {
                           BorderRadius.circular(8), // Reduce corner radius
                     ),
                   ),
-                  child: Text(ChordModifiers.render(ChordModifiers.majorSeventh)),
+                  child:
+                      Text(ChordModifiers.render(ChordModifiers.majorSeventh)),
                 ),
               ),
             ),
@@ -394,12 +452,15 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordQuality == ChordModifiers.diminished) {
+                            if (selectedChord?.chordQuality ==
+                                ChordModifiers.diminished) {
                               selectedChord?.chordQuality = null;
                             } else {
-                              selectedChord?.chordQuality = ChordModifiers.diminished;
+                              selectedChord?.chordQuality =
+                                  ChordModifiers.diminished;
                             }
-                            _chordNameController.text = selectedChord?.renderFullChord();
+                            _chordNameController.text =
+                                selectedChord?.renderFullChord();
                           });
                         },
                   style: ElevatedButton.styleFrom(
@@ -423,12 +484,15 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordQuality == ChordModifiers.halfDiminished) {
+                            if (selectedChord?.chordQuality ==
+                                ChordModifiers.halfDiminished) {
                               selectedChord?.chordQuality = null;
                             } else {
-                              selectedChord?.chordQuality = ChordModifiers.halfDiminished;
+                              selectedChord?.chordQuality =
+                                  ChordModifiers.halfDiminished;
                             }
-                            _chordNameController.text = selectedChord?.renderFullChord();
+                            _chordNameController.text =
+                                selectedChord?.renderFullChord();
                           });
                         },
                   style: ElevatedButton.styleFrom(
@@ -438,7 +502,8 @@ class _BarDialogState extends State<BarDialog> {
                           BorderRadius.circular(8), // Reduce corner radius
                     ),
                   ),
-                  child: Text(ChordModifiers.render(ChordModifiers.halfDiminished)),
+                  child: Text(
+                      ChordModifiers.render(ChordModifiers.halfDiminished)),
                 ),
               ),
             ),
@@ -452,12 +517,15 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordQuality == ChordModifiers.augmented) {
+                            if (selectedChord?.chordQuality ==
+                                ChordModifiers.augmented) {
                               selectedChord?.chordQuality = null;
                             } else {
-                              selectedChord?.chordQuality = ChordModifiers.augmented;
+                              selectedChord?.chordQuality =
+                                  ChordModifiers.augmented;
                             }
-                            _chordNameController.text = selectedChord?.renderFullChord();
+                            _chordNameController.text =
+                                selectedChord?.renderFullChord();
                           });
                         },
                   style: ElevatedButton.styleFrom(
@@ -481,12 +549,15 @@ class _BarDialogState extends State<BarDialog> {
                       ? null
                       : () {
                           setState(() {
-                            if (selectedChord?.chordExtension == ChordModifiers.suspended) {
+                            if (selectedChord?.chordExtension ==
+                                ChordModifiers.suspended) {
                               selectedChord?.chordExtension = null;
                             } else {
-                              selectedChord?.chordExtension = ChordModifiers.suspended;
+                              selectedChord?.chordExtension =
+                                  ChordModifiers.suspended;
                             }
-                            _chordNameController.text = selectedChord?.renderFullChord();
+                            _chordNameController.text =
+                                selectedChord?.renderFullChord();
                           });
                         },
                   style: ElevatedButton.styleFrom(

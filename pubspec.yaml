@@ -60,6 +60,9 @@ dev_dependencies:
   hive_test: ^1.0.1
   flutter_quill: ^9.4.1
   file_picker: ^8.0.5 
+  integration_test:
+    sdk: flutter
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
