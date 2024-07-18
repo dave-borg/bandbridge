@@ -3,6 +3,7 @@ import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/songs/song_header_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -56,6 +57,7 @@ class _SongHeaderState extends State<SongHeader> {
                             //================================================================
                             //Edit Button
                             IconButton(
+                              key: const Key('songHeader_editButton'),
                               icon: const Icon(Icons.edit),
                               onPressed: () {
                                 showDialog(
@@ -82,6 +84,7 @@ class _SongHeaderState extends State<SongHeader> {
                             //================================================================
                             //Delete button
                             IconButton(
+                              key: const Key('songHeader_deleteButton'),
                               icon: const Icon(Icons.delete),
                               onPressed: () {
                                 showDialog(
@@ -101,6 +104,7 @@ class _SongHeaderState extends State<SongHeader> {
                                           },
                                         ),
                                         TextButton(
+                                          key: const Key('songHeader_deleteButton_confirm'),
                                           child: const Text('DELETE'),
                                           onPressed: () {
                                             currentSong.delete();
@@ -154,6 +158,7 @@ class _SongHeaderState extends State<SongHeader> {
                                   right: 26.0,
                                   bottom: 8.0),
                               child: Text(
+                                key: const Key('songHeader_timeSignature'),
                                 currentSong.timeSignature,
                                 style:
                                     Theme.of(context).textTheme.headlineMedium,
