@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class LyricsEditor extends StatefulWidget {
-  var logger = Logger(level: LoggingUtil.loggingLevel('LyricsEditor'));
+  var logger = LoggingUtil.loggingLevel('LyricsEditor');
   late TrackPlayer trackPlayer;
 
   final Song song;
@@ -68,8 +68,8 @@ class _LyricsEditorState extends State<LyricsEditor> {
               currentPosition <= thisLyricEndTime) {
             setState(() {
               thisLyric.isHighlighted = true;
-              widget.logger
-                  .d("Highlighing: ${thisLyric.text} @ $currentPosition");
+              LoggingUtil
+                  .log(Level.debug, "Highlighing: ${thisLyric.text} @ $currentPosition");
             });
           } else {
             setState(() {
@@ -141,7 +141,7 @@ class _LyricsEditorState extends State<LyricsEditor> {
                                 onPressed: () {
                                   setState(() {
                                     isEditingEnabled = !isEditingEnabled;
-                                    widget.logger.d(
+                                    LoggingUtil.log(Level.debug,
                                         "Edit button pressed: $isEditingEnabled");
                                   });
                                 },
@@ -180,7 +180,7 @@ class _LyricsEditorState extends State<LyricsEditor> {
                                       widget.song.unsynchronisedLyrics =
                                           inputLyrics;
                                       widget.lyricsList = inputLyrics;
-                                      widget.logger.d(widget.song
+                                      LoggingUtil.log(Level.debug, widget.song
                                           .getDebugOutput(
                                               'Added unsynchronised lyrics'));
                                       songProvider.saveSong(widget.song);
@@ -246,7 +246,7 @@ class _LyricsEditorState extends State<LyricsEditor> {
                                   setState(() {
                                     //widget.trackPlayer = TrackPlayer(widget.song);
                                     isEditingEnabled = !isEditingEnabled;
-                                    widget.logger.d(
+                                    LoggingUtil.log(Level.debug,
                                         "Sync button pressed: ${!isEditingEnabled}");
                                   });
                                 },
@@ -328,7 +328,7 @@ class _LyricsEditorState extends State<LyricsEditor> {
                                     onWillAcceptWithDetails: (data) =>
                                         true, // Decide whether to accept the data
                                     onAcceptWithDetails: (droppedObject) {
-                                      widget.logger.d(
+                                      LoggingUtil.log(Level.debug, 
                                           "Dropped data: ${droppedObject.data.section}\n\nDropped data: ${lyric.text}");
                                       if (widget.previewSections
                                               .lyricIsInCurrentSection(
@@ -362,7 +362,7 @@ class _LyricsEditorState extends State<LyricsEditor> {
                                           child: GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                widget.logger.d(
+                                                LoggingUtil.log(Level.debug,
                                                     "Tapped: ${lyric.text} @ ${widget.trackPlayer.getCurrentPosition()}");
                                                 lyric.startTimeMs = widget
                                                     .trackPlayer

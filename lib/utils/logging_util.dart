@@ -1,12 +1,15 @@
-// ignore_for_file: deprecated_member_use
+import 'package:bandbridge/utils/logging_loki_output.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:yaml/yaml.dart';
 import 'package:logger/logger.dart';
 
 class LoggingUtil {
   static YamlMap? _yamlCache;
+  static Logger? _logger;
+  static Level level = Level.info;
+
   // Method to preload YAML content asynchronously
-  static Future<void> preloadYamlContent(doc) async {
+  static Future<void> preloadYamlContent() async {
     final yamlString = await rootBundle.loadString('assets/logging_conf.yaml');
     _yamlCache = loadYaml(yamlString);
   }
@@ -17,7 +20,7 @@ class LoggingUtil {
           'YAML content not preloaded. Call preloadYamlContent first.');
     }
     var yaml = _yamlCache!;
-    var level = Level.info;
+    level = Level.info;
 
     // If the class name is not in the loggers section of the YAML file, use the DEFAULT logger
     if (!yaml['loggers'].containsKey(className)) className = 'DEFAULT';
@@ -42,11 +45,32 @@ class LoggingUtil {
       case 'WARNING':
         level = Level.warning;
         break;
-      case 'WTF':
-        level = Level.wtf; //new favorite thing
-        break;
     }
-
     return level;
+  }
+
+  static void initLogger(String lokiUrl) {
+    _logger = Logger(
+      level: level,
+      output: LokiLogOutput(lokiUrl),
+    );
+  }
+
+  Logger getLogger() {
+    if (_logger == null) {
+      throw Exception('Logger not initialized. Call initLogger first.');
+    }
+    return _logger!;
+  }
+
+  static void log(Level logLevel, String message) {
+    if (_logger == null) {
+      throw Exception('Logger not initialized. Call initLogger first.');
+    }
+    // var level = loggingLevel(className);
+    
+    print(message);
+    print( _logger );
+    _logger!.log(logLevel, message);
   }
 }

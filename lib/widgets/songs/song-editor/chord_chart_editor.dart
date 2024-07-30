@@ -541,6 +541,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                             context: context,
                             builder: (BuildContext context) {
                               return BarDialog(
+                                  key: Key('${currentSection}_addBarDialog'),
                                   song: widget.song,
                                   bar: Bar(),
                                   dialogTitle: 'Add Bar');
@@ -582,6 +583,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                           builder: (context, candidateData, rejectedData) {
                             return isEditingEnabled
                                 ? Container(
+                                    key: const ValueKey('unique_container_key'), // Add a unique value key here
                                     width: 200.0,
                                     height: 50.0,
                                     decoration: BoxDecoration(

@@ -56,7 +56,13 @@ class _SectionsListState extends State<SectionsList> {
                 children: [
                   SizedBox(
                     width: 30.0, // Your desired width
+                    
+                    
+                    
+                    //================================================================
+                    //Add Section button
                     child: IconButton(
+                      key: const Key('songList_btnAddSection'),
                       padding: EdgeInsets.zero, // Remove padding
                       icon: const Icon(Icons.add, size: 20.0), // Set icon size
                       onPressed: () async {
@@ -142,6 +148,7 @@ class _SectionsListState extends State<SectionsList> {
                 itemBuilder: (BuildContext context, int index) {
                   final section = widget.song.sections[index];
                   return ListTile(
+                    key: ValueKey("song_section_$index"),
                     title: Text(section.section),
                     selected: selectedSectionIndex == index,
                     onTap: () {

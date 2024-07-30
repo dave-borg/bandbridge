@@ -97,6 +97,7 @@ class SongArrangementDialog extends StatelessWidget {
           },
         ),
         TextButton(
+          key: const Key('songSectionDialog_submit'),
           child: const Text('Submit'),
           onPressed: () async {
             logger.t('Submit button pressed');
