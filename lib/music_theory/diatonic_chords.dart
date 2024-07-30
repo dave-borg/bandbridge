@@ -51,6 +51,7 @@ class DiatonicChords {
     } else {
       key = match?.group(0) ?? '';
     }
+
     // Find the starting index of the key in the chromatic scale
     final int keyIndex = chromaticScale.indexOf(key);
 

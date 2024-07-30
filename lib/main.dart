@@ -12,11 +12,9 @@ import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/songs_gigs_main.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:yaml/yaml.dart';
 import 'login.dart';
 
 
@@ -25,9 +23,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
 //Load the logging configuration from the YAML file
-  String yamlContent = await rootBundle.loadString('assets/logging_conf.yaml');
-  var doc = loadYaml(yamlContent);
-  LoggingUtil.preloadYamlContent(doc);
+  LoggingUtil.preloadYamlContent();
+  LoggingUtil.initLogger('http://192.168.128.140:3100/loki/api/v1/push');
 
   final document = await getApplicationDocumentsDirectory();
 
