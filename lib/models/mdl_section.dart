@@ -12,7 +12,7 @@ import 'package:logger/logger.dart';
 class Section extends HiveObject {
   var logger = Logger(level: LoggingUtil.loggingLevel('Section'));
   @HiveField(0)
-  String section;
+  String sectionName;
   @HiveField(1)
   String timestamp;
   @HiveField(2)
@@ -23,7 +23,7 @@ class Section extends HiveObject {
   List<Lyric>? unsynchronisedLyrics;
 
   Section({
-    this.section = '',
+    this.sectionName = '',
     this.timestamp = '',
     this.duration = '',
     List<Bar>? bars,
@@ -33,7 +33,7 @@ class Section extends HiveObject {
 
   factory Section.fromJson(Map<String, dynamic> json) {
     return Section(
-      section: json['section'] ?? '',
+      sectionName: json['section'] ?? '',
       timestamp: json['timestamp'] ?? '',
       duration: json['duration'] ?? '',
       bars: (json['bars'] as List<dynamic>?)
@@ -46,7 +46,7 @@ class Section extends HiveObject {
 
   Map<String, dynamic> toJson() {
     return {
-      'section': section,
+      'section': sectionName,
       'timestamp': timestamp,
       'duration': duration,
       'bars': bars?.map((bar) => bar.toJson()).toList(),

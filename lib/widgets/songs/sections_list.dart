@@ -83,7 +83,7 @@ class _SectionsListState extends State<SectionsList> {
                           },
                         );
 
-                        widget.logger.d("result.section: ${result?.section}");
+                        widget.logger.d("result.section: ${result?.sectionName}");
 
                         if (result != null) {
                           setState(() {
@@ -149,7 +149,7 @@ class _SectionsListState extends State<SectionsList> {
                   final section = widget.song.sections[index];
                   return ListTile(
                     key: ValueKey("song_section_$index"),
-                    title: Text(section.section),
+                    title: Text(section.sectionName),
                     selected: selectedSectionIndex == index,
                     onTap: () {
                       setState(() {

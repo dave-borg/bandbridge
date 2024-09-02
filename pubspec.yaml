@@ -46,6 +46,7 @@ dependencies:
   just_audio: ^0.9.38
   just_waveform: ^0.0.5
   rxdart: ^0.27.7
+  split_view: ^3.2.1
 
 
 dev_dependencies:

@@ -10,7 +10,7 @@ class SectionAdapter extends TypeAdapter<Section> {
   @override
   Section read(BinaryReader reader) {
     return Section(
-      section: reader.read(),
+      sectionName: reader.read(),
       timestamp: reader.read(),
       duration: reader.read(),
       bars: reader.readList().cast<Bar>(),
@@ -20,7 +20,7 @@ class SectionAdapter extends TypeAdapter<Section> {
 
   @override
   void write(BinaryWriter writer, Section obj) {
-    writer.write(obj.section);
+    writer.write(obj.sectionName);
     writer.write(obj.timestamp);
     writer.write(obj.duration);
     writer.writeList(obj.bars ?? []);

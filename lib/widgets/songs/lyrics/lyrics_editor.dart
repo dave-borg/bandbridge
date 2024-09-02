@@ -313,14 +313,14 @@ class _LyricsEditorState extends State<LyricsEditor> {
                                   elevation:
                                       4.0, // Optional: Adds shadow to the feedback widget.
                                   child: Text(
-                                      structure.thisSection?.section ?? ''),
+                                      structure.thisSection?.sectionName ?? ''),
                                 ),
                                 child: Text(
                                     style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
-                                    structure.thisSection?.section ??
+                                    structure.thisSection?.sectionName ??
                                         ''), // The widget that will remain under the finger when dragging starts.
                               ),
                               ...structure.getLyrics().map((lyric) =>
@@ -329,7 +329,7 @@ class _LyricsEditorState extends State<LyricsEditor> {
                                         true, // Decide whether to accept the data
                                     onAcceptWithDetails: (droppedObject) {
                                       LoggingUtil.log(Level.debug, 
-                                          "Dropped data: ${droppedObject.data.section}\n\nDropped data: ${lyric.text}");
+                                          "Dropped data: ${droppedObject.data.sectionName}\n\nDropped data: ${lyric.text}");
                                       if (widget.previewSections
                                               .lyricIsInCurrentSection(
                                                   droppedObject.data, lyric) ||
@@ -400,7 +400,7 @@ class _LyricsEditorState extends State<LyricsEditor> {
                       return ListTile(
                         title: Draggable(
                           feedback: Text(
-                            section.section,
+                            section.sectionName,
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -409,7 +409,7 @@ class _LyricsEditorState extends State<LyricsEditor> {
                           childWhenDragging: Container(),
                           data: section,
                           child: Text(
-                            section.section,
+                            section.sectionName,
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
