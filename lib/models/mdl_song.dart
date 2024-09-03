@@ -126,4 +126,16 @@ class Song extends HiveObject {
     }
     unsynchronisedLyrics = [];
   }
+
+  /**
+   * Returns the duration of a bar in milliseconds
+   */
+  int getBarDurationMs(){
+    int minuteInMs = 60 * 1000;
+    double? tempoBpm = double.tryParse(tempo);
+    int beatsPerBar = int.parse(timeSignature.split('/')[0]);
+    double beatDuration = minuteInMs / tempoBpm!;
+    
+    return (beatDuration * beatsPerBar).toInt();
+  }
 }

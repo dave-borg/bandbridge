@@ -26,7 +26,7 @@ void main() async {
 
   var yamlContent = await File('assets/logging_conf.yaml').readAsString();
 	var doc = loadYaml(yamlContent);
-	LoggingUtil.preloadYamlContent(doc);
+	LoggingUtil.preloadYamlContent();
 
   runApp(const MaterialApp(home: SongEditorWrapper()));
 }

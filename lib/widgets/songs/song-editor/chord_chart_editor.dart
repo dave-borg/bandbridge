@@ -6,6 +6,7 @@ import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/utils/logging_util.dart';
 import 'package:bandbridge/widgets/songs/audio/track_player.dart';
 import 'package:bandbridge/widgets/songs/chord-chart/bar_dialog.dart';
+import 'package:bandbridge/widgets/songs/chord-chart/bar_widget.dart';
 import 'package:bandbridge/widgets/songs/chord-chart/chord_container.dart';
 import 'package:flutter/material.dart';
 import 'package:bandbridge/models/mdl_song.dart';
@@ -46,7 +47,7 @@ class ChordChartEditor extends StatefulWidget {
 class _ChordChartEditorState extends State<ChordChartEditor> {
   bool isEditingEnabled = true;
   Timer? periodicTimer;
-  double barDurationMs = 500.0;
+  int barDurationMs = 500;
   Map<Section, List<Bar>> sectionBars = {};
   List<TempoBarList> tempoBarLists =
       []; //need this to keep track of the tempo changes
@@ -56,7 +57,6 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
     periodicTimer = Timer.periodic(const Duration(milliseconds: 150), (timer) {
       currentPlaybackTimeMs = widget.trackPlayer.getCurrentPosition();
 
-      //for (int i = 0; i < sectionBars.length; i++) {
       for (var sectionBarLists in sectionBars.values) {
         for (var thisBar in sectionBarLists) {
           if (currentPlaybackTimeMs >= thisBar.calculatedStartTimeMs &&
@@ -84,11 +84,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
   }
 
   void initBarSchedule() {
-    int minuteInMs = 60 * 1000;
-    double? tempoBpm = double.tryParse(widget.song.tempo);
-    int beatsPerBar = int.parse(widget.song.timeSignature.split('/')[0]);
-    double beatDuration = minuteInMs / tempoBpm!;
-    barDurationMs = beatDuration * beatsPerBar;
+    barDurationMs = widget.song.getBarDurationMs();
     tempoBarLists = [];
 
     var thisTempoList = TempoBarList();
@@ -311,7 +307,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
                   Container(
                     margin: const EdgeInsets.only(top: 16.0),
                     child: Text(
-                      widget.song.sections[currentSection].section,
+                      widget.song.sections[currentSection].sectionName,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -469,68 +465,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
 
                               //===================================================================================================
                               //Bar container
-                              child: Container(
-                                width: 200.0,
-                                height: 50.0,
-                                padding: const EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.blueAccent),
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  color: bar.isHighlighted
-                                      ? const Color.fromARGB(255, 78, 119, 188)
-                                      : const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                ),
-                                child: Wrap(
-                                  spacing: 6.0, // Adjust spacing as needed
-                                  children: bar.beats
-                                      .map((beat) {
-                                        List<Widget> widgets = [];
-
-//First widget - debug output for the bar
-                                        // if (bar.beats.indexOf(beat) == 0) {
-                                        //   widgets.add(
-                                        //     SizedBox(
-                                        //       width: 35,
-                                        //       height: 30,
-                                        //       child: Text(
-                                        //         "${bar.startTimeMs}ms\n${bar.calculatedStartTimeMs}ms",
-                                        //         style: const TextStyle(
-                                        //             fontSize: 6),
-                                        //       ),
-                                        //     ),
-                                        //   );
-                                        // }
-
-                                        if (beat.chord != null) {
-                                          widgets.add(
-                                            ChordContainer(
-                                              chord: beat.chord!,
-                                              width: 35,
-                                              // width: 15,
-                                              height: 50,
-                                            ),
-                                          );
-                                        } else {
-                                          widgets.add(
-                                            const SizedBox(
-                                              width: 35,
-                                              //width: 15,
-                                              height: 30,
-                                              child: Text(
-                                                " /",
-                                                style: TextStyle(fontSize: 18),
-                                              ),
-                                            ),
-                                          );
-                                        }
-
-                                        return widgets;
-                                      })
-                                      .expand((i) => i)
-                                      .toList(), // Flatten the list of lists into a single list
-                                ),
-                              ),
+                              child: BarWidget(bar:bar),
                             ),
                           ),
                         );

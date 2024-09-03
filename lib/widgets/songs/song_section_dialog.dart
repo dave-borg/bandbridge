@@ -41,7 +41,7 @@ class SongArrangementDialog extends StatelessWidget {
                   decoration: const InputDecoration(labelText: 'Section Title'),
                   initialValue: sectionIndex == -1
                       ? ""
-                      : song.sections[sectionIndex].section,
+                      : song.sections[sectionIndex].sectionName,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a section title\n(eg. Verse, Chorus)';
@@ -49,7 +49,7 @@ class SongArrangementDialog extends StatelessWidget {
                     return null;
                   },
                   onSaved: (value) {
-                    newSection.section = value!;
+                    newSection.sectionName = value!;
                   },
                 ),
                 sectionIndex ==
@@ -69,7 +69,7 @@ class SongArrangementDialog extends StatelessWidget {
                           ...song.sections.map((section) {
                             return DropdownMenuItem<Section>(
                               value: section,
-                              child: Text(section.section),
+                              child: Text(section.sectionName),
                             );
                           }),
                         ],

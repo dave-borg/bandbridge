@@ -21,7 +21,7 @@ class SongSectionPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    logger.d('SongSectionPanel rebuilt with section: ${section.section}');
+    logger.d('SongSectionPanel rebuilt with section: ${section.sectionName}');
 
     return SizedBox(
       width: 610,
@@ -38,7 +38,7 @@ class SongSectionPanel extends StatelessWidget {
                 height: 40,
                 width: 140,
                 margin: const EdgeInsets.only(top: 30.0),
-                child: Text(section.section,
+                child: Text(section.sectionName,
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,

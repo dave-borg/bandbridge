@@ -15,7 +15,7 @@ class SongGenerator {
     );
 
     Section intro = Section();
-    intro.section = 'Intro';
+    intro.sectionName = 'Intro';
     intro.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
     intro.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
     intro.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
@@ -27,7 +27,7 @@ class SongGenerator {
     song.sections.add(intro);
 
     Section verse = Section();
-    verse.section = 'Verse';
+    verse.sectionName = 'Verse';
     verse.bars?.add(buildBar(chords: {
       0: Chord(rootNote: "A", beats: "4")
     }, lyrics: {
@@ -51,7 +51,7 @@ class SongGenerator {
     song.sections.add(verse);
 
     Section chorus = Section();
-    chorus.section = 'Chorus';
+    chorus.sectionName = 'Chorus';
     chorus.bars?.add(buildBar(
         chords: {0: Chord(rootNote: "A", beats: "4")},
         lyrics: {0: Lyric(text: "Get back", beats: "4")}));
@@ -87,7 +87,7 @@ class SongGenerator {
     song.sections.add(chorus);
 
     Section solo = Section();
-    solo.section = 'Keyboard Solo (Verse)';
+    solo.sectionName = 'Keyboard Solo (Verse)';
     solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
     solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "A", beats: "4")}));
     solo.bars?.add(buildBar(chords: {0: Chord(rootNote: "D", beats: "4")}));
@@ -107,7 +107,7 @@ class SongGenerator {
     song.sections.add(solo);
 
     Section verse2 = Section();
-    verse2.section = 'Verse';
+    verse2.sectionName = 'Verse';
     verse2.bars?.add(buildBar(chords: {
       0: Chord(rootNote: "A", beats: "4")
     }, lyrics: {
@@ -132,7 +132,7 @@ class SongGenerator {
     song.sections.add(verse2);
 
     Section chorus2 = Section();
-    chorus2.section = 'Chorus';
+    chorus2.sectionName = 'Chorus';
     chorus2.bars?.add(buildBar(
         chords: {0: Chord(rootNote: "A", beats: "4")},
         lyrics: {0: Lyric(text: "Get back", beats: "4")}));

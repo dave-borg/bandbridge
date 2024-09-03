@@ -1,9 +1,9 @@
 import 'package:bandbridge/models/song_provider.dart';
 import 'package:bandbridge/models/mdl_song.dart';
 import 'package:bandbridge/utils/logging_util.dart';
+import 'package:bandbridge/widgets/perform/perform_song_main.dart';
 import 'package:bandbridge/widgets/songs/song_header_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -104,7 +104,8 @@ class _SongHeaderState extends State<SongHeader> {
                                           },
                                         ),
                                         TextButton(
-                                          key: const Key('songHeader_deleteButton_confirm'),
+                                          key: const Key(
+                                              'songHeader_deleteButton_confirm'),
                                           child: const Text('DELETE'),
                                           onPressed: () {
                                             currentSong.delete();
@@ -221,7 +222,14 @@ class _SongHeaderState extends State<SongHeader> {
                           height: 120,
                           child: ElevatedButton(
                             onPressed: () {
-                              // Handle button press
+                              logger.d(currentSong.getDebugOutput(
+                                  "Play song: ${currentSong.title}"));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        PerformSongMain(songToPlay: currentSong)),
+                              );
                             },
                             style: ButtonStyle(
                               backgroundColor:
