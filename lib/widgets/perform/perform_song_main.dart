@@ -1,24 +1,97 @@
+import 'dart:async';
+
 import 'package:bandbridge/models/mdl_song.dart';
-import 'package:bandbridge/widgets/perform/lyric_scroll_item.dart';
+import 'package:bandbridge/widgets/perform/perform_scroll_item.dart';
+import 'package:bandbridge/widgets/songs/audio/track_player.dart';
 import 'package:bandbridge/widgets/songs/chord-chart/bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:split_view/split_view.dart';
 
 class PerformSongMain extends StatefulWidget {
   final Song songToPlay;
+  late TrackPlayer trackPlayer;
 
-  const PerformSongMain({super.key, required this.songToPlay});
+  PerformSongMain({super.key, required this.songToPlay}) {
+    trackPlayer = TrackPlayer(songToPlay);
+  }
 
   @override
   _PerformSongScreenState createState() => _PerformSongScreenState();
 }
 
 class _PerformSongScreenState extends State<PerformSongMain> {
+  final FixedExtentScrollController _lyricController =
+      FixedExtentScrollController();
+  final FixedExtentScrollController _barController =
+      FixedExtentScrollController();
   bool _isSwitch1On = true;
   bool _isSwitch2On = true;
 
-  var lyrics = <LyricScrollItem>[];
-  var bars = <Widget>[];
+  Timer? periodicTimer;
+  var lyrics = <PerformScrollItem>[];
+  var bars = <PerformScrollItem>[];
+
+  startTimer() {
+    int currentTimer = 0;
+
+    periodicTimer = Timer.periodic(const Duration(milliseconds: 150), (timer) {
+      currentTimer = widget.trackPlayer.getCurrentPosition();
+      int barDuration = widget.songToPlay.getBarDurationMs();
+
+      for (var thisLyricItem in lyrics) {
+        var lyricIndex = -1;
+        lyricIndex = lyrics.indexOf(thisLyricItem);
+
+        if (thisLyricItem.startMs > 0) {
+          if (currentTimer >=
+                  (thisLyricItem.startMs - (barDuration / 2).round()) &&
+              currentTimer < lyrics[lyricIndex + 1].startMs) {
+            //scroll to this item
+            //print('scrolling to ${thisLyricItem.displayWidget.toString()}');
+            scrollLyrics(lyricIndex);
+          }
+        }
+      }
+
+      for (var thisBarItem in bars) {
+        var barIndex = -1;
+        barIndex = bars.indexOf(thisBarItem);
+
+        if (thisBarItem.startMs > 0) {
+          if (currentTimer >=
+                  (thisBarItem.startMs - (barDuration / 2).round()) &&
+              currentTimer < bars[barIndex + 1].startMs) {
+            //scroll to this item
+            scrollBars(barIndex);
+          }
+        }
+      }
+    });
+  }
+
+  stopTimer() {
+    periodicTimer?.cancel();
+    scrollLyrics(0);
+    scrollBars(0);
+  }
+
+  scrollLyrics(int targetIndex) {
+    _lyricController.animateToItem(
+      targetIndex,
+      duration: Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  scrollBars(int targetIndex) {
+    _barController.animateToItem(
+      targetIndex,
+      duration: Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  scrollChords(int targetIndex) {}
 
   @override
   void initState() {
@@ -26,32 +99,63 @@ class _PerformSongScreenState extends State<PerformSongMain> {
     // Populate the lyrics list with LyricScrollItem widgets
     for (var section in widget.songToPlay.sections) {
       //add the section title
-      lyrics.add(LyricScrollItem(
-        displayText: section.sectionName,
+      lyrics.add(PerformScrollItem(
+        displayWidget: Text(
+          "[ ${section.sectionName} ]",
+          style: TextStyle(
+            fontSize: 36,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 175, 166, 226),
+          ),
+        ),
         isHeader: true,
+        startMs: -1,
       ));
 
       //build the list of lyrics for this section
       if (section.unsynchronisedLyrics != null) {
         for (var lyric in section.unsynchronisedLyrics!) {
-          lyrics.add(LyricScrollItem(
-            displayText: lyric.text,
+          lyrics.add(PerformScrollItem(
+            displayWidget: Text(
+              "${lyric.text} (${lyric.calculatedStartTimeMs})",
+              style: TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
             isHeader: false,
+            startMs: lyric.startTimeMs, //dangerous - need to check for null
           ));
         }
       }
 
       //add the section title
-      //bars.add(section.sectionName as Widget);
+      bars.add(PerformScrollItem(
+        displayWidget: Text(
+          "[ ${section.sectionName} ]",
+          style: TextStyle(
+            fontSize: 36,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 175, 166, 226),
+          ),
+        ),
+        isHeader: true,
+        startMs: -1,
+      ));
 
       if (section.bars != null) {
-        for (var i = 0; i < section.bars!.length; i += 2) {
+        for (var i = 0; i < section.bars!.length; i += 4) {
           var bar1 = section.bars![i];
           var bar2 =
               (i + 1 < section.bars!.length) ? section.bars![i + 1] : null;
+          var bar3 =
+              (i + 2 < section.bars!.length) ? section.bars![i + 2] : null;
+          var bar4 =
+              (i + 3 < section.bars!.length) ? section.bars![i + 3] : null;
 
-          bars.add(
-            Row(
+          bars.add(PerformScrollItem(
+            displayWidget: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IntrinsicWidth(
@@ -61,9 +165,19 @@ class _PerformSongScreenState extends State<PerformSongMain> {
                   IntrinsicWidth(
                     child: BarWidget(bar: bar2),
                   ),
+                if (bar3 != null)
+                  IntrinsicWidth(
+                    child: BarWidget(bar: bar3),
+                  ),
+                if (bar4 != null)
+                  IntrinsicWidth(
+                    child: BarWidget(bar: bar4),
+                  ),
               ],
             ),
-          );
+            isHeader: false,
+            startMs: bar1.calculatedStartTimeMs,
+          ));
         }
       }
     }
@@ -142,6 +256,7 @@ class _PerformSongScreenState extends State<PerformSongMain> {
                 ? Container(
                     color: const Color.fromARGB(255, 35, 35, 35),
                     child: ListWheelScrollView(
+                      controller: _lyricController,
                       itemExtent: 60,
                       squeeze: 0.5,
                       useMagnifier: true,
@@ -154,10 +269,11 @@ class _PerformSongScreenState extends State<PerformSongMain> {
                 ? Container(
                     color: Color.fromARGB(255, 49, 49, 49),
                     child: ListWheelScrollView(
-                      itemExtent: 60,
-                      // squeeze: 0.5,
+                      controller: _barController,
+                      itemExtent: 90,
+                      squeeze: 1,
                       useMagnifier: true,
-                      magnification: 1.8,
+                      magnification: 1.3,
                       children: bars,
                     ),
                   )
@@ -172,13 +288,15 @@ class _PerformSongScreenState extends State<PerformSongMain> {
             IconButton(
               icon: const Icon(Icons.play_arrow),
               onPressed: () {
-                // Play the song
+                startTimer();
+                widget.trackPlayer.play();
               },
             ),
             IconButton(
               icon: const Icon(Icons.stop),
               onPressed: () {
-                // Stop the song
+                stopTimer();
+                widget.trackPlayer.stop();
               },
             ),
           ],

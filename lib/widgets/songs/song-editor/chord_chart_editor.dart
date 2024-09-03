@@ -47,7 +47,7 @@ class ChordChartEditor extends StatefulWidget {
 class _ChordChartEditorState extends State<ChordChartEditor> {
   bool isEditingEnabled = true;
   Timer? periodicTimer;
-  double barDurationMs = 500.0;
+  int barDurationMs = 500;
   Map<Section, List<Bar>> sectionBars = {};
   List<TempoBarList> tempoBarLists =
       []; //need this to keep track of the tempo changes
@@ -57,7 +57,6 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
     periodicTimer = Timer.periodic(const Duration(milliseconds: 150), (timer) {
       currentPlaybackTimeMs = widget.trackPlayer.getCurrentPosition();
 
-      //for (int i = 0; i < sectionBars.length; i++) {
       for (var sectionBarLists in sectionBars.values) {
         for (var thisBar in sectionBarLists) {
           if (currentPlaybackTimeMs >= thisBar.calculatedStartTimeMs &&
@@ -85,11 +84,7 @@ class _ChordChartEditorState extends State<ChordChartEditor> {
   }
 
   void initBarSchedule() {
-    int minuteInMs = 60 * 1000;
-    double? tempoBpm = double.tryParse(widget.song.tempo);
-    int beatsPerBar = int.parse(widget.song.timeSignature.split('/')[0]);
-    double beatDuration = minuteInMs / tempoBpm!;
-    barDurationMs = beatDuration * beatsPerBar;
+    barDurationMs = widget.song.getBarDurationMs();
     tempoBarLists = [];
 
     var thisTempoList = TempoBarList();
