@@ -116,7 +116,5 @@ class Section extends HiveObject {
       logger.d(
           "Lyric ${unsynchronisedLyrics![i].text} scheduled at bar $barIndex");
     }
-
-    // unsynchronisedLyrics = [];
   }
 }

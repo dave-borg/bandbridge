@@ -138,4 +138,15 @@ class Song extends HiveObject {
     
     return (beatDuration * beatsPerBar).toInt();
   }
+
+  List<Lyric> getAllLyrics() {
+    List<Lyric> allLyrics = [];
+    for (var thisSection in sections) {
+      thisSection.unsynchronisedLyrics!.forEach((thisLyric) {
+        allLyrics.add(thisLyric);
+      });
+    }
+    print("All Lyrics: ${allLyrics.length}");
+    return allLyrics;
+  }
 }

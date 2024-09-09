@@ -1,7 +1,7 @@
 loggers:
   LyricsEditor:
     level: DEBUG
-  SongHeader:
+  PerformSongMain:
     level: DEBUG
   DEFAULT:
     level: INFO

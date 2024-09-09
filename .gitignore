@@ -57,6 +57,8 @@ lib/generated_plugin_registrant.dart
 **/ios/Flutter/flutter_assets/
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/build/*
+**/ios/Pods
 
 # Android related
 **/android/.gradle
